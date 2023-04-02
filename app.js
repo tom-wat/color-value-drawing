@@ -153,6 +153,7 @@ canvas.addEventListener("click", function (e) {
 });
 
 function clearCanvas() {
+  if (!undoStates.length) return;
   const intialState = undoStates[undoStates.length - 1];
   undoStates = [];
   undoStates.unshift(intialState);
@@ -332,9 +333,14 @@ document.addEventListener("keydown", (event) => {
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
   }
-
   if (event.key === "Enter") {
     debouncedDownload();
+  }
+  if (event.key === "f") {
+    fullScale.checked = !fullScale.checked;
+  }
+  if (event.key === "c") {
+    clearCanvas();
   }
 });
 
@@ -346,6 +352,7 @@ let keyShift = false;
 // let keyArrowRight = false;
 let keyMeta = false;
 let keyZ = false;
+// let keyD = false;
 
 // Define your key press handler
 function handleKeyPress() {
@@ -408,6 +415,9 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "z") {
     keyZ = true;
   }
+  // if (event.key === "d") {
+  //   keyD = true;
+  // }
   // console.log(event.key);
   // console.log(`keyShift:${keyShift}`);
   // console.log(`keyMeta:${keyMeta}`);
@@ -437,4 +447,7 @@ document.addEventListener("keyup", (event) => {
   if (event.key === "z") {
     keyZ = false;
   }
+  // if (event.key === "d") {
+  //   keyD = false;
+  // }
 });
