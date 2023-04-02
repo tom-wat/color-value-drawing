@@ -29,6 +29,7 @@ fileInput.addEventListener("change", function () {
       }
       changeFontSize(ctx, fontInput);
       changeColor(ctx, colorInput, alphaInput);
+      undoStates = [];
       getCurrentImageState();
     };
   };
