@@ -55,6 +55,10 @@ function adjustedDrawImage() {
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
+function updateOutput(element, value) {
+  element.nextElementSibling.value = value.padStart(3, "0");
+}
+
 function rgbToHsl(r, g, b) {
   r = r / 255;
   g = g / 255;
@@ -310,7 +314,7 @@ function redo() {
 document.addEventListener("keydown", (event) => {
   if (event.key === "w") {
     colorInput.value = (parseInt(colorInput.value) + 10).toString();
-    colorInput.nextElementSibling.value = colorInput.value;
+    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
   if (event.key === "a") {
@@ -320,7 +324,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "s") {
     colorInput.value = (parseInt(colorInput.value) - 10).toString();
-    colorInput.nextElementSibling.value = colorInput.value;
+    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
   if (event.key === "d") {

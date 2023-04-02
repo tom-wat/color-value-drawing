@@ -49,14 +49,9 @@
               min="0"
               max="100"
               value="100"
-              oninput="this.nextElementSibling.value = this.value"
+              oninput="updateOutput(colorInput, this.value)"
             />
-            <output
-              name="font-color-output"
-              for="font-color-input"
-              oninput="this.previousElementSibling.value = this.value"
-              >100</output
-            >
+            <output name="font-color-output" for="font-color-input">100</output>
           </div>
           <div class="alpha-input flex-row">
             <label for="font-color-alpha-input">alpha:</label
@@ -66,12 +61,9 @@
               min="0"
               max="100"
               value="100"
-              oninput="this.nextElementSibling.value = this.value"
+              oninput="updateOutput(alphaInput, this.value)"
             />
-            <output
-              name="font-color-alpha-output"
-              for="font-color-alpha-input"
-              oninput="this.previousElementSibling.value = this.value"
+            <output name="font-color-alpha-output" for="font-color-alpha-input"
               >100</output
             >
           </div>
