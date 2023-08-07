@@ -18,8 +18,86 @@
           <button type="button" onclick="clearCanvas()">Clear</button>
           <div class="full-scale flex-row">
             <label for="full-scale">full-scale: </label>
-            <input type="checkbox" name="full-scale" id="full-scale" checked/>
+            <input type="checkbox" name="full-scale" id="full-scale" checked />
           </div>
+        </div>
+
+        <div class="flex-row">
+          <form id="data-drawing-position-x">
+            drawing-position-x:
+            <input
+              type="radio"
+              id="drawing-position-x-left"
+              name="positionX"
+              value="left"
+            />
+            <label for="drawing-position-x-left">left</label>
+            <input
+              type="radio"
+              id="drawing-position-x-right"
+              name="positionX"
+              value="right"
+              checked
+            />
+            <label for="drawing-position-x-right">right</label>
+          </form>
+        </div>
+
+        <div class="flex-row">
+          <form id="data-drawing-position-y">
+            drawing-position-y:
+            <input
+              type="radio"
+              id="drawing-position-y-top"
+              name="positionY"
+              value="top"
+            />
+            <label for="drawing-position-y-top">top</label>
+            <input
+              type="radio"
+              id="drawing-position-y-bottom"
+              name="positionY"
+              value="bottom"
+              checked
+            />
+            <label for="drawing-position-y-bottom">bottom</label>
+          </form>
+        </div>
+
+        <div class="flex-row">
+          <label for="offset-x">offset-x: </label
+          ><input
+            type="range"
+            id="offset-x"
+            min="0"
+            max="2"
+            value="0"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output
+            name="offset-x-output"
+            for="offset-x"
+            oninput="this.previousElementSibling.value = this.value"
+            >0</output
+          >
+        </div>
+
+        <div class="flex-row">
+          <label for="offset-y">offset-y: </label
+          ><input
+            type="range"
+            id="offset-y"
+            min="0"
+            max="4"
+            value="0"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output
+            name="offset-y-output"
+            for="offset-y"
+            oninput="this.previousElementSibling.value = this.value"
+            >0</output
+          >
         </div>
 
         <div class="flex-row">
@@ -39,6 +117,7 @@
             >12</output
           >
         </div>
+
         <div class="flex-row">
           font-color:
           <div class="color-input flex-row">

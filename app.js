@@ -6,15 +6,29 @@ const fontInput = document.getElementById("font-size-input");
 const colorInput = document.getElementById("font-color-input");
 const alphaInput = document.getElementById("font-color-alpha-input");
 const downloadBtn = document.getElementById("download-btn");
+const drawingPositionX = document.getElementById("data-drawing-position-x");
+const drawingPositionY = document.getElementById("data-drawing-position-y");
+const offsetX = document.getElementById("offset-x");
+const offsetY = document.getElementById("offset-y");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+const positionXRadioNodeList = drawingPositionX.positionX;
+const positionYRadioNodeList = drawingPositionY.positionY;
+
+console.log(positionXRadioNodeList);
 
 let image;
 let undoStates = [];
 let redoStates = [];
 let currentStates;
 
-fileInput.addEventListener("change", function () {
-  const file = this.files[0];
+const openFile = (event) => {
+  console.log(event.target.files);
+  const file = event.target.files[0];
+  if (!file) {
+    console.error("No file selected.");
+    return;
+  }
   const reader = new FileReader();
   reader.onload = function () {
     canvas.style.display = "block";
@@ -33,8 +47,12 @@ fileInput.addEventListener("change", function () {
       getCurrentImageState();
     };
   };
+
   reader.readAsDataURL(file);
-});
+  // 配列のファイルを削除する (インデックス0以降のすべての要素を削除)
+};
+
+fileInput.addEventListener("change", openFile);
 
 function actualDrawImage() {
   if (!image) return;
@@ -197,25 +215,6 @@ function debounce(func, delay, immediate) {
   };
 }
 
-function drawMultilineText(context, text, x, y, lineHeight) {
-  const lines = text.split(",");
-
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const lineWidth = context.measureText(line).width;
-    let xOffset = 0;
-
-    if (context.textAlign === "center") {
-      xOffset = -lineWidth / 2;
-    } else if (context.textAlign === "right") {
-      xOffset = -lineWidth;
-    }
-
-    context.fillText(line, x + xOffset, y);
-    y += lineHeight;
-  }
-}
-
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
 
@@ -226,30 +225,83 @@ fontInput.addEventListener("input", function () {
   changeFontSize(ctx, fontInput);
 });
 
+function drawMultilineText(
+  context,
+  text,
+  pointX,
+  pointY,
+  lineHeight,
+  textPositionX,
+  textPositionY,
+  fontSize,
+  offsetX,
+  offsetY
+) {
+  const lines = text.split(",");
+  console.log(textPositionX, textPositionY);
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lineWidth = context.measureText(line).width;
+    const offsetXValue = [1, 5, 9];
+    const offsetYValue = [1, 6, 10, 15, 19];
+    let xOffset = 0;
+    let yOffset = 0;
+    let xOffsetAdjustment =
+      (fontSize / 4 + fontSize / 2) * offsetXValue[offsetX];
+    let yOffsetAdjustment = (fontSize / 2) * offsetYValue[offsetY];
+
+    if (textPositionX === "left") {
+      xOffset = -lineWidth - xOffsetAdjustment;
+    } else {
+      xOffset = xOffsetAdjustment;
+    }
+
+    if (textPositionY === "top") {
+      yOffset = -lineHeight * (lines.length - 1) - yOffsetAdjustment;
+    } else {
+      yOffset = yOffsetAdjustment;
+    }
+
+    context.fillText(line, pointX + xOffset, pointY + yOffset);
+    pointY += lineHeight;
+  }
+}
+
 // クリックしたら色データをキャンバスに描画
 canvas.addEventListener("click", function (event) {
-  const x = event.offsetX;
-  const y = event.offsetY;
+  const pointX = event.offsetX;
+  const pointY = event.offsetY;
   const colorInfoElement = document.getElementById("colorInfo");
   const text = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
+  const offsetXValue = parseInt(offsetX.value);
+  const offsetYValue = parseInt(offsetY.value);
+  const lineHeight = fontSize + fontSize / 8;
+  const textPositionX = positionXRadioNodeList.value;
+  const textPositionY = positionYRadioNodeList.value;
+
   // クリックした場所のピクセルカラー情報を取得する
   // const color = ctx.getImageData(x, y, 1, 1).data;
 
   // 新しい描画を行う
-
   drawMultilineText(
     ctx,
     text,
-    x + fontSize / 4 + fontSize / 2,
-    y - fontSize / 7.5 + fontSize / 2,
-    fontSize + fontSize / 8
+    pointX,
+    pointY,
+    lineHeight,
+    textPositionX,
+    textPositionY,
+    fontSize,
+    offsetXValue,
+    offsetYValue
   );
 
   ctx.strokeStyle = ctx.fillStyle;
   ctx.strokeRect(
-    x - fontSize / 2,
-    y - fontSize / 2,
+    pointX - fontSize / 2,
+    pointY - fontSize / 2,
     fontSize - 2,
     fontSize - 2
   );
@@ -313,25 +365,76 @@ function redo() {
 
 // Add event listeners to track the state of each key
 document.addEventListener("keydown", (event) => {
+  if (event.key === "r") {
+    fileInput.click();
+  }
   if (event.key === "w") {
     colorInput.value = (parseInt(colorInput.value) + 10).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
+  }
+  if (event.key === "q") {
+    colorInput.value = (parseInt(colorInput.value) - 10).toString();
+    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
+    changeColor(ctx, colorInput, alphaInput);
+  }
+  if (event.key === "s") {
+    fontInput.value = (parseInt(fontInput.value) + 1).toString();
+    fontInput.nextElementSibling.value = fontInput.value;
+    changeFontSize(ctx, fontInput);
   }
   if (event.key === "a") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
   }
-  if (event.key === "s") {
-    colorInput.value = (parseInt(colorInput.value) - 10).toString();
-    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
-    changeColor(ctx, colorInput, alphaInput);
+  if (event.key === "x") {
+    offsetX.value = (parseInt(offsetX.value) + 1).toString();
+    offsetX.nextElementSibling.value = offsetX.value;
   }
+  if (event.key === "z") {
+    offsetX.value = (parseInt(offsetX.value) - 1).toString();
+    offsetX.nextElementSibling.value = offsetX.value;
+  }
+  if (event.key === "y") {
+    offsetY.value = (parseInt(offsetY.value) + 1).toString();
+    offsetY.nextElementSibling.value = offsetY.value;
+  }
+  if (event.key === "t") {
+    offsetY.value = (parseInt(offsetY.value) - 1).toString();
+    offsetY.nextElementSibling.value = offsetY.value;
+  }
+
   if (event.key === "d") {
-    fontInput.value = (parseInt(fontInput.value) + 1).toString();
-    fontInput.nextElementSibling.value = fontInput.value;
-    changeFontSize(ctx, fontInput);
+    for (let i = 0; i < positionXRadioNodeList.length; i++) {
+      if (positionXRadioNodeList[i].checked) {
+        // console.log(positionXRadioNodeList[i]);
+        // console.log(positionXRadioNodeList.length);
+        // console.log(i);
+        positionXRadioNodeList[i].checked = false;
+        if (i + 1 === positionXRadioNodeList.length) {
+          positionXRadioNodeList[0].checked = true;
+          break;
+        } else {
+          positionXRadioNodeList[i + 1].checked = true;
+          break;
+        }
+      }
+    }
+  }
+  if (event.key === "e") {
+    for (let i = 0; i < positionYRadioNodeList.length; i++) {
+      if (positionYRadioNodeList[i].checked) {
+        positionYRadioNodeList[i].checked = false;
+        if (i + 1 === positionYRadioNodeList.length) {
+          positionYRadioNodeList[0].checked = true;
+          break;
+        } else {
+          positionYRadioNodeList[i + 1].checked = true;
+          break;
+        }
+      }
+    }
   }
   if (event.key === "Enter") {
     debouncedDownload();
