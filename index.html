@@ -12,19 +12,19 @@
         <input type="file" id="fileInput" />
 
         <div class="flex-row">
-          <button id="download-btn">キャンバスをダウンロード</button>
-          <button id="undo-btn" onclick="undo();">Undo</button>
-          <button id="redo-btn" onclick="redo();">Redo</button>
-          <button type="button" onclick="clearCanvas()">Clear</button>
+          <button id="download-btn">キャンバスをダウンロード(Enter)</button>
+          <button id="undo-btn" onclick="undo();">Undo(cmd+z)</button>
+          <button id="redo-btn" onclick="redo();">Redo(cmd+shift+z)</button>
+          <button type="button" onclick="clearCanvas()">Clear(c)</button>
           <div class="full-scale flex-row">
-            <label for="full-scale">full-scale: </label>
+            <label for="full-scale">full-scale(v): </label>
             <input type="checkbox" name="full-scale" id="full-scale" checked />
           </div>
         </div>
 
         <div class="flex-row">
           <form id="data-drawing-position-x">
-            drawing-position-x:
+            drawing-position-x(d):
             <input
               type="radio"
               id="drawing-position-x-left"
@@ -45,7 +45,7 @@
 
         <div class="flex-row">
           <form id="data-drawing-position-y">
-            drawing-position-y:
+            drawing-position-y(e):
             <input
               type="radio"
               id="drawing-position-y-top"
@@ -65,7 +65,7 @@
         </div>
 
         <div class="flex-row">
-          <label for="offset-x">offset-x: </label
+          <label for="offset-x">offset-x(z,x): </label
           ><input
             type="range"
             id="offset-x"
@@ -83,7 +83,7 @@
         </div>
 
         <div class="flex-row">
-          <label for="offset-y">offset-y: </label
+          <label for="offset-y">offset-y(t,y): </label
           ><input
             type="range"
             id="offset-y"
@@ -101,7 +101,7 @@
         </div>
 
         <div class="flex-row">
-          <label for="font-size-input">font-size: </label
+          <label for="font-size-input">font-size(a,s): </label
           ><input
             type="range"
             id="font-size-input"
@@ -121,7 +121,7 @@
         <div class="flex-row">
           font-color:
           <div class="color-input flex-row">
-            <label for="font-color-input">lightness:</label
+            <label for="font-color-input">lightness(q,w):</label
             ><input
               type="range"
               id="font-color-input"
