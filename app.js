@@ -365,7 +365,7 @@ function redo() {
 
 // Add event listeners to track the state of each key
 document.addEventListener("keydown", (event) => {
-  if (event.key === "r") {
+  if (event.key === "f") {
     fileInput.click();
   }
   if (event.key === "w") {
@@ -439,7 +439,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     debouncedDownload();
   }
-  if (event.key === "f") {
+  if (event.key === "v") {
     fullScale.checked = !fullScale.checked;
   }
   if (event.key === "c") {
