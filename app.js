@@ -381,6 +381,16 @@ document.addEventListener("keydown", (event) => {
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
+  if (event.key === "o") {
+    alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
+    alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
+    changeColor(ctx, colorInput, alphaInput);
+  }
+  if (event.key === "i") {
+    alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
+    alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
+    changeColor(ctx, colorInput, alphaInput);
+  }
   if (event.key === "s") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
