@@ -21,10 +21,6 @@ let undoStates = [];
 let redoStates = [];
 let currentStates;
 
-fileButton.addEventListener("click", function () {
-  fileInput.click();
-});
-
 const openFile = (event) => {
   console.log(event.target.files);
   const file = event.target.files[0];
@@ -439,6 +435,9 @@ document.addEventListener("keydown", (event) => {
     }
   }
   if (event.key === "z") {
+    if (keyMeta) {
+      return;
+    }
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
       if (positionYRadioNodeList[i].checked) {
         positionYRadioNodeList[i].checked = false;
