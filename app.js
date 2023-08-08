@@ -391,11 +391,11 @@ document.addEventListener("keydown", (event) => {
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
   }
-  if (event.key === "x") {
+  if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
   }
-  if (event.key === "z") {
+  if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
   }
@@ -408,7 +408,7 @@ document.addEventListener("keydown", (event) => {
     offsetY.nextElementSibling.value = offsetY.value;
   }
 
-  if (event.key === "d") {
+  if (event.key === "x") {
     for (let i = 0; i < positionXRadioNodeList.length; i++) {
       if (positionXRadioNodeList[i].checked) {
         // console.log(positionXRadioNodeList[i]);
@@ -425,7 +425,7 @@ document.addEventListener("keydown", (event) => {
       }
     }
   }
-  if (event.key === "e") {
+  if (event.key === "z") {
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
       if (positionYRadioNodeList[i].checked) {
         positionYRadioNodeList[i].checked = false;
