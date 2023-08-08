@@ -1,4 +1,5 @@
-const fileInput = document.getElementById("fileInput");
+const fileButton = document.getElementById("file-button");
+const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
 const fullScale = document.getElementById("full-scale");
@@ -15,12 +16,14 @@ const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 
-console.log(positionXRadioNodeList);
-
 let image;
 let undoStates = [];
 let redoStates = [];
 let currentStates;
+
+fileButton.addEventListener("click", function () {
+  fileInput.click();
+});
 
 const openFile = (event) => {
   console.log(event.target.files);
@@ -436,7 +439,7 @@ document.addEventListener("keydown", (event) => {
       }
     }
   }
-  if (event.key === "Enter") {
+  if (event.key === "p") {
     debouncedDownload();
   }
   if (event.key === "v") {

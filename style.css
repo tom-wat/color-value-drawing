@@ -17,14 +17,22 @@ textarea {
   font-family: inherit;
   font-size: calc(100% - 2px);
   outline-color: darkblue;
+  background-color: #fff;
+  border: 1px solid #333;
+  border-radius: 4px;
 }
 button{
-  padding: 2px 4px;
+  padding: 4px 8px;
 }
-
 output{
   margin-left: -0.3rem;
   margin-right: 0.5rem;
+}
+.file-button{
+  width: fit-content;
+}
+#file-input {
+  display: none;
 }
 .flex-row {
   display: flex;
@@ -85,5 +93,8 @@ output{
   body {
     background-color: #333;
     color: #fff;
+  }
+  button{
+    border: none;
   }
 }
