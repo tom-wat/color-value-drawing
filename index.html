@@ -52,7 +52,7 @@
 
         <div class="flex-row">
           <form id="data-drawing-position-y">
-            drawing-position-y(z):
+            drawing-position-y(d):
             <input
               type="radio"
               id="drawing-position-y-top"
@@ -135,12 +135,13 @@
               min="0"
               max="100"
               value="100"
+              step="50"
               oninput="updateOutput(colorInput, this.value)"
             />
             <output name="font-color-output" for="font-color-input">100</output>
           </div>
           <div class="alpha-input flex-row">
-            <label for="font-color-alpha-input">alpha(i,o):</label
+            <label for="font-color-alpha-input">alpha(n,b):</label
             ><input
               type="range"
               id="font-color-alpha-input"

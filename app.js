@@ -16,9 +16,11 @@ const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 
+const undoStatesLimitNumber = 50;
 let image;
 let undoStates = [];
 let redoStates = [];
+let initialState;
 let currentStates;
 
 const openFile = (event) => {
@@ -34,7 +36,6 @@ const openFile = (event) => {
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
-      console.log(fullScale.checked);
       if (fullScale.checked) {
         actualDrawImage();
       } else {
@@ -44,6 +45,13 @@ const openFile = (event) => {
       changeColor(ctx, colorInput, alphaInput);
       undoStates = [];
       getCurrentImageState();
+      initialState = undoStates[0];
+
+      // console.log(undoStates.length);
+      // console.log(undoStates);
+      // console.log(initialState);
+      // console.log(undoStates[0]);
+      // console.log(initialState === undoStates[0]);
     };
   };
 
@@ -110,7 +118,7 @@ function rgbToHsl(r, g, b) {
   s = Math.round(s * 100);
   l = Math.round(l * 100);
 
-  console.log(h, s, l);
+  // console.log(h, s, l);
   return { h, s, l };
 }
 
@@ -151,7 +159,7 @@ function rgbToLab(R, G, B) {
   const a = Math.round(500 * (fx - fy));
   const b = Math.round(200 * (fy - fz));
 
-  console.log(L, a, b);
+  // console.log(L, a, b);
   return { L, a, b };
 }
 
@@ -169,16 +177,6 @@ canvas.addEventListener("click", function (e) {
   colorInfoElement.textContent = `L:${L},h:${h},s:${s},l:${l}`;
 });
 
-function clearCanvas() {
-  if (!undoStates.length) return;
-  const intialState = undoStates[undoStates.length - 1];
-  undoStates = [];
-  undoStates.unshift(intialState);
-  redoStates = [];
-  ctx.putImageData(intialState, 0, 0);
-  console.log(undoStates);
-  console.log(redoStates);
-}
 function download() {
   // Canvasのイメージデータを取得する
   const imageData = canvas.toDataURL("image/png");
@@ -237,7 +235,7 @@ function drawMultilineText(
   offsetY
 ) {
   const lines = text.split(",");
-  console.log(textPositionX, textPositionY);
+  // console.log(textPositionX, textPositionY);
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
@@ -307,6 +305,9 @@ canvas.addEventListener("click", function (event) {
   // update current state
   redoStates = [];
   getCurrentImageState();
+  if (undoStates.length > undoStatesLimitNumber) {
+    undoStates.length = undoStatesLimitNumber;
+  }
   console.log(undoStates);
   // ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
   // ctx.fillRect(x - 2, y - 2, 5, 5);
@@ -318,8 +319,8 @@ const changeColor = (context, colorInput, alphaInput) => {
   const saturation = 0; // 彩度 (0-100)
   const lightness = colorValue; // 明度 (0-100)
   const alphaValue = alphaInput.value;
-  console.log(colorInput.value);
-  console.log(alphaInput.value);
+  // console.log(colorInput.value);
+  // console.log(alphaInput.value);
   context.fillStyle =
     // "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)";
     `hsl( ${hue}, ${saturation}%, ${lightness}%, ${alphaValue}%)`;
@@ -344,20 +345,30 @@ function undo() {
   redoStates.unshift(firstUndoStates);
   // redraw canvas
   ctx.putImageData(undoStates[0], 0, 0);
-  console.log(undoStates);
-  console.log(redoStates);
+  console.log(`undoStates:${undoStates.length}`);
+  console.log(`redoStates:${redoStates.length}`);
 }
 
 // function to redo
 function redo() {
   // check if there's a next state in the array
-  if (redoStates.length <= 0) return;
+  if (redoStates.length === 0) return;
   let firstRedoStates = redoStates.shift();
   undoStates.unshift(firstRedoStates);
   // redraw canvas
   ctx.putImageData(undoStates[0], 0, 0);
-  console.log(undoStates);
-  console.log(redoStates);
+  console.log(`undoStates:${undoStates.length}`);
+  console.log(`redoStates:${redoStates.length}`);
+}
+
+function clearCanvas() {
+  if (!initialState) return;
+  if (initialState === undoStates[0]) return;
+  undoStates.unshift(initialState);
+  redoStates = [];
+  ctx.putImageData(initialState, 0, 0);
+  console.log(`undoStates:${undoStates.length}`);
+  console.log(`redoStates:${redoStates.length}`);
 }
 
 // keyboard shortcuts
@@ -365,27 +376,26 @@ function redo() {
 // Add event listeners to track the state of each key
 document.addEventListener("keydown", (event) => {
   if (event.key === "r") {
-    if (keyMeta) {
-      return;
-    }
+    if (keyMeta) return;
+
     fileInput.click();
   }
   if (event.key === "w") {
-    colorInput.value = (parseInt(colorInput.value) + 10).toString();
+    colorInput.value = (parseInt(colorInput.value) + 50).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
   if (event.key === "q") {
-    colorInput.value = (parseInt(colorInput.value) - 10).toString();
+    colorInput.value = (parseInt(colorInput.value) - 50).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
-  if (event.key === "o") {
+  if (event.key === "n") {
     alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
     alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
   }
-  if (event.key === "i") {
+  if (event.key === "b") {
     alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
     alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
@@ -434,10 +444,7 @@ document.addEventListener("keydown", (event) => {
       }
     }
   }
-  if (event.key === "z") {
-    if (keyMeta) {
-      return;
-    }
+  if (event.key === "d") {
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
       if (positionYRadioNodeList[i].checked) {
         positionYRadioNodeList[i].checked = false;
