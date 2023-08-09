@@ -393,11 +393,15 @@ document.addEventListener("keydown", (event) => {
     colorInput.value = (parseInt(colorInput.value) + 50).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
+    tooltip2.textContent = `lightness: ${colorInput.value}`;
+    tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
   }
   if (event.key === "q") {
     colorInput.value = (parseInt(colorInput.value) - 50).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
+    tooltip2.textContent = `lightness: ${colorInput.value}`;
+    tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
   }
   if (event.key === "n") {
     alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
@@ -413,11 +417,15 @@ document.addEventListener("keydown", (event) => {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
+    tooltip1.textContent = `font-size: ${fontInput.value}`;
+    tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "a") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
+    tooltip1.textContent = `font-size: ${fontInput.value}`;
+    tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
@@ -435,7 +443,6 @@ document.addEventListener("keydown", (event) => {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     offsetY.nextElementSibling.value = offsetY.value;
   }
-
   if (event.key === "x") {
     for (let i = 0; i < positionXRadioNodeList.length; i++) {
       if (positionXRadioNodeList[i].checked) {
@@ -452,6 +459,14 @@ document.addEventListener("keydown", (event) => {
         }
       }
     }
+    const previousTextWidth = tooltip3.textContent.length * 7;
+    tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
+    tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
+    const currentTextWidth = tooltip3.textContent.length * 7;
+    const textWidthDifference = previousTextWidth - currentTextWidth;
+    const tooltip4Style = window.getComputedStyle(tooltip4);
+    const tooltip4LeftValue = parseInt(tooltip4Style.left);
+    tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
   }
   if (event.key === "d") {
     // if (keyMeta) return;
@@ -468,6 +483,8 @@ document.addEventListener("keydown", (event) => {
         }
       }
     }
+    tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
+    tooltip4.style.width = `${tooltip4.textContent.length * 7}px`;
   }
   if (event.key === "p") {
     debouncedDownload();
@@ -590,6 +607,7 @@ document.addEventListener("keyup", (event) => {
 
 // マウス移動時に実行する関数
 function showTooltip(event) {
+  // console.log(event);
   // ページのスクロール量を取得
   const scrollTop =
     document.documentElement.scrollTop || document.body.scrollTop;
@@ -612,7 +630,7 @@ function showTooltip(event) {
   tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
   tooltip4.style.width = `${tooltip4.textContent.length * 7}px`;
 
-  //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用する）
+  //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）
   const tooltip1Width = tooltip1.offsetWidth;
   const tooltip1Height = tooltip1.offsetHeight;
   const tooltip3Width = tooltip3.offsetWidth;
