@@ -682,3 +682,15 @@ function showTooltip(event) {
 
 // マウス移動時に実行する関数を登録
 document.addEventListener("mousemove", showTooltip);
+
+// スマートフォン、タブレットの場合ツールチップを非表示
+const isMobile = navigator.userAgent.match(
+  /(iPhone|iPod|iPad|Android|BlackBerry)/
+);
+if (!!isMobile) {
+  document.removeEventListener("mousemove", showTooltip);
+  tooltip1.style.display = "none";
+  tooltip2.style.display = "none";
+  tooltip3.style.display = "none";
+  tooltip4.style.display = "none";
+}
