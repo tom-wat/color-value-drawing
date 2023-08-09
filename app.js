@@ -453,8 +453,8 @@ document.addEventListener("keydown", (event) => {
       }
     }
   }
-  if (event.key === "z") {
-    if (keyMeta) return;
+  if (event.key === "d") {
+    // if (keyMeta) return;
 
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
       if (positionYRadioNodeList[i].checked) {
