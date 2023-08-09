@@ -11,6 +11,9 @@
     <div id="tooltip2" class="tooltip"></div>
     <div id="tooltip3" class="tooltip"></div>
     <div id="tooltip4" class="tooltip"></div>
+    <div id="tooltip5" class="tooltip"></div>
+    <div id="tooltip6" class="tooltip"></div>
+    <div id="tooltip7" class="tooltip"></div>
     <div class="container">
       <section class="top">
         <button
@@ -26,9 +29,9 @@
           <button id="download-btn">Download(p)</button>
           <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
           <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
-          <button onclick="clearCanvas()">Clear(c)</button>
+          <button onclick="clearCanvas()">Clear(e)</button>
           <div class="full-scale flex-row">
-            <label for="full-scale">full-scale(f): </label>
+            <label for="full-scale">full-scale(t): </label>
             <input type="checkbox" name="full-scale" id="full-scale" checked />
           </div>
         </div>
@@ -56,7 +59,7 @@
 
         <div class="flex-row">
           <form id="data-drawing-position-y">
-            drawing-position-y(d):
+            drawing-position-y(z):
             <input
               type="radio"
               id="drawing-position-y-top"
@@ -76,7 +79,7 @@
         </div>
 
         <div class="flex-row">
-          <label for="offset-x">offset-x(g,h): </label
+          <label for="offset-x">offset-x(c,v): </label
           ><input
             type="range"
             id="offset-x"
@@ -91,7 +94,7 @@
             oninput="this.previousElementSibling.value = this.value"
             >0</output
           >
-          <label for="offset-y">offset-y(t,y): </label
+          <label for="offset-y">offset-y(d,f): </label
           ><input
             type="range"
             id="offset-y"
@@ -127,16 +130,15 @@
         </div>
 
         <div class="flex-row">
-          font-color:
           <div class="color-input flex-row">
             <label for="font-color-input">lightness(q,w):</label
             ><input
               type="range"
               id="font-color-input"
-              min="0"
+              min="10"
               max="100"
               value="100"
-              step="50"
+              step="90"
               oninput="updateOutput(colorInput, this.value)"
             />
             <output name="font-color-output" for="font-color-input">100</output>
@@ -146,7 +148,7 @@
             ><input
               type="range"
               id="font-color-alpha-input"
-              min="0"
+              min="10"
               max="100"
               value="100"
               oninput="updateOutput(alphaInput, this.value)"
