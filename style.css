@@ -28,6 +28,19 @@ output{
   margin-left: -0.3rem;
   margin-right: 0.5rem;
 }
+.tooltip {
+  position: absolute;
+  display: none;
+  font-size: 12px;
+  padding: 4px;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 1;
+}
 .file-button{
   width: fit-content;
 }

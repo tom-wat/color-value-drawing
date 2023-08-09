@@ -13,6 +13,15 @@ const offsetX = document.getElementById("offset-x");
 const offsetY = document.getElementById("offset-y");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
+const tooltip1 = document.getElementById("tooltip1");
+const tooltip2 = document.getElementById("tooltip2");
+const tooltip3 = document.getElementById("tooltip3");
+const tooltip4 = document.getElementById("tooltip4");
+const tooltipPositionAdjustmentValueX = 15;
+const tooltipPositionAdjustmentValueY = 15;
+const tooltipInlineMargin = 10;
+const tooltipBlockMargin = 10;
+
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 
@@ -444,7 +453,9 @@ document.addEventListener("keydown", (event) => {
       }
     }
   }
-  if (event.key === "d") {
+  if (event.key === "z") {
+    if (keyMeta) return;
+
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
       if (positionYRadioNodeList[i].checked) {
         positionYRadioNodeList[i].checked = false;
@@ -576,3 +587,98 @@ document.addEventListener("keyup", (event) => {
   //   keyD = false;
   // }
 });
+
+// マウス移動時に実行する関数
+function showTooltip(event) {
+  // ページのスクロール量を取得
+  const scrollTop =
+    document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollLeft =
+    document.documentElement.scrollLeft || document.body.scrollLeft;
+
+  // マウスポインタの位置を取得
+  const x = event.clientX + scrollLeft;
+  const y = event.clientY + scrollTop;
+
+  // ツールチップに表示する文字列を設定
+  tooltip1.textContent = `font-size: ${fontInput.value}`;
+  tooltip2.textContent = `lightness: ${colorInput.value}`;
+  tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
+  tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
+
+  //ツールチップの幅をツールチップの文字数から指定
+  tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+  tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
+  tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
+  tooltip4.style.width = `${tooltip4.textContent.length * 7}px`;
+
+  //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用する）
+  const tooltip1Width = tooltip1.offsetWidth;
+  const tooltip1Height = tooltip1.offsetHeight;
+  const tooltip3Width = tooltip3.offsetWidth;
+  // const tooltip3Height = tooltip3.offsetHeight;
+
+  // ツールチップを表示する位置を設定
+  tooltip1.style.left = x + tooltipPositionAdjustmentValueX + "px";
+  tooltip1.style.top = y + tooltipPositionAdjustmentValueY + "px";
+
+  tooltip2.style.left =
+    x +
+    tooltip1Width +
+    tooltipPositionAdjustmentValueX +
+    tooltipInlineMargin +
+    "px";
+  tooltip2.style.top = y + tooltipPositionAdjustmentValueY + "px";
+
+  tooltip3.style.left = x + tooltipPositionAdjustmentValueX + "px";
+  tooltip3.style.top =
+    y +
+    tooltip1Height +
+    tooltipPositionAdjustmentValueY +
+    tooltipBlockMargin +
+    "px";
+
+  tooltip4.style.left =
+    x +
+    tooltip3Width +
+    tooltipPositionAdjustmentValueX +
+    tooltipInlineMargin +
+    "px";
+  tooltip4.style.top =
+    y +
+    tooltip1Height +
+    tooltipPositionAdjustmentValueY +
+    tooltipBlockMargin +
+    "px";
+
+  // // ウィンドウの幅とツールチップの幅を取得
+  // const windowWidth = window.innerWidth;
+  // const tooltipWidth = tooltip.offsetWidth;
+
+  // // ツールチップがウィンドウの右端を超える場合は left 座標を調整
+  // if (x + tooltipWidth + tooltipPositionAdjustmentValueX > windowWidth) {
+  //   tooltip.style.left =
+  //     x - tooltipWidth - tooltipPositionAdjustmentValueX + "px";
+  // }
+
+  // ツールチップの高さを取得
+  // const tooltipHeight = tooltip.offsetHeight;
+
+  // // ツールチップがウィンドウの下端を超える場合は top 座標を調整
+  // if (
+  //   y + tooltipHeight + tooltipPositionAdjustmentValueY >
+  //   document.body.scrollHeight
+  // ) {
+  //   tooltip.style.top =
+  //     y - tooltipHeight - tooltipPositionAdjustmentValueY + "px";
+  // }
+
+  // ツールチップを表示する
+  tooltip1.style.display = "block";
+  tooltip2.style.display = "block";
+  tooltip3.style.display = "block";
+  tooltip4.style.display = "block";
+}
+
+// マウス移動時に実行する関数を登録
+document.addEventListener("mousemove", showTooltip);
