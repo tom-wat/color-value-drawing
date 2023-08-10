@@ -5,6 +5,9 @@
   padding: 0;
   /* box-sizing: border-box; */
 }
+html{
+  overflow: scroll;
+}
 body {
   /* Light mode styles */
   background-color: #eee;
