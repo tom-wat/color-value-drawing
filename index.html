@@ -14,6 +14,7 @@
     <div id="tooltip5" class="tooltip"></div>
     <div id="tooltip6" class="tooltip"></div>
     <div id="tooltip7" class="tooltip"></div>
+    <div id="tooltip8" class="tooltip"></div>
     <div class="container">
       <section class="top">
         <button
@@ -31,14 +32,14 @@
           <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
           <button onclick="clearCanvas()">Clear(e)</button>
           <div class="full-scale flex-row">
-            <label for="full-scale">full-scale(t): </label>
+            <label for="full-scale">full-scale(v): </label>
             <input type="checkbox" name="full-scale" id="full-scale" checked />
           </div>
         </div>
 
         <div class="flex-row">
           <form id="data-drawing-position-x">
-            drawing-position-x(x):
+            drawing-position-x(d):
             <input
               type="radio"
               id="drawing-position-x-left"
@@ -59,7 +60,7 @@
 
         <div class="flex-row">
           <form id="data-drawing-position-y">
-            drawing-position-y(z):
+            drawing-position-y(f):
             <input
               type="radio"
               id="drawing-position-y-top"
@@ -79,12 +80,12 @@
         </div>
 
         <div class="flex-row">
-          <label for="offset-x">offset-x(c,v): </label
+          <label for="offset-x">offset-x(g,h): </label
           ><input
             type="range"
             id="offset-x"
             min="0"
-            max="2"
+            max="4"
             value="0"
             oninput="this.nextElementSibling.value = this.value"
           />
@@ -94,7 +95,7 @@
             oninput="this.previousElementSibling.value = this.value"
             >0</output
           >
-          <label for="offset-y">offset-y(d,f): </label
+          <label for="offset-y">offset-y(t,y): </label
           ><input
             type="range"
             id="offset-y"
@@ -144,7 +145,7 @@
             <output name="font-color-output" for="font-color-input">100</output>
           </div>
           <div class="alpha-input flex-row">
-            <label for="font-color-alpha-input">alpha(n,b):</label
+            <label for="font-color-alpha-input">alpha(b,n):</label
             ><input
               type="range"
               id="font-color-alpha-input"
@@ -157,6 +158,23 @@
               >100</output
             >
           </div>
+        </div>
+        <div class="flex-row">
+          <label for="column-number">column-number(x,c):</label
+          ><input
+            type="range"
+            id="column-number"
+            min="1"
+            max="4"
+            value="1"
+            oninput="this.nextElementSibling.value = this.value"
+          />
+          <output
+            name="column-number"
+            for="column-number"
+            oninput="this.previousElementSibling.value = this.value"
+            >1</output
+          >
         </div>
         <div class="flex-row">
           <p>point-color:</p>

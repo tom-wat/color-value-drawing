@@ -6,6 +6,7 @@ const fullScale = document.getElementById("full-scale");
 const fontInput = document.getElementById("font-size-input");
 const colorInput = document.getElementById("font-color-input");
 const alphaInput = document.getElementById("font-color-alpha-input");
+const columnNumber = document.getElementById("column-number");
 const downloadBtn = document.getElementById("download-btn");
 const drawingPositionX = document.getElementById("data-drawing-position-x");
 const drawingPositionY = document.getElementById("data-drawing-position-y");
@@ -20,6 +21,7 @@ const tooltip4 = document.getElementById("tooltip4");
 const tooltip5 = document.getElementById("tooltip5");
 const tooltip6 = document.getElementById("tooltip6");
 const tooltip7 = document.getElementById("tooltip7");
+const tooltip8 = document.getElementById("tooltip8");
 const tooltipPositionAdjustmentValueX = 15;
 const tooltipPositionAdjustmentValueY = 15;
 const tooltipInlineMargin = 10;
@@ -264,15 +266,20 @@ function drawMultilineText(
   textPositionY,
   fontSize,
   offsetX,
-  offsetY
+  offsetY,
+  columnNumber
 ) {
   const lines = text.split(",");
-  // console.log(textPositionX, textPositionY);
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
+  let drawingPositionX = 0;
+  let drawingPositionY = 0;
+  let xOffset = 0;
+  let yOffset = 0;
+
+  for (let i = 1; i < lines.length + 1; i++) {
+    const line = lines[i - 1];
     const lineWidth = context.measureText(line).width;
-    const offsetXValue = [0, 1, 2];
+    const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
     const padding = 4 + (fontSize * 2) / 15;
     const margin = 4 + (fontSize * 2) / 15;
@@ -281,37 +288,39 @@ function drawMultilineText(
     const textSpaceheight = lineHeight + padding;
     const xOffsetAdjustment = fontSize / 4 + fontSize / 2;
     const yOffsetAdjustment = 0;
-
-    let xOffset = 0;
-    let yOffset = 0;
+    const offSetXWidth = fontSize * columnNumber;
 
     if (textPositionX === "left") {
       xOffset =
         -xOffsetAdjustment -
         textSpaceWidth -
-        (textSpaceWidth + margin) * offsetXValue[offsetX] -
+        drawingPositionX * 2 -
+        offSetXWidth * offsetXValue[offsetX] -
         magicNumber;
     } else {
-      xOffset =
-        xOffsetAdjustment + (textSpaceWidth + margin) * offsetXValue[offsetX];
+      xOffset = xOffsetAdjustment + offSetXWidth * offsetXValue[offsetX];
     }
-
     if (textPositionY === "top") {
       yOffset =
-        -(textSpaceheight + margin) * lines.length -
-        yOffsetAdjustment -
-        (textSpaceheight + margin) * lines.length * offsetYValue[offsetY];
+        -yOffsetAdjustment -
+        (textSpaceheight + margin) * Math.floor(lines.length / columnNumber) -
+        (textSpaceheight + margin) *
+          Math.floor(lines.length / columnNumber) *
+          offsetYValue[offsetY];
     } else {
       yOffset =
         yOffsetAdjustment +
-        (textSpaceheight + margin) * lines.length * offsetYValue[offsetY];
+        (textSpaceheight + margin) *
+          Math.floor(lines.length / columnNumber) *
+          offsetYValue[offsetY];
     }
+
     context.textBaseline = "top";
     context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
     drawRoundedRectangle(
       context,
-      pointX + xOffset,
-      pointY + yOffset,
+      pointX + drawingPositionX + xOffset,
+      pointY + drawingPositionY + yOffset,
       textSpaceWidth,
       textSpaceheight,
       padding
@@ -324,10 +333,16 @@ function drawMultilineText(
     }
     context.fillText(
       line,
-      pointX + xOffset + padding,
-      pointY + yOffset + padding
+      pointX + drawingPositionX + xOffset + padding,
+      pointY + drawingPositionY + yOffset + padding
     );
-    pointY += textSpaceheight + margin;
+
+    if (i % columnNumber === 0) {
+      drawingPositionY += textSpaceheight + margin;
+      drawingPositionX = 0;
+    } else {
+      drawingPositionX += textSpaceWidth + margin;
+    }
   }
 }
 
@@ -343,6 +358,7 @@ canvas.addEventListener("click", function (event) {
   const lineHeight = fontSize + fontSize / 8;
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
+  const columnNumberValue = columnNumber.value;
 
   // クリックした場所のピクセルカラー情報を取得する
   // const color = ctx.getImageData(x, y, 1, 1).data;
@@ -358,7 +374,8 @@ canvas.addEventListener("click", function (event) {
     textPositionY,
     fontSize,
     offsetXValue,
-    offsetYValue
+    offsetYValue,
+    columnNumberValue
   );
 
   ctx.lineWidth = (2 * fontSize) / 10;
@@ -489,31 +506,31 @@ document.addEventListener("keydown", (event) => {
     tooltip1.textContent = `font-size: ${fontInput.value}`;
     tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
-  if (event.key === "v") {
+  if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
     tooltip5.textContent = `offset-x: ${offsetX.value}`;
     tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
-  if (event.key === "c") {
+  if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
     tooltip5.textContent = `offset-x: ${offsetX.value}`;
     tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
-  if (event.key === "f") {
+  if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
     offsetY.nextElementSibling.value = offsetY.value;
     tooltip6.textContent = `offset-y: ${offsetY.value}`;
     tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
-  if (event.key === "d") {
+  if (event.key === "t") {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     offsetY.nextElementSibling.value = offsetY.value;
     tooltip6.textContent = `offset-y: ${offsetY.value}`;
     tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
-  if (event.key === "x") {
+  if (event.key === "d") {
     for (let i = 0; i < positionXRadioNodeList.length; i++) {
       if (positionXRadioNodeList[i].checked) {
         // console.log(positionXRadioNodeList[i]);
@@ -538,7 +555,7 @@ document.addEventListener("keydown", (event) => {
     const tooltip4LeftValue = parseInt(tooltip4Style.left);
     tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
   }
-  if (event.key === "z") {
+  if (event.key === "f") {
     if (keyMeta) return;
 
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
@@ -559,11 +576,23 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "p") {
     debouncedDownload();
   }
-  if (event.key === "t") {
+  if (event.key === "v") {
     fullScale.checked = !fullScale.checked;
   }
   if (event.key === "e") {
     clearCanvas();
+  }
+  if (event.key === "c") {
+    columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
+    columnNumber.nextElementSibling.value = columnNumber.value;
+    tooltip8.textContent = `column-number: ${columnNumber.value}`;
+    tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
+  }
+  if (event.key === "x") {
+    columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
+    columnNumber.nextElementSibling.value = columnNumber.value;
+    tooltip8.textContent = `column-number: ${columnNumber.value}`;
+    tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
 });
 
@@ -696,6 +725,7 @@ function showTooltip(event) {
   tooltip5.textContent = `offset-x: ${offsetX.value}`;
   tooltip6.textContent = `offset-y: ${offsetY.value}`;
   tooltip7.textContent = `alpha: ${alphaInput.value}`;
+  tooltip8.textContent = `column-number: ${columnNumber.value}`;
 
   //ツールチップの幅をツールチップの文字数から指定
   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
@@ -705,6 +735,7 @@ function showTooltip(event) {
   tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   tooltip7.style.width = `${tooltip7.textContent.length * 7}px`;
+  tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
 
   //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）
   const tooltip1Width = tooltip1.offsetWidth;
@@ -712,6 +743,7 @@ function showTooltip(event) {
   const tooltip3Width = tooltip3.offsetWidth;
   const tooltip3Height = tooltip3.offsetHeight;
   const tooltip5Width = tooltip5.offsetWidth;
+  const tooltip5Height = tooltip5.offsetHeight;
   const tooltip6Width = tooltip6.offsetWidth;
 
   // ツールチップを表示する位置を設定
@@ -784,6 +816,16 @@ function showTooltip(event) {
     tooltipPositionAdjustmentValueY +
     tooltipBlockMargin * 2 +
     "px";
+
+  tooltip8.style.left = x + tooltipPositionAdjustmentValueX + "px";
+  tooltip8.style.top =
+    y +
+    tooltip1Height +
+    tooltip3Height +
+    tooltip5Height +
+    tooltipPositionAdjustmentValueY +
+    tooltipBlockMargin * 3 +
+    "px";
   // // ウィンドウの幅とツールチップの幅を取得
   // const windowWidth = window.innerWidth;
   // const tooltipWidth = tooltip.offsetWidth;
@@ -814,6 +856,7 @@ function showTooltip(event) {
   tooltip5.style.display = "block";
   tooltip6.style.display = "block";
   tooltip7.style.display = "block";
+  tooltip8.style.display = "block";
 }
 
 // マウス移動時に実行する関数を登録
@@ -832,4 +875,5 @@ if (!!isMobile) {
   tooltip5.style.display = "none";
   tooltip6.style.display = "none";
   tooltip7.style.display = "none";
+  tooltip8.style.display = "none";
 }
