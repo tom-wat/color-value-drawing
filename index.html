@@ -16,7 +16,7 @@
     <div id="tooltip7" class="tooltip"></div>
     <div id="tooltip8" class="tooltip"></div>
     <div class="container">
-      <section class="top">
+      <nav id="navigation" class="navigation">
         <button
           id="file-button"
           class="file-button"
@@ -26,15 +26,13 @@
         </button>
         <input type="file" id="file-input" />
 
-        <div class="flex-row">
-          <button id="download-btn">Download(p)</button>
-          <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
-          <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
-          <button onclick="clearCanvas()">Clear(e)</button>
-          <div class="full-scale flex-row">
-            <label for="full-scale">full-scale(v): </label>
-            <input type="checkbox" name="full-scale" id="full-scale" checked />
-          </div>
+        <button id="download-btn">Download(p)</button>
+        <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
+        <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
+        <button onclick="clearCanvas()">Clear(e)</button>
+        <div class="full-scale flex-row">
+          <label for="full-scale">full-scale(v): </label>
+          <input type="checkbox" name="full-scale" id="full-scale" checked />
         </div>
 
         <div class="flex-row">
@@ -95,6 +93,9 @@
             oninput="this.previousElementSibling.value = this.value"
             >0</output
           >
+        </div>
+
+        <div class="flex-row">
           <label for="offset-y">offset-y(t,y): </label
           ><input
             type="range"
@@ -180,7 +181,8 @@
           <p>point-color:</p>
           <div id="colorInfo">L:100,h:0,s:0,l:100</div>
         </div>
-      </section>
+        <button id="close-button" onclick="navClose()">close(esc)</button>
+      </nav>
       <section class="image">
         <canvas id="canvas"></canvas>
       </section>

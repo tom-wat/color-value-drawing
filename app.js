@@ -8,6 +8,8 @@ const colorInput = document.getElementById("font-color-input");
 const alphaInput = document.getElementById("font-color-alpha-input");
 const columnNumber = document.getElementById("column-number");
 const downloadBtn = document.getElementById("download-btn");
+const navigation = document.getElementById("navigation");
+const closeButton = document.getElementById("close-button");
 const drawingPositionX = document.getElementById("data-drawing-position-x");
 const drawingPositionY = document.getElementById("data-drawing-position-y");
 const offsetX = document.getElementById("offset-x");
@@ -594,6 +596,9 @@ document.addEventListener("keydown", (event) => {
     tooltip8.textContent = `column-number: ${columnNumber.value}`;
     tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
+  if (event.key === "Escape") {
+    navClose();
+  }
 });
 
 // Set up an object to track the current state of each key
@@ -876,4 +881,9 @@ if (!!isMobile) {
   tooltip6.style.display = "none";
   tooltip7.style.display = "none";
   tooltip8.style.display = "none";
+}
+
+function navClose() {
+  console.log(navigation);
+  navigation.classList.toggle("navigation-move");
 }
