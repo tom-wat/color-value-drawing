@@ -9,6 +9,7 @@ body {
   /* Light mode styles */
   background-color: #eee;
   color: #333;
+  font-family: sans-serif;
 }
 button,
 input,
