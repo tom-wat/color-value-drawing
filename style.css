@@ -62,7 +62,7 @@ output{
   position: fixed;
   padding: 2rem;
   border-radius: 1rem;
-  transition: 0.3s;
+  /* transition: 0.2s; */
   background-color: #333;
   border: 1px solid#eee;
   top:1rem;
@@ -72,9 +72,34 @@ output{
   display: grid;
   gap: 1rem;
 }
-.navigation-move{
-  transform: translate(-320px, 0px);
+.navigation.close{
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border:none;
 }
+.navigation.close .nav-content{
+  display: none;  
+}
+.open-button{
+  width: 64px;
+  height: 64px;
+  border: 1px solid #eee;
+  font-size: 16px;
+  border-radius: 1rem;
+  /* padding: 8px; */
+  outline-color: darkblue;
+  background-color: #333;
+  color: #eee;
+  display: none;
+  cursor: pointer;
+}
+.navigation.close .open-button{
+  display: block;  
+}
+/* .navigation-move{
+  transform: translate(-320px, 0px);
+} */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -125,6 +150,16 @@ output{
   }
   #colorInfo {
     margin: 0;
+  }
+  .navigation{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+  }
+  .open-button{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
   }
 }
 @media (prefers-color-scheme: dark) {

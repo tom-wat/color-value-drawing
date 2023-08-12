@@ -187,8 +187,11 @@
             <p>point-color:</p>
             <div id="colorInfo">L:100,h:0,s:0,l:100</div>
           </div>
-          <button id="close-button" onclick="navClose()">close(esc)</button>
+          <button id="close-button" onclick="navToggle()">close(esc)</button>
         </div>
+        <button id="open-button" class="open-button" onclick="navToggle()">
+          +
+        </button>
       </nav>
       <section class="image-container">
         <canvas id="canvas"></canvas>

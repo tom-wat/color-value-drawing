@@ -622,7 +622,7 @@ document.addEventListener("keydown", (event) => {
     tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
   if (event.key === "Escape") {
-    navClose();
+    navToggle();
   }
 });
 
@@ -908,7 +908,7 @@ if (!!isMobile) {
   tooltip8.style.display = "none";
 }
 
-function navClose() {
+function navToggle() {
   console.log(navigation);
-  navigation.classList.toggle("navigation-move");
+  navigation.classList.toggle("close");
 }
