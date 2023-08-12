@@ -168,14 +168,14 @@
             id="column-number"
             min="1"
             max="4"
-            value="1"
+            value="2"
             oninput="this.nextElementSibling.value = this.value"
           />
           <output
             name="column-number"
             for="column-number"
             oninput="this.previousElementSibling.value = this.value"
-            >1</output
+            >2</output
           >
         </div>
         <div class="flex-row">
@@ -184,7 +184,7 @@
         </div>
         <button id="close-button" onclick="navClose()">close(esc)</button>
       </nav>
-      <section class="image">
+      <section class="image-container">
         <canvas id="canvas"></canvas>
       </section>
     </div>

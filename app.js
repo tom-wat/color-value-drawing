@@ -288,9 +288,14 @@ function drawMultilineText(
     const magicNumber = 2;
     const textSpaceWidth = lineWidth + padding * 2;
     const textSpaceheight = lineHeight + padding;
-    const xOffsetAdjustment = fontSize / 4 + fontSize / 2;
-    const yOffsetAdjustment = 0;
+    const xOffsetAdjustment = fontSize / 3 + fontSize / 2;
+    const yOffsetAdjustment = fontSize / 2;
     const offSetXWidth = fontSize * columnNumber;
+    let colorSet = [
+      [185, 300, 120, 50],
+      [100, 100, 100, 100],
+      [85, 95, 85, 80],
+    ];
 
     if (textPositionX === "left") {
       xOffset =
@@ -318,7 +323,11 @@ function drawMultilineText(
     }
 
     context.textBaseline = "top";
-    context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+    // context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+    context.fillStyle = `hsl( ${colorSet[0][i - 1]}, ${colorSet[1][i - 1]}%, ${
+      colorSet[2][i - 1]
+    }%, ${alphaInput.value}%)`;
+
     drawRoundedRectangle(
       context,
       pointX + drawingPositionX + xOffset,
@@ -328,11 +337,12 @@ function drawMultilineText(
       padding
     );
     // console.log(colorInput.value === "100");
-    if (colorInput.value === "100") {
-      context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
-    } else {
-      context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
-    }
+    // if (colorInput.value === "100") {
+    //   context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
+    // } else {
+    //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
+    // }
+    context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
     context.fillText(
       line,
       pointX + drawingPositionX + xOffset + padding,
@@ -381,13 +391,28 @@ canvas.addEventListener("click", function (event) {
   );
 
   ctx.lineWidth = (2 * fontSize) / 10;
-  ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-  ctx.strokeRect(
-    pointX - fontSize / 2,
-    pointY - fontSize / 2,
-    fontSize - 2,
-    fontSize - 2
-  );
+  ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+  // ctx.strokeRect(
+  //   pointX - fontSize / 2,
+  //   pointY - fontSize / 2,
+  //   fontSize - 2,
+  //   fontSize - 2
+  // );
+  // ctx.fillRect(pointX - 10.5, pointY - 2, 6, 3);
+  // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
+  // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
+  // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
+
+  ctx.fillRect(pointX - 12.5, pointY - 2, 8, 3);
+  ctx.fillRect(pointX + 3.5, pointY - 2, 8, 3);
+  ctx.fillRect(pointX - 2, pointY - 12, 3.5, 8);
+  ctx.fillRect(pointX - 2, pointY + 3, 3.5, 8);
+
+  // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
+  // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
+  // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
+  // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
+
   // update current state
   redoStates = [];
   getCurrentImageState();
@@ -471,28 +496,28 @@ document.addEventListener("keydown", (event) => {
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip2.textContent = `lightness: ${colorInput.value}`;
-    tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
+    tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
   }
   if (event.key === "q") {
     colorInput.value = (parseInt(colorInput.value) - 90).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip2.textContent = `lightness: ${colorInput.value}`;
-    tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
+    tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
   }
   if (event.key === "n") {
     alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
     alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip7.textContent = `alpha: ${alphaInput.value}`;
-    tooltip7.style.width = `${tooltip7.textContent.length * 7}px`;
+    tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
   }
   if (event.key === "b") {
     alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
     alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip7.textContent = `alpha: ${alphaInput.value}`;
-    tooltip7.style.width = `${tooltip7.textContent.length * 7}px`;
+    tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
   }
   if (event.key === "s") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
@@ -573,7 +598,7 @@ document.addEventListener("keydown", (event) => {
       }
     }
     tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
-    tooltip4.style.width = `${tooltip4.textContent.length * 7}px`;
+    tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   }
   if (event.key === "p") {
     debouncedDownload();
@@ -734,12 +759,12 @@ function showTooltip(event) {
 
   //ツールチップの幅をツールチップの文字数から指定
   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
-  tooltip2.style.width = `${tooltip2.textContent.length * 7}px`;
+  tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
   tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
-  tooltip4.style.width = `${tooltip4.textContent.length * 7}px`;
+  tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
-  tooltip7.style.width = `${tooltip7.textContent.length * 7}px`;
+  tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
   tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
 
   //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）

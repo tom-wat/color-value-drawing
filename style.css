@@ -3,7 +3,7 @@
 *::after {
   margin: 0;
   padding: 0;
-  /* box-sizing: border-box; */
+  box-sizing: border-box;
 }
 html{
   overflow: scroll;
@@ -88,6 +88,12 @@ output{
 /* .full-scale label{
   transform: translateY(2px);
 } */
+.image-container{
+  /* padding: 1rem 0; */
+  height: auto;
+
+}
+
 #canvas {
   vertical-align: bottom;
   display: none;
@@ -108,10 +114,7 @@ output{
   top: 50%;
   transform: translateY(-50%);
 }
-.image {
-  /* padding: 1rem 0; */
-  height: auto;
-}
+
 @media (max-width: 800px) {
 
   #fileInput {
