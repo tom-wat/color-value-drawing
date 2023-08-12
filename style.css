@@ -58,7 +58,7 @@ output{
 }
 .navigation{
   width: 30vw;
-  min-width: 360px;
+  min-width: 400px;
   position: fixed;
   padding: 2rem;
   border-radius: 1rem;
@@ -157,7 +157,8 @@ output{
     position: fixed;
     bottom: 1rem;
     left: 1rem;
-    width: calc(100%-4rem);
+    width: calc(100% - 2rem);
+    min-width: none;
     padding: 1rem;
   }
   .open-button{
