@@ -57,20 +57,23 @@ output{
   gap: 0.5rem;
 }
 .navigation{
-  width: 400px;
-  display: grid;
-  gap: 1rem;
+  width: 30vw;
+  min-width: 360px;
   position: fixed;
   padding: 2rem;
-  background-color: #333;
   border-radius: 1rem;
   transition: 0.3s;
+  background-color: #333;
   border: 1px solid#eee;
   top:1rem;
   left:1rem;
 }
+.nav-content{
+  display: grid;
+  gap: 1rem;
+}
 .navigation-move{
-  transform: translate(-400px, 0px);
+  transform: translate(-320px, 0px);
 }
 .container {
   display: grid;

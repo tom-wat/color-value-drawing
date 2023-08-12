@@ -18,171 +18,177 @@
     <div id="tooltip8" class="tooltip"></div>
     <div class="container">
       <nav id="navigation" class="navigation">
-        <button
-          id="file-button"
-          class="file-button"
-          onclick="fileInput.click()"
-        >
-          Read a file(r)
-        </button>
-        <input type="file" id="file-input" />
-
-        <button id="download-btn">Download(p)</button>
-        <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
-        <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
-        <button onclick="clearCanvas()">Clear(e)</button>
-        <div class="full-scale flex-row">
-          <label for="full-scale">full-scale(v): </label>
-          <input type="checkbox" name="full-scale" id="full-scale" checked />
-        </div>
-
-        <div class="flex-row">
-          <form id="data-drawing-position-x">
-            drawing-position-x(d):
-            <input
-              type="radio"
-              id="drawing-position-x-left"
-              name="positionX"
-              value="left"
-            />
-            <label for="drawing-position-x-left">left</label>
-            <input
-              type="radio"
-              id="drawing-position-x-right"
-              name="positionX"
-              value="right"
-              checked
-            />
-            <label for="drawing-position-x-right">right</label>
-          </form>
-        </div>
-
-        <div class="flex-row">
-          <form id="data-drawing-position-y">
-            drawing-position-y(f):
-            <input
-              type="radio"
-              id="drawing-position-y-top"
-              name="positionY"
-              value="top"
-            />
-            <label for="drawing-position-y-top">top</label>
-            <input
-              type="radio"
-              id="drawing-position-y-bottom"
-              name="positionY"
-              value="bottom"
-              checked
-            />
-            <label for="drawing-position-y-bottom">bottom</label>
-          </form>
-        </div>
-
-        <div class="flex-row">
-          <label for="offset-x">offset-x(g,h): </label
-          ><input
-            type="range"
-            id="offset-x"
-            min="0"
-            max="4"
-            value="0"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output
-            name="offset-x-output"
-            for="offset-x"
-            oninput="this.previousElementSibling.value = this.value"
-            >0</output
+        <div class="nav-content">
+          <button
+            id="file-button"
+            class="file-button"
+            onclick="fileInput.click()"
           >
-        </div>
+            Read a file(r)
+          </button>
+          <input type="file" id="file-input" />
 
-        <div class="flex-row">
-          <label for="offset-y">offset-y(t,y): </label
-          ><input
-            type="range"
-            id="offset-y"
-            min="0"
-            max="4"
-            value="0"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output
-            name="offset-y-output"
-            for="offset-y"
-            oninput="this.previousElementSibling.value = this.value"
-            >0</output
-          >
-        </div>
-
-        <div class="flex-row">
-          <label for="font-size-input">font-size(a,s): </label
-          ><input
-            type="range"
-            id="font-size-input"
-            min="10"
-            max="30"
-            value="12"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output
-            name="font-size-output"
-            for="font-size-input"
-            oninput="this.previousElementSibling.value = this.value"
-            >12</output
-          >
-        </div>
-
-        <div class="flex-row">
-          <div class="color-input flex-row">
-            <label for="font-color-input">lightness(q,w):</label
-            ><input
-              type="range"
-              id="font-color-input"
-              min="10"
-              max="100"
-              value="100"
-              step="90"
-              oninput="updateOutput(colorInput, this.value)"
-            />
-            <output name="font-color-output" for="font-color-input">100</output>
+          <button id="download-btn">Download(p)</button>
+          <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
+          <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
+          <button onclick="clearCanvas()">Clear(e)</button>
+          <div class="full-scale flex-row">
+            <label for="full-scale">full-scale(v): </label>
+            <input type="checkbox" name="full-scale" id="full-scale" checked />
           </div>
-          <div class="alpha-input flex-row">
-            <label for="font-color-alpha-input">alpha(b,n):</label
+
+          <div class="flex-row">
+            <form id="data-drawing-position-x">
+              drawing-position-x(d):
+              <input
+                type="radio"
+                id="drawing-position-x-left"
+                name="positionX"
+                value="left"
+              />
+              <label for="drawing-position-x-left">left</label>
+              <input
+                type="radio"
+                id="drawing-position-x-right"
+                name="positionX"
+                value="right"
+                checked
+              />
+              <label for="drawing-position-x-right">right</label>
+            </form>
+          </div>
+
+          <div class="flex-row">
+            <form id="data-drawing-position-y">
+              drawing-position-y(f):
+              <input
+                type="radio"
+                id="drawing-position-y-top"
+                name="positionY"
+                value="top"
+              />
+              <label for="drawing-position-y-top">top</label>
+              <input
+                type="radio"
+                id="drawing-position-y-bottom"
+                name="positionY"
+                value="bottom"
+                checked
+              />
+              <label for="drawing-position-y-bottom">bottom</label>
+            </form>
+          </div>
+
+          <div class="flex-row">
+            <label for="offset-x">offset-x(g,h): </label
             ><input
               type="range"
-              id="font-color-alpha-input"
-              min="10"
-              max="100"
-              value="100"
-              oninput="updateOutput(alphaInput, this.value)"
+              id="offset-x"
+              min="0"
+              max="4"
+              value="0"
+              oninput="this.nextElementSibling.value = this.value"
             />
-            <output name="font-color-alpha-output" for="font-color-alpha-input"
-              >100</output
+            <output
+              name="offset-x-output"
+              for="offset-x"
+              oninput="this.previousElementSibling.value = this.value"
+              >0</output
             >
           </div>
+
+          <div class="flex-row">
+            <label for="offset-y">offset-y(t,y): </label
+            ><input
+              type="range"
+              id="offset-y"
+              min="0"
+              max="4"
+              value="0"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="offset-y-output"
+              for="offset-y"
+              oninput="this.previousElementSibling.value = this.value"
+              >0</output
+            >
+          </div>
+
+          <div class="flex-row">
+            <label for="font-size-input">font-size(a,s): </label
+            ><input
+              type="range"
+              id="font-size-input"
+              min="10"
+              max="30"
+              value="12"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="font-size-output"
+              for="font-size-input"
+              oninput="this.previousElementSibling.value = this.value"
+              >12</output
+            >
+          </div>
+
+          <div class="flex-row">
+            <div class="color-input flex-row">
+              <label for="font-color-input">lightness(q,w):</label
+              ><input
+                type="range"
+                id="font-color-input"
+                min="10"
+                max="100"
+                value="100"
+                step="90"
+                oninput="updateOutput(colorInput, this.value)"
+              />
+              <output name="font-color-output" for="font-color-input"
+                >100</output
+              >
+            </div>
+            <div class="alpha-input flex-row">
+              <label for="font-color-alpha-input">alpha(b,n):</label
+              ><input
+                type="range"
+                id="font-color-alpha-input"
+                min="10"
+                max="100"
+                value="100"
+                oninput="updateOutput(alphaInput, this.value)"
+              />
+              <output
+                name="font-color-alpha-output"
+                for="font-color-alpha-input"
+                >100</output
+              >
+            </div>
+          </div>
+          <div class="flex-row">
+            <label for="column-number">column-number(x,c):</label
+            ><input
+              type="range"
+              id="column-number"
+              min="1"
+              max="4"
+              value="2"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="column-number"
+              for="column-number"
+              oninput="this.previousElementSibling.value = this.value"
+              >2</output
+            >
+          </div>
+          <div class="flex-row">
+            <p>point-color:</p>
+            <div id="colorInfo">L:100,h:0,s:0,l:100</div>
+          </div>
+          <button id="close-button" onclick="navClose()">close(esc)</button>
         </div>
-        <div class="flex-row">
-          <label for="column-number">column-number(x,c):</label
-          ><input
-            type="range"
-            id="column-number"
-            min="1"
-            max="4"
-            value="2"
-            oninput="this.nextElementSibling.value = this.value"
-          />
-          <output
-            name="column-number"
-            for="column-number"
-            oninput="this.previousElementSibling.value = this.value"
-            >2</output
-          >
-        </div>
-        <div class="flex-row">
-          <p>point-color:</p>
-          <div id="colorInfo">L:100,h:0,s:0,l:100</div>
-        </div>
-        <button id="close-button" onclick="navClose()">close(esc)</button>
       </nav>
       <section class="image-container">
         <canvas id="canvas"></canvas>
