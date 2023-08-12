@@ -158,7 +158,7 @@ output{
     bottom: 1rem;
     left: 1rem;
     width: calc(100% - 2rem);
-    min-width: none;
+    min-width: 280px;
     padding: 1rem;
   }
   .open-button{
