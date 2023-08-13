@@ -2,7 +2,7 @@ const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
-const fullScale = document.getElementById("full-scale");
+const scale = document.getElementById("scale");
 const fontInput = document.getElementById("font-size-input");
 const colorInput = document.getElementById("font-color-input");
 const alphaInput = document.getElementById("font-color-alpha-input");
@@ -31,9 +31,11 @@ const clickPointAdjustment = -2;
 // const tooltipInlineMargin = 10;
 // const tooltipBlockMargin = 10;
 
+const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 
+console.log(scaleRadioNodeList.value);
 const undoStatesLimitNumber = 50;
 let image;
 let undoStates = [];
@@ -48,16 +50,30 @@ const openFile = (event) => {
     console.error("No file selected.");
     return;
   }
+
   const reader = new FileReader();
   reader.onload = function () {
     canvas.style.display = "block";
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
-      if (fullScale.checked) {
-        actualDrawImage();
-      } else {
-        adjustedDrawImage();
+      // if (fullScale.checked) {
+      //   dividedDrawImage(1);
+      // } else {
+      //   adjustedDrawImage();
+      // }
+      switch (scaleRadioNodeList.value) {
+        case "full":
+          dividedDrawImage(1);
+          break;
+        case "half":
+          dividedDrawImage(2);
+          break;
+        case "quarter":
+          dividedDrawImage(4);
+          break;
+        default:
+          adjustedDrawImage();
       }
       changeFontSize(ctx, fontInput);
       changeColor(ctx, colorInput, alphaInput);
@@ -79,11 +95,12 @@ const openFile = (event) => {
 
 fileInput.addEventListener("change", openFile);
 
-function actualDrawImage() {
+function dividedDrawImage(divisor) {
   if (!image) return;
-  canvas.width = image.width;
-  canvas.height = image.height;
-  ctx.drawImage(image, 0, 0);
+  canvas.width = image.width / divisor;
+  canvas.height = image.height / divisor;
+  // ctx.drawImage(image, 0, 0);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 //ウインドウの幅にキャンバスを合わせる
@@ -612,7 +629,20 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "v") {
     if (keyMeta) return;
 
-    fullScale.checked = !fullScale.checked;
+    for (let i = 0; i < scaleRadioNodeList.length; i++) {
+      if (scaleRadioNodeList[i].checked) {
+        scaleRadioNodeList[i].checked = false;
+        //最初の要素に戻ってチェック
+        if (i + 1 === scaleRadioNodeList.length) {
+          scaleRadioNodeList[0].checked = true;
+          break;
+          //次の要素をチェック
+        } else {
+          scaleRadioNodeList[i + 1].checked = true;
+          break;
+        }
+      }
+    }
   }
   if (event.key === "e") {
     if (keyMeta) return;

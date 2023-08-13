@@ -32,9 +32,36 @@
           <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
           <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
           <button onclick="clearCanvas()">Clear(e)</button>
-          <div class="full-scale flex-row">
-            <label for="full-scale">full-scale(v): </label>
-            <input type="checkbox" name="full-scale" id="full-scale" checked />
+          <div class="scale flex-row">
+            <!-- <label for="full-scale">full-scale(v): </label>
+            <input type="checkbox" name="full-scale" id="full-scale" checked /> -->
+            <form id="scale">
+              scale(s):
+              <input
+                type="radio"
+                id="scale-full"
+                name="scale"
+                value="full"
+                checked
+              />
+              <label for="scale-full">full</label>
+              <input type="radio" id="scale-half" name="scale" value="half" />
+              <label for="scale-half">1/2</label>
+              <input
+                type="radio"
+                id="scale-quarter"
+                name="scale"
+                value="quarter"
+              />
+              <label for="scale-quarter">1/4</label>
+              <input
+                type="radio"
+                id="scale-window"
+                name="scale"
+                value="window"
+              />
+              <label for="scale-window">window</label>
+            </form>
           </div>
 
           <div class="flex-row">
