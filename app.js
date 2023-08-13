@@ -366,7 +366,13 @@ function drawMultilineText(
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
     context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
-    if (i === 3 && lines[3].substring(2) < 35) {
+    if (
+      (i === 2 && lines[1].substring(2) < 20) ||
+      (i === 2 && lines[1].substring(2) > 210)
+    ) {
+      context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
+    }
+    if (i === 3 && lines[3].substring(2) < 45) {
       context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
     }
     context.fillText(
