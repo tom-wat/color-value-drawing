@@ -25,6 +25,7 @@ textarea {
   border: 1px solid #333;
   border-radius: 4px;
 }
+
 button{
   padding: 4px 8px;
 }
@@ -164,6 +165,9 @@ output{
     position: fixed;
     bottom: 1rem;
     left: 1rem;
+  }
+  input{
+    max-width: 30%;
   }
 }
 @media (prefers-color-scheme: dark) {
