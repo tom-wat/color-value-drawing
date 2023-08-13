@@ -16,6 +16,8 @@ const offsetX = document.getElementById("offset-x");
 const offsetY = document.getElementById("offset-y");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
+const clickPointAdjustment = -2;
+
 const tooltip1 = document.getElementById("tooltip1");
 const tooltip2 = document.getElementById("tooltip2");
 const tooltip3 = document.getElementById("tooltip3");
@@ -180,8 +182,8 @@ function rgbToLab(R, G, B) {
 }
 
 canvas.addEventListener("click", function (e) {
-  const x = e.offsetX;
-  const y = e.offsetY;
+  const x = e.offsetX + clickPointAdjustment;
+  const y = e.offsetY + clickPointAdjustment;
   const color = ctx.getImageData(x, y, 1, 1).data;
   const { h, s, l } = rgbToHsl(color[0], color[1], color[2]);
   const { L, a, b } = rgbToLab(color[0], color[1], color[2]);
@@ -403,10 +405,10 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
   // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
 
-  ctx.fillRect(pointX - 12.5, pointY - 2, 8, 3);
-  ctx.fillRect(pointX + 3.5, pointY - 2, 8, 3);
-  ctx.fillRect(pointX - 2, pointY - 12, 3.5, 8);
-  ctx.fillRect(pointX - 2, pointY + 3, 3.5, 8);
+  ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
+  ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
 
   // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
   // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
@@ -519,14 +521,14 @@ document.addEventListener("keydown", (event) => {
     tooltip7.textContent = `alpha: ${alphaInput.value}`;
     tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
   }
-  if (event.key === "s") {
+  if (event.key === "f") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
     tooltip1.textContent = `font-size: ${fontInput.value}`;
     tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
-  if (event.key === "a") {
+  if (event.key === "d") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
@@ -557,7 +559,9 @@ document.addEventListener("keydown", (event) => {
     tooltip6.textContent = `offset-y: ${offsetY.value}`;
     tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
-  if (event.key === "d") {
+  if (event.key === "a") {
+    if (keyMeta) return;
+
     for (let i = 0; i < positionXRadioNodeList.length; i++) {
       if (positionXRadioNodeList[i].checked) {
         // console.log(positionXRadioNodeList[i]);
@@ -582,7 +586,7 @@ document.addEventListener("keydown", (event) => {
     const tooltip4LeftValue = parseInt(tooltip4Style.left);
     tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
   }
-  if (event.key === "f") {
+  if (event.key === "s") {
     if (keyMeta) return;
 
     for (let i = 0; i < positionYRadioNodeList.length; i++) {
@@ -601,21 +605,31 @@ document.addEventListener("keydown", (event) => {
     tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   }
   if (event.key === "p") {
+    if (keyMeta) return;
+
     debouncedDownload();
   }
   if (event.key === "v") {
+    if (keyMeta) return;
+
     fullScale.checked = !fullScale.checked;
   }
   if (event.key === "e") {
+    if (keyMeta) return;
+
     clearCanvas();
   }
-  if (event.key === "c") {
+  if (event.key === "x") {
+    if (keyMeta) return;
+
     columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
     columnNumber.nextElementSibling.value = columnNumber.value;
     tooltip8.textContent = `column-number: ${columnNumber.value}`;
     tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
-  if (event.key === "x") {
+  if (event.key === "z") {
+    if (keyMeta) return;
+
     columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
     columnNumber.nextElementSibling.value = columnNumber.value;
     tooltip8.textContent = `column-number: ${columnNumber.value}`;
