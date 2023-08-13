@@ -18,18 +18,18 @@ const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
 const clickPointAdjustment = -2;
 
-const tooltip1 = document.getElementById("tooltip1");
-const tooltip2 = document.getElementById("tooltip2");
-const tooltip3 = document.getElementById("tooltip3");
-const tooltip4 = document.getElementById("tooltip4");
-const tooltip5 = document.getElementById("tooltip5");
-const tooltip6 = document.getElementById("tooltip6");
-const tooltip7 = document.getElementById("tooltip7");
-const tooltip8 = document.getElementById("tooltip8");
-const tooltipPositionAdjustmentValueX = 15;
-const tooltipPositionAdjustmentValueY = 15;
-const tooltipInlineMargin = 10;
-const tooltipBlockMargin = 10;
+// const tooltip1 = document.getElementById("tooltip1");
+// const tooltip2 = document.getElementById("tooltip2");
+// const tooltip3 = document.getElementById("tooltip3");
+// const tooltip4 = document.getElementById("tooltip4");
+// const tooltip5 = document.getElementById("tooltip5");
+// const tooltip6 = document.getElementById("tooltip6");
+// const tooltip7 = document.getElementById("tooltip7");
+// const tooltip8 = document.getElementById("tooltip8");
+// const tooltipPositionAdjustmentValueX = 15;
+// const tooltipPositionAdjustmentValueY = 15;
+// const tooltipInlineMargin = 10;
+// const tooltipBlockMargin = 10;
 
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
@@ -494,14 +494,14 @@ document.addEventListener("keydown", (event) => {
     fileInput.click();
   }
   if (event.key === "w") {
-    colorInput.value = (parseInt(colorInput.value) + 90).toString();
+    colorInput.value = (parseInt(colorInput.value) + 80).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip2.textContent = `lightness: ${colorInput.value}`;
     tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
   }
   if (event.key === "q") {
-    colorInput.value = (parseInt(colorInput.value) - 90).toString();
+    colorInput.value = (parseInt(colorInput.value) - 80).toString();
     colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
     changeColor(ctx, colorInput, alphaInput);
     tooltip2.textContent = `lightness: ${colorInput.value}`;
@@ -748,179 +748,179 @@ document.addEventListener("keyup", (event) => {
   // }
 });
 
-// マウス移動時に実行する関数
-function showTooltip(event) {
-  // console.log(event);
-  // ページのスクロール量を取得
-  const scrollTop =
-    document.documentElement.scrollTop || document.body.scrollTop;
-  const scrollLeft =
-    document.documentElement.scrollLeft || document.body.scrollLeft;
+// // マウス移動時に実行する関数
+// function showTooltip(event) {
+//   // console.log(event);
+//   // ページのスクロール量を取得
+//   const scrollTop =
+//     document.documentElement.scrollTop || document.body.scrollTop;
+//   const scrollLeft =
+//     document.documentElement.scrollLeft || document.body.scrollLeft;
 
-  // マウスポインタの位置を取得
-  const x = event.clientX + scrollLeft;
-  const y = event.clientY + scrollTop;
+//   // マウスポインタの位置を取得
+//   const x = event.clientX + scrollLeft;
+//   const y = event.clientY + scrollTop;
 
-  // ツールチップに表示する文字列を設定
-  tooltip1.textContent = `font-size: ${fontInput.value}`;
-  tooltip2.textContent = `lightness: ${colorInput.value}`;
-  tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
-  tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
-  tooltip5.textContent = `offset-x: ${offsetX.value}`;
-  tooltip6.textContent = `offset-y: ${offsetY.value}`;
-  tooltip7.textContent = `alpha: ${alphaInput.value}`;
-  tooltip8.textContent = `column-number: ${columnNumber.value}`;
+//   // ツールチップに表示する文字列を設定
+//   tooltip1.textContent = `font-size: ${fontInput.value}`;
+//   tooltip2.textContent = `lightness: ${colorInput.value}`;
+//   tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
+//   tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
+//   tooltip5.textContent = `offset-x: ${offsetX.value}`;
+//   tooltip6.textContent = `offset-y: ${offsetY.value}`;
+//   tooltip7.textContent = `alpha: ${alphaInput.value}`;
+//   tooltip8.textContent = `column-number: ${columnNumber.value}`;
 
-  //ツールチップの幅をツールチップの文字数から指定
-  tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
-  tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-  tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
-  tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
-  tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
-  tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
-  tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-  tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
+//   //ツールチップの幅をツールチップの文字数から指定
+//   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+//   tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
+//   tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
+//   tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
+//   tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
+//   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
+//   tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
+//   tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
 
-  //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）
-  const tooltip1Width = tooltip1.offsetWidth;
-  const tooltip1Height = tooltip1.offsetHeight;
-  const tooltip3Width = tooltip3.offsetWidth;
-  const tooltip3Height = tooltip3.offsetHeight;
-  const tooltip5Width = tooltip5.offsetWidth;
-  const tooltip5Height = tooltip5.offsetHeight;
-  const tooltip6Width = tooltip6.offsetWidth;
+//   //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）
+//   const tooltip1Width = tooltip1.offsetWidth;
+//   const tooltip1Height = tooltip1.offsetHeight;
+//   const tooltip3Width = tooltip3.offsetWidth;
+//   const tooltip3Height = tooltip3.offsetHeight;
+//   const tooltip5Width = tooltip5.offsetWidth;
+//   const tooltip5Height = tooltip5.offsetHeight;
+//   const tooltip6Width = tooltip6.offsetWidth;
 
-  // ツールチップを表示する位置を設定
-  tooltip1.style.left = x + tooltipPositionAdjustmentValueX + "px";
-  tooltip1.style.top = y + tooltipPositionAdjustmentValueY + "px";
+//   // ツールチップを表示する位置を設定
+//   tooltip1.style.left = x + tooltipPositionAdjustmentValueX + "px";
+//   tooltip1.style.top = y + tooltipPositionAdjustmentValueY + "px";
 
-  tooltip2.style.left =
-    x +
-    tooltip1Width +
-    tooltipPositionAdjustmentValueX +
-    tooltipInlineMargin +
-    "px";
-  tooltip2.style.top = y + tooltipPositionAdjustmentValueY + "px";
+//   tooltip2.style.left =
+//     x +
+//     tooltip1Width +
+//     tooltipPositionAdjustmentValueX +
+//     tooltipInlineMargin +
+//     "px";
+//   tooltip2.style.top = y + tooltipPositionAdjustmentValueY + "px";
 
-  tooltip3.style.left = x + tooltipPositionAdjustmentValueX + "px";
-  tooltip3.style.top =
-    y +
-    tooltip1Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin +
-    "px";
+//   tooltip3.style.left = x + tooltipPositionAdjustmentValueX + "px";
+//   tooltip3.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin +
+//     "px";
 
-  tooltip4.style.left =
-    x +
-    tooltip3Width +
-    tooltipPositionAdjustmentValueX +
-    tooltipInlineMargin +
-    "px";
-  tooltip4.style.top =
-    y +
-    tooltip1Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin +
-    "px";
+//   tooltip4.style.left =
+//     x +
+//     tooltip3Width +
+//     tooltipPositionAdjustmentValueX +
+//     tooltipInlineMargin +
+//     "px";
+//   tooltip4.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin +
+//     "px";
 
-  tooltip5.style.left = x + tooltipPositionAdjustmentValueX + "px";
-  tooltip5.style.top =
-    y +
-    tooltip1Height +
-    tooltip3Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin * 2 +
-    "px";
+//   tooltip5.style.left = x + tooltipPositionAdjustmentValueX + "px";
+//   tooltip5.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltip3Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin * 2 +
+//     "px";
 
-  tooltip6.style.left =
-    x +
-    tooltip5Width +
-    tooltipPositionAdjustmentValueX +
-    tooltipInlineMargin +
-    "px";
-  tooltip6.style.top =
-    y +
-    tooltip1Height +
-    tooltip3Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin * 2 +
-    "px";
+//   tooltip6.style.left =
+//     x +
+//     tooltip5Width +
+//     tooltipPositionAdjustmentValueX +
+//     tooltipInlineMargin +
+//     "px";
+//   tooltip6.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltip3Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin * 2 +
+//     "px";
 
-  tooltip7.style.left =
-    x +
-    tooltip5Width +
-    tooltip6Width +
-    tooltipPositionAdjustmentValueX +
-    tooltipInlineMargin * 2 +
-    "px";
-  tooltip7.style.top =
-    y +
-    tooltip1Height +
-    tooltip3Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin * 2 +
-    "px";
+//   tooltip7.style.left =
+//     x +
+//     tooltip5Width +
+//     tooltip6Width +
+//     tooltipPositionAdjustmentValueX +
+//     tooltipInlineMargin * 2 +
+//     "px";
+//   tooltip7.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltip3Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin * 2 +
+//     "px";
 
-  tooltip8.style.left = x + tooltipPositionAdjustmentValueX + "px";
-  tooltip8.style.top =
-    y +
-    tooltip1Height +
-    tooltip3Height +
-    tooltip5Height +
-    tooltipPositionAdjustmentValueY +
-    tooltipBlockMargin * 3 +
-    "px";
-  // // ウィンドウの幅とツールチップの幅を取得
-  // const windowWidth = window.innerWidth;
-  // const tooltipWidth = tooltip.offsetWidth;
+//   tooltip8.style.left = x + tooltipPositionAdjustmentValueX + "px";
+//   tooltip8.style.top =
+//     y +
+//     tooltip1Height +
+//     tooltip3Height +
+//     tooltip5Height +
+//     tooltipPositionAdjustmentValueY +
+//     tooltipBlockMargin * 3 +
+//     "px";
+//   // // ウィンドウの幅とツールチップの幅を取得
+//   // const windowWidth = window.innerWidth;
+//   // const tooltipWidth = tooltip.offsetWidth;
 
-  // // ツールチップがウィンドウの右端を超える場合は left 座標を調整
-  // if (x + tooltipWidth + tooltipPositionAdjustmentValueX > windowWidth) {
-  //   tooltip.style.left =
-  //     x - tooltipWidth - tooltipPositionAdjustmentValueX + "px";
-  // }
+//   // // ツールチップがウィンドウの右端を超える場合は left 座標を調整
+//   // if (x + tooltipWidth + tooltipPositionAdjustmentValueX > windowWidth) {
+//   //   tooltip.style.left =
+//   //     x - tooltipWidth - tooltipPositionAdjustmentValueX + "px";
+//   // }
 
-  // ツールチップの高さを取得
-  // const tooltipHeight = tooltip.offsetHeight;
+//   // ツールチップの高さを取得
+//   // const tooltipHeight = tooltip.offsetHeight;
 
-  // // ツールチップがウィンドウの下端を超える場合は top 座標を調整
-  // if (
-  //   y + tooltipHeight + tooltipPositionAdjustmentValueY >
-  //   document.body.scrollHeight
-  // ) {
-  //   tooltip.style.top =
-  //     y - tooltipHeight - tooltipPositionAdjustmentValueY + "px";
-  // }
+//   // // ツールチップがウィンドウの下端を超える場合は top 座標を調整
+//   // if (
+//   //   y + tooltipHeight + tooltipPositionAdjustmentValueY >
+//   //   document.body.scrollHeight
+//   // ) {
+//   //   tooltip.style.top =
+//   //     y - tooltipHeight - tooltipPositionAdjustmentValueY + "px";
+//   // }
 
-  // ツールチップを表示する
-  tooltip1.style.display = "block";
-  tooltip2.style.display = "block";
-  tooltip3.style.display = "block";
-  tooltip4.style.display = "block";
-  tooltip5.style.display = "block";
-  tooltip6.style.display = "block";
-  tooltip7.style.display = "block";
-  tooltip8.style.display = "block";
-}
+//   // ツールチップを表示する
+//   tooltip1.style.display = "block";
+//   tooltip2.style.display = "block";
+//   tooltip3.style.display = "block";
+//   tooltip4.style.display = "block";
+//   tooltip5.style.display = "block";
+//   tooltip6.style.display = "block";
+//   tooltip7.style.display = "block";
+//   tooltip8.style.display = "block";
+// }
 
-// マウス移動時に実行する関数を登録
-document.addEventListener("mousemove", showTooltip);
+// // マウス移動時に実行する関数を登録
+// document.addEventListener("mousemove", showTooltip);
 
-// スマートフォン、タブレットの場合ツールチップを非表示
-const isMobile = navigator.userAgent.match(
-  /(iPhone|iPod|iPad|Android|BlackBerry)/
-);
-if (!!isMobile) {
-  document.removeEventListener("mousemove", showTooltip);
-  tooltip1.style.display = "none";
-  tooltip2.style.display = "none";
-  tooltip3.style.display = "none";
-  tooltip4.style.display = "none";
-  tooltip5.style.display = "none";
-  tooltip6.style.display = "none";
-  tooltip7.style.display = "none";
-  tooltip8.style.display = "none";
-}
+// // スマートフォン、タブレットの場合ツールチップを非表示
+// const isMobile = navigator.userAgent.match(
+//   /(iPhone|iPod|iPad|Android|BlackBerry)/
+// );
+// if (!!isMobile) {
+//   document.removeEventListener("mousemove", showTooltip);
+//   tooltip1.style.display = "none";
+//   tooltip2.style.display = "none";
+//   tooltip3.style.display = "none";
+//   tooltip4.style.display = "none";
+//   tooltip5.style.display = "none";
+//   tooltip6.style.display = "none";
+//   tooltip7.style.display = "none";
+//   tooltip8.style.display = "none";
+// }
 
 function navToggle() {
   console.log(navigation);
