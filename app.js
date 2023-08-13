@@ -291,14 +291,15 @@ function drawMultilineText(
   columnNumber
 ) {
   const lines = text.split(",");
-
+  console.log(lines);
+  console.log(lines[1]);
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
   let yOffset = 0;
 
-  for (let i = 1; i < lines.length + 1; i++) {
-    const line = lines[i - 1];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const lineWidth = context.measureText(line).width;
     const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
@@ -310,10 +311,15 @@ function drawMultilineText(
     const xOffsetAdjustment = fontSize / 3 + fontSize / 2;
     const yOffsetAdjustment = fontSize / 2;
     const offSetXWidth = fontSize * columnNumber;
+    // let colorSet = [
+    //   [185, 300, 120, 50],
+    //   [100, 100, 100, 100],
+    //   [85, 95, 85, 80],
+    // ];
     let colorSet = [
-      [185, 300, 120, 50],
-      [100, 100, 100, 100],
-      [85, 95, 85, 80],
+      [0, lines[1].substring(2), lines[1].substring(2), lines[1].substring(2)],
+      [0, 100, 100, lines[2].substring(2)],
+      [97, 75, 50, lines[3].substring(2)],
     ];
 
     if (textPositionX === "left") {
@@ -343,9 +349,7 @@ function drawMultilineText(
 
     context.textBaseline = "top";
     // context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-    context.fillStyle = `hsl( ${colorSet[0][i - 1]}, ${colorSet[1][i - 1]}%, ${
-      colorSet[2][i - 1]
-    }%, ${alphaInput.value}%)`;
+    context.fillStyle = `hsl( ${colorSet[0][i]}, ${colorSet[1][i]}%, ${colorSet[2][i]}%, ${alphaInput.value}%)`;
 
     drawRoundedRectangle(
       context,
@@ -362,13 +366,16 @@ function drawMultilineText(
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
     context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
+    if (i === 3 && lines[3].substring(2) < 35) {
+      context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
+    }
     context.fillText(
       line,
       pointX + drawingPositionX + xOffset + padding,
       pointY + drawingPositionY + yOffset + padding
     );
 
-    if (i % columnNumber === 0) {
+    if ((i + 1) % columnNumber === 0) {
       drawingPositionY += textSpaceheight + margin;
       drawingPositionX = 0;
     } else {
