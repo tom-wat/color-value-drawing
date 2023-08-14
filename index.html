@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta name="viewport" content="width=device-width,initial-scale=1" /> -->
+    <meta name="viewport" content="width=device-width, minimum-scale=1" />
+    <title>Color data drawing</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- <div id="tooltip1" class="tooltip"></div>
+    <div id="tooltip2" class="tooltip"></div>
+    <div id="tooltip3" class="tooltip"></div>
+    <div id="tooltip4" class="tooltip"></div>
+    <div id="tooltip5" class="tooltip"></div>
+    <div id="tooltip6" class="tooltip"></div>
+    <div id="tooltip7" class="tooltip"></div>
+    <div id="tooltip8" class="tooltip"></div> -->
+    <div class="container">
+      <nav id="navigation" class="navigation">
+        <div class="nav-content">
+          <button
+            id="file-button"
+            class="file-button"
+            onclick="fileInput.click()"
+          >
+            Read a file(r)
+          </button>
+          <input type="file" id="file-input" />
+
+          <button id="download-btn">Download(p)</button>
+          <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
+          <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
+          <button onclick="clearCanvas()">Clear(e)</button>
+          <div class="scale flex-row">
+            <!-- <label for="full-scale">full-scale(v): </label>
+            <input type="checkbox" name="full-scale" id="full-scale" checked /> -->
+            <form id="scale">
+              scale(v):
+              <input
+                type="radio"
+                id="scale-full"
+                name="scale"
+                value="full"
+                checked
+              />
+              <label for="scale-full">full</label>
+              <input type="radio" id="scale-half" name="scale" value="half" />
+              <label for="scale-half">1/2</label>
+              <input
+                type="radio"
+                id="scale-quarter"
+                name="scale"
+                value="quarter"
+              />
+              <label for="scale-quarter">1/4</label>
+              <input
+                type="radio"
+                id="scale-window"
+                name="scale"
+                value="window"
+              />
+              <label for="scale-window">window</label>
+            </form>
+          </div>
+
+          <div class="flex-row">
+            <form id="data-drawing-position-x">
+              drawing-position-x(a):
+              <input
+                type="radio"
+                id="drawing-position-x-left"
+                name="positionX"
+                value="left"
+              />
+              <label for="drawing-position-x-left">left</label>
+              <input
+                type="radio"
+                id="drawing-position-x-right"
+                name="positionX"
+                value="right"
+                checked
+              />
+              <label for="drawing-position-x-right">right</label>
+            </form>
+          </div>
+
+          <div class="flex-row">
+            <form id="data-drawing-position-y">
+              drawing-position-y(s):
+              <input
+                type="radio"
+                id="drawing-position-y-top"
+                name="positionY"
+                value="top"
+              />
+              <label for="drawing-position-y-top">top</label>
+              <input
+                type="radio"
+                id="drawing-position-y-bottom"
+                name="positionY"
+                value="bottom"
+                checked
+              />
+              <label for="drawing-position-y-bottom">bottom</label>
+            </form>
+          </div>
+
+          <div class="flex-row">
+            <label for="offset-x">offset-x(g,h): </label
+            ><input
+              type="range"
+              id="offset-x"
+              min="0"
+              max="4"
+              value="0"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="offset-x-output"
+              for="offset-x"
+              oninput="this.previousElementSibling.value = this.value"
+              >0</output
+            >
+          </div>
+
+          <div class="flex-row">
+            <label for="offset-y">offset-y(t,y): </label
+            ><input
+              type="range"
+              id="offset-y"
+              min="0"
+              max="4"
+              value="0"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="offset-y-output"
+              for="offset-y"
+              oninput="this.previousElementSibling.value = this.value"
+              >0</output
+            >
+          </div>
+
+          <div class="flex-row">
+            <label for="font-size-input">font-size(d,f): </label
+            ><input
+              type="range"
+              id="font-size-input"
+              min="10"
+              max="30"
+              value="12"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="font-size-output"
+              for="font-size-input"
+              oninput="this.previousElementSibling.value = this.value"
+              >12</output
+            >
+          </div>
+
+          <!-- <div class="flex-row">
+            <div class="color-input flex-row">
+              <label for="font-color-input">lightness(q,w):</label
+              ><input
+                type="range"
+                id="font-color-input"
+                min="20"
+                max="100"
+                value="100"
+                step="80"
+                oninput="updateOutput(colorInput, this.value)"
+              />
+              <output name="font-color-output" for="font-color-input"
+                >100</output
+              >
+            </div>
+            <div class="alpha-input flex-row">
+              <label for="font-color-alpha-input">alpha(b,n):</label
+              ><input
+                type="range"
+                id="font-color-alpha-input"
+                min="10"
+                max="100"
+                value="100"
+                oninput="updateOutput(alphaInput, this.value)"
+              />
+              <output
+                name="font-color-alpha-output"
+                for="font-color-alpha-input"
+                >100</output
+              >
+            </div>
+          </div> -->
+          <div class="flex-row">
+            <label for="column-number">column-number(z,x):</label
+            ><input
+              type="range"
+              id="column-number"
+              min="1"
+              max="4"
+              value="1"
+              oninput="this.nextElementSibling.value = this.value"
+            />
+            <output
+              name="column-number"
+              for="column-number"
+              oninput="this.previousElementSibling.value = this.value"
+              >1</output
+            >
+          </div>
+          <div class="flex-row">
+            <p>point-color:</p>
+            <div id="colorInfo">L:---,h:---,s:---,l:---</div>
+          </div>
+          <button id="close-button" onclick="navToggle()">close(esc)</button>
+        </div>
+        <button id="open-button" class="open-button" onclick="navToggle()">
+          +
+        </button>
+      </nav>
+      <section class="image-container">
+        <canvas id="canvas"></canvas>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
