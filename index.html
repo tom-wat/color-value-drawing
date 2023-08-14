@@ -21,22 +21,34 @@
         <div class="nav-content">
           <button
             id="file-button"
-            class="file-button"
+            class="button flex"
             onclick="fileInput.click()"
           >
-            Read a file(r)
+            <span>Read a file</span><span class="shortcut">R</span>
           </button>
           <input type="file" id="file-input" />
 
-          <button id="download-btn">Download(p)</button>
-          <button id="undo-btn" onclick="undo()">Undo(cmd+z)</button>
-          <button id="redo-btn" onclick="redo()">Redo(cmd+shift+z)</button>
-          <button onclick="clearCanvas()">Clear(e)</button>
-          <div class="scale flex-row">
-            <!-- <label for="full-scale">full-scale(v): </label>
-            <input type="checkbox" name="full-scale" id="full-scale" checked /> -->
-            <form id="scale">
-              scale(v):
+          <button id="download-btn" class="button flex">
+            <span>Download</span><span class="shortcut">P</span>
+          </button>
+          <button
+            id="undo-btn"
+            class="button flex"
+            class="flex"
+            onclick="undo()"
+          >
+            <span>Undo</span><span class="shortcut">⌘Z</span>
+          </button>
+          <button id="redo-btn" class="button flex" onclick="redo()">
+            <span>Redo</span><span class="shortcut">⇧⌘Z</span>
+          </button>
+          <button class="button flex" onclick="clearCanvas()">
+            <span>Clear</span><span class="shortcut">E</span>
+          </button>
+          <div class="button scale flex button-type-b">
+            <span>Scale</span>
+
+            <form id="scale" class="flex margin-right">
               <input
                 type="radio"
                 id="scale-full"
@@ -44,7 +56,7 @@
                 value="full"
                 checked
               />
-              <label for="scale-full">full</label>
+              <label for="scale-full">Full</label>
               <input type="radio" id="scale-half" name="scale" value="half" />
               <label for="scale-half">1/2</label>
               <input
@@ -60,20 +72,21 @@
                 name="scale"
                 value="window"
               />
-              <label for="scale-window">window</label>
+              <label for="scale-window">Window</label>
             </form>
+            <span class="shortcut">V</span>
           </div>
 
-          <div class="flex-row">
-            <form id="data-drawing-position-x">
-              drawing-position-x(a):
+          <div class="button flex button-type-b">
+            <span>Position-X</span>
+            <form id="data-drawing-position-x" class="flex margin-right">
               <input
                 type="radio"
                 id="drawing-position-x-left"
                 name="positionX"
                 value="left"
               />
-              <label for="drawing-position-x-left">left</label>
+              <label for="drawing-position-x-left">Left</label>
               <input
                 type="radio"
                 id="drawing-position-x-right"
@@ -81,20 +94,21 @@
                 value="right"
                 checked
               />
-              <label for="drawing-position-x-right">right</label>
+              <label for="drawing-position-x-right">Right</label>
             </form>
+            <span class="shortcut">A</span>
           </div>
 
-          <div class="flex-row">
-            <form id="data-drawing-position-y">
-              drawing-position-y(s):
+          <div class="button flex button-type-b">
+            <span>Position-Y</span>
+            <form id="data-drawing-position-y" class="flex margin-right">
               <input
                 type="radio"
                 id="drawing-position-y-top"
                 name="positionY"
                 value="top"
               />
-              <label for="drawing-position-y-top">top</label>
+              <label for="drawing-position-y-top">Top</label>
               <input
                 type="radio"
                 id="drawing-position-y-bottom"
@@ -102,66 +116,76 @@
                 value="bottom"
                 checked
               />
-              <label for="drawing-position-y-bottom">bottom</label>
+              <label for="drawing-position-y-bottom">Bottom</label>
             </form>
+            <span class="shortcut">S</span>
           </div>
 
-          <div class="flex-row">
-            <label for="offset-x">offset-x(g,h): </label
-            ><input
+          <button class="button flex button-type-b">
+            <span>Offset-X</span>
+            <input
               type="range"
               id="offset-x"
               min="0"
               max="4"
               value="0"
-              oninput="this.nextElementSibling.value = this.value"
+              oninput="updateOutput(offsetX, offsetXOutput)"
             />
-            <output
-              name="offset-x-output"
-              for="offset-x"
-              oninput="this.previousElementSibling.value = this.value"
-              >0</output
-            >
-          </div>
+            <div class="flex margin-right">
+              <span class="inline-button">-</span>
+              <output id="offset-x-output" name="offset-x-output" for="offset-x"
+                >0</output
+              >
+              <span class="inline-button">+</span>
+            </div>
+            <span class="shortcut">G, H</span>
+          </button>
 
-          <div class="flex-row">
-            <label for="offset-y">offset-y(t,y): </label
-            ><input
+          <button class="button flex button-type-b">
+            <span>Offset-Y</span>
+            <input
               type="range"
               id="offset-y"
               min="0"
               max="4"
               value="0"
-              oninput="this.nextElementSibling.value = this.value"
+              oninput="updateOutput(offsetY, offsetYOutput)"
             />
-            <output
-              name="offset-y-output"
-              for="offset-y"
-              oninput="this.previousElementSibling.value = this.value"
-              >0</output
-            >
-          </div>
+            <div class="flex margin-right">
+              <span class="inline-button">-</span>
+              <output id="offset-y-output" name="offset-y-output" for="offset-y"
+                >0</output
+              >
+              <span class="inline-button">+</span>
+            </div>
+            <span class="shortcut">T, Y</span>
+          </button>
 
-          <div class="flex-row">
-            <label for="font-size-input">font-size(d,f): </label
-            ><input
+          <button class="button flex button-type-b">
+            <span>Font Size</span>
+            <input
               type="range"
               id="font-size-input"
               min="10"
               max="30"
               value="12"
-              oninput="this.nextElementSibling.value = this.value"
+              oninput="updateOutput(fontInput, fontOutput)"
             />
-            <output
-              name="font-size-output"
-              for="font-size-input"
-              oninput="this.previousElementSibling.value = this.value"
-              >12</output
-            >
-          </div>
+            <div class="flex margin-right">
+              <span class="inline-button">-</span>
+              <output
+                id="font-size-output"
+                name="font-size-output"
+                for="font-size"
+                >12</output
+              >
+              <span class="inline-button">+</span>
+            </div>
+            <span class="shortcut">D, F</span>
+          </button>
 
-          <!-- <div class="flex-row">
-            <div class="color-input flex-row">
+          <!-- <div class="flex">
+            <div class="color-input flex">
               <label for="font-color-input">lightness(q,w):</label
               ><input
                 type="range"
@@ -176,7 +200,7 @@
                 >100</output
               >
             </div>
-            <div class="alpha-input flex-row">
+            <div class="alpha-input flex">
               <label for="font-color-alpha-input">alpha(b,n):</label
               ><input
                 type="range"
@@ -193,8 +217,8 @@
               >
             </div>
           </div> -->
-          <div class="flex-row">
-            <label for="column-number">column-number(z,x):</label
+          <button class="button flex button-type-b">
+            <!-- <label for="column-number">column-number(z,x):</label
             ><input
               type="range"
               id="column-number"
@@ -208,13 +232,35 @@
               for="column-number"
               oninput="this.previousElementSibling.value = this.value"
               >1</output
-            >
-          </div>
-          <div class="flex-row">
-            <p>point-color:</p>
-            <div id="colorInfo">L:---,h:---,s:---,l:---</div>
-          </div>
-          <button id="close-button" onclick="navToggle()">close(esc)</button>
+            > -->
+            <span>Column</span>
+            <input
+              type="range"
+              id="column-number"
+              min="1"
+              max="4"
+              value="1"
+              oninput="updateOutput(fontInput, fontOutput)"
+            />
+            <div class="flex margin-right">
+              <span class="inline-button">-</span>
+              <output
+                id="column-number-output"
+                name="column-number-output"
+                for="column-number"
+                >1</output
+              >
+              <span class="inline-button">+</span>
+            </div>
+            <span class="shortcut">Z, X</span>
+          </button>
+          <button class="button flex">
+            <p>Color</p>
+            <div id="colorInfo">L : ---, h : ---, s : ---, l : ---</div>
+          </button>
+          <button id="close-button" class="button flex" onclick="navToggle()">
+            <span>Close</span><span class="shortcut">esc</span>
+          </button>
         </div>
         <button id="open-button" class="open-button" onclick="navToggle()">
           +
