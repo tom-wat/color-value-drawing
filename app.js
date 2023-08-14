@@ -4,8 +4,8 @@ const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
 const scale = document.getElementById("scale");
 const fontInput = document.getElementById("font-size-input");
-const colorInput = document.getElementById("font-color-input");
-const alphaInput = document.getElementById("font-color-alpha-input");
+// const colorInput = document.getElementById("font-color-input");
+// const alphaInput = document.getElementById("font-color-alpha-input");
 const columnNumber = document.getElementById("column-number");
 const downloadBtn = document.getElementById("download-btn");
 const navigation = document.getElementById("navigation");
@@ -76,7 +76,7 @@ const openFile = (event) => {
           adjustedDrawImage();
       }
       changeFontSize(ctx, fontInput);
-      changeColor(ctx, colorInput, alphaInput);
+      // changeColor(ctx, colorInput, alphaInput);
       undoStates = [];
       getCurrentImageState();
       initialState = undoStates[0];
@@ -279,7 +279,7 @@ function drawRoundedRectangle(ctx, x, y, width, height, cornerRadius) {
 
 function drawMultilineText(
   context,
-  text,
+  colorText,
   pointX,
   pointY,
   lineHeight,
@@ -290,17 +290,17 @@ function drawMultilineText(
   offsetY,
   columnNumber
 ) {
-  const lines = text.split(",");
-  console.log(lines);
-  console.log(lines[1]);
+  const colorElements = colorText.split(",");
+  // console.log(colorElements);
+  // console.log(colorElements[1]);
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
   let yOffset = 0;
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const lineWidth = context.measureText(line).width;
+  for (let i = 0; i < colorElements.length; i++) {
+    const colorElement = colorElements[i];
+    const lineWidth = context.measureText(colorElement).width;
     const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
     const padding = 4 + (fontSize * 2) / 15;
@@ -317,9 +317,14 @@ function drawMultilineText(
     //   [85, 95, 85, 80],
     // ];
     let colorSet = [
-      [0, lines[1].substring(2), lines[1].substring(2), lines[1].substring(2)],
-      [0, 100, lines[2].substring(2), lines[2].substring(2)],
-      [97, 50, 50, lines[3].substring(2)],
+      [
+        0,
+        colorElements[1].substring(2),
+        colorElements[1].substring(2),
+        colorElements[1].substring(2),
+      ],
+      [0, 100, colorElements[2].substring(2), colorElements[2].substring(2)],
+      [97, 50, 50, colorElements[3].substring(2)],
     ];
 
     if (textPositionX === "left") {
@@ -335,15 +340,16 @@ function drawMultilineText(
     if (textPositionY === "top") {
       yOffset =
         -yOffsetAdjustment -
-        (textSpaceheight + margin) * Math.floor(lines.length / columnNumber) -
         (textSpaceheight + margin) *
-          Math.floor(lines.length / columnNumber) *
+          Math.floor(colorElements.length / columnNumber) -
+        (textSpaceheight + margin) *
+          Math.floor(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     } else {
       yOffset =
         yOffsetAdjustment +
         (textSpaceheight + margin) *
-          Math.floor(lines.length / columnNumber) *
+          Math.floor(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     }
 
@@ -367,19 +373,28 @@ function drawMultilineText(
     // }
     context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
     if (
-      (i === 1 && lines[1].substring(2) < 20) ||
-      (i === 1 && lines[1].substring(2) > 200)
+      (i === 1 && colorElements[1].substring(2) < 20) ||
+      (i === 1 && colorElements[1].substring(2) > 200)
     ) {
       context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
     }
-    if (i === 2) {
+    if (
+      (i === 2 && colorElements[1].substring(2) < 45) ||
+      (i === 2 && colorElements[1].substring(2) > 200) ||
+      (i === 2 &&
+        colorElements[1].substring(2) > 45 &&
+        colorElements[2].substring(2) < 60) ||
+      (i === 2 &&
+        colorElements[1].substring(2) < 200 &&
+        colorElements[2].substring(2) < 60)
+    ) {
       context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
     }
-    if (i === 3 && lines[3].substring(2) <= 50) {
+    if (i === 3 && colorElements[3].substring(2) <= 50) {
       context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
     }
     context.fillText(
-      line,
+      colorElement,
       pointX + drawingPositionX + xOffset + padding,
       pointY + drawingPositionY + yOffset + padding
     );
@@ -398,7 +413,7 @@ canvas.addEventListener("click", function (event) {
   const pointX = event.offsetX;
   const pointY = event.offsetY;
   const colorInfoElement = document.getElementById("colorInfo");
-  const text = `${colorInfoElement.textContent}`;
+  const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
   const offsetYValue = parseInt(offsetY.value);
@@ -406,14 +421,14 @@ canvas.addEventListener("click", function (event) {
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
   const columnNumberValue = columnNumber.value;
-
+  const colorElements = colorText.split(",");
   // クリックした場所のピクセルカラー情報を取得する
   // const color = ctx.getImageData(x, y, 1, 1).data;
 
   // 新しい描画を行う
   drawMultilineText(
     ctx,
-    text,
+    colorText,
     pointX,
     pointY,
     lineHeight,
@@ -425,8 +440,14 @@ canvas.addEventListener("click", function (event) {
     columnNumberValue
   );
 
-  ctx.lineWidth = (2 * fontSize) / 10;
-  ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+  ctx.lineWidth = 0.5;
+  // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+  ctx.fillStyle = `hsl( 0, 0%, 100%)`;
+  ctx.strokeStyle = `hsl( 0, 0%, 15%)`;
+
+  // ctx.lineWidth = 2;
+  // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+
   // ctx.strokeRect(
   //   pointX - fontSize / 2,
   //   pointY - fontSize / 2,
@@ -437,7 +458,12 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
   // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
   // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-
+  if (colorElements[0].substring(2) > 85) {
+    ctx.strokeRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
+    ctx.strokeRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
+    ctx.strokeRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
+    ctx.strokeRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
+  }
   ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
   ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
   ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
@@ -447,6 +473,18 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
   // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
   // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
+
+  // //水平線
+  // ctx.beginPath();
+  // ctx.moveTo(pointX - 8.5, pointY + clickPointAdjustment);
+  // ctx.lineTo(pointX + 4.5, pointY + clickPointAdjustment);
+  // ctx.stroke();
+
+  // // 垂直線
+  // ctx.beginPath();
+  // ctx.moveTo(pointX + clickPointAdjustment, pointY - 8);
+  // ctx.lineTo(pointX + clickPointAdjustment, pointY + 4.5);
+  // ctx.stroke();
 
   // update current state
   redoStates = [];
@@ -459,26 +497,26 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(x - 2, y - 2, 5, 5);
 });
 
-const changeColor = (context, colorInput, alphaInput) => {
-  const colorValue = colorInput.value;
-  const hue = 0; // 色相 (0-360)
-  const saturation = 0; // 彩度 (0-100)
-  const lightness = colorValue; // 明度 (0-100)
-  const alphaValue = alphaInput.value;
-  // console.log(colorInput.value);
-  // console.log(alphaInput.value);
-  context.fillStyle =
-    // "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)";
-    `hsl( ${hue}, ${saturation}%, ${lightness}%, ${alphaValue}%)`;
-};
+// const changeColor = (context, colorInput, alphaInput) => {
+//   const colorValue = colorInput.value;
+//   const hue = 0; // 色相 (0-360)
+//   const saturation = 0; // 彩度 (0-100)
+//   const lightness = colorValue; // 明度 (0-100)
+//   const alphaValue = alphaInput.value;
+//   // console.log(colorInput.value);
+//   // console.log(alphaInput.value);
+//   context.fillStyle =
+//     // "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)";
+//     `hsl( ${hue}, ${saturation}%, ${lightness}%, ${alphaValue}%)`;
+// };
 
-colorInput.addEventListener("input", function () {
-  changeColor(ctx, colorInput, alphaInput);
-});
+// colorInput.addEventListener("input", function () {
+//   changeColor(ctx, colorInput, alphaInput);
+// });
 
-alphaInput.addEventListener("input", function () {
-  changeColor(ctx, colorInput, alphaInput);
-});
+// alphaInput.addEventListener("input", function () {
+//   changeColor(ctx, colorInput, alphaInput);
+// });
 
 function getCurrentImageState() {
   currentStates = ctx.getImageData(0, 0, image.width, image.height);
@@ -526,71 +564,71 @@ document.addEventListener("keydown", (event) => {
 
     fileInput.click();
   }
-  if (event.key === "w") {
-    colorInput.value = (parseInt(colorInput.value) + 80).toString();
-    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
-    changeColor(ctx, colorInput, alphaInput);
-    tooltip2.textContent = `lightness: ${colorInput.value}`;
-    tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-  }
-  if (event.key === "q") {
-    colorInput.value = (parseInt(colorInput.value) - 80).toString();
-    colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
-    changeColor(ctx, colorInput, alphaInput);
-    tooltip2.textContent = `lightness: ${colorInput.value}`;
-    tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-  }
-  if (event.key === "n") {
-    alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
-    alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
-    changeColor(ctx, colorInput, alphaInput);
-    tooltip7.textContent = `alpha: ${alphaInput.value}`;
-    tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-  }
-  if (event.key === "b") {
-    alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
-    alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
-    changeColor(ctx, colorInput, alphaInput);
-    tooltip7.textContent = `alpha: ${alphaInput.value}`;
-    tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-  }
+  // if (event.key === "w") {
+  //   colorInput.value = (parseInt(colorInput.value) + 80).toString();
+  //   colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
+  //   changeColor(ctx, colorInput, alphaInput);
+  //   // tooltip2.textContent = `lightness: ${colorInput.value}`;
+  //   // tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
+  // }
+  // if (event.key === "q") {
+  //   colorInput.value = (parseInt(colorInput.value) - 80).toString();
+  //   colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
+  //   changeColor(ctx, colorInput, alphaInput);
+  //   // tooltip2.textContent = `lightness: ${colorInput.value}`;
+  //   // tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
+  // }
+  // if (event.key === "n") {
+  //   alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
+  //   alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
+  //   changeColor(ctx, colorInput, alphaInput);
+  //   // tooltip7.textContent = `alpha: ${alphaInput.value}`;
+  //   // tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
+  // }
+  // if (event.key === "b") {
+  //   alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
+  //   alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
+  //   changeColor(ctx, colorInput, alphaInput);
+  //   // tooltip7.textContent = `alpha: ${alphaInput.value}`;
+  //   // tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
+  // }
   if (event.key === "f") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
-    tooltip1.textContent = `font-size: ${fontInput.value}`;
-    tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+    //   tooltip1.textContent = `font-size: ${fontInput.value}`;
+    //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "d") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     fontInput.nextElementSibling.value = fontInput.value;
     changeFontSize(ctx, fontInput);
-    tooltip1.textContent = `font-size: ${fontInput.value}`;
-    tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+    // tooltip1.textContent = `font-size: ${fontInput.value}`;
+    // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
-    tooltip5.textContent = `offset-x: ${offsetX.value}`;
-    tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
+    // tooltip5.textContent = `offset-x: ${offsetX.value}`;
+    // tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
   if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     offsetX.nextElementSibling.value = offsetX.value;
-    tooltip5.textContent = `offset-x: ${offsetX.value}`;
-    tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
+    // tooltip5.textContent = `offset-x: ${offsetX.value}`;
+    // tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
   if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
     offsetY.nextElementSibling.value = offsetY.value;
-    tooltip6.textContent = `offset-y: ${offsetY.value}`;
-    tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
+    // tooltip6.textContent = `offset-y: ${offsetY.value}`;
+    // tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
   if (event.key === "t") {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     offsetY.nextElementSibling.value = offsetY.value;
-    tooltip6.textContent = `offset-y: ${offsetY.value}`;
-    tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
+    //   tooltip6.textContent = `offset-y: ${offsetY.value}`;
+    //   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
   if (event.key === "a") {
     if (keyMeta) return;
@@ -610,14 +648,14 @@ document.addEventListener("keydown", (event) => {
         }
       }
     }
-    const previousTextWidth = tooltip3.textContent.length * 7;
-    tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
-    tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
-    const currentTextWidth = tooltip3.textContent.length * 7;
-    const textWidthDifference = previousTextWidth - currentTextWidth;
-    const tooltip4Style = window.getComputedStyle(tooltip4);
-    const tooltip4LeftValue = parseInt(tooltip4Style.left);
-    tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
+    // const previousTextWidth = tooltip3.textContent.length * 7;
+    // tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
+    // tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
+    // const currentTextWidth = tooltip3.textContent.length * 7;
+    // const textWidthDifference = previousTextWidth - currentTextWidth;
+    // const tooltip4Style = window.getComputedStyle(tooltip4);
+    // const tooltip4LeftValue = parseInt(tooltip4Style.left);
+    // tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
   }
   if (event.key === "s") {
     if (keyMeta) return;
@@ -634,8 +672,8 @@ document.addEventListener("keydown", (event) => {
         }
       }
     }
-    tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
-    tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
+    // tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
+    // tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   }
   if (event.key === "p") {
     if (keyMeta) return;
@@ -670,16 +708,16 @@ document.addEventListener("keydown", (event) => {
 
     columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
     columnNumber.nextElementSibling.value = columnNumber.value;
-    tooltip8.textContent = `column-number: ${columnNumber.value}`;
-    tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
+    // tooltip8.textContent = `column-number: ${columnNumber.value}`;
+    // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
   if (event.key === "z") {
     if (keyMeta) return;
 
     columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
     columnNumber.nextElementSibling.value = columnNumber.value;
-    tooltip8.textContent = `column-number: ${columnNumber.value}`;
-    tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
+    // tooltip8.textContent = `column-number: ${columnNumber.value}`;
+    // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
   if (event.key === "Escape") {
     navToggle();
