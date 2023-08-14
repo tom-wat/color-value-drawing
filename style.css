@@ -10,8 +10,8 @@ html{
 }
 body {
   /* Light mode styles */
-  background-color: #eee;
-  color: #333;
+  background-color: #333;
+  color: #eee;
   font-family: sans-serif;
 }
 button,
@@ -22,7 +22,7 @@ textarea {
   font-size: calc(100% - 2px);
   outline-color: darkblue;
   background-color: #fff;
-  border: 1px solid #333;
+  border: none;
   border-radius: 4px;
 }
 
@@ -171,11 +171,5 @@ output{
   }
 }
 @media (prefers-color-scheme: dark) {
-  body { 
-    background-color: #333;
-    color: #fff;
-  }
-  button{
-    border: none;
-  }
+
 }
