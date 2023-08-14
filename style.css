@@ -6,7 +6,7 @@
   box-sizing: border-box;
 }
 html{
-  overflow: scroll;
+  overflow: auto;
 }
 body {
   /* Light mode styles */
