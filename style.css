@@ -52,7 +52,7 @@ output{
   font-weight: 600;
   background-color: hsl(240 5% 17%);
   color: #eee;
-  line-height: 3;
+  line-height: 2;
   text-align: left;
   border-top: 1px solid#333;
   border-bottom: 1px solid#333;
@@ -78,7 +78,7 @@ output{
 .button-type-b label{
   /* border: 1px solid #fff; */
   display: inline-block;
-  line-height: 3;
+  line-height: 2;
   padding-inline: 0.8rem;
   border-left: 1px solid#555;
 }
@@ -92,7 +92,7 @@ output{
   background-color: hsl(240 5% 17%);
   color: #eee;
   display: inline-block;
-  line-height: 3;
+  line-height: 2;
   padding-inline: 1rem;
   border-inline: 1px solid#555;
 }
@@ -114,6 +114,7 @@ input[type="radio"]:checked + label{
 } */
 .flex{
   display: flex;
+  align-items: center;
 }
 .flex > :first-child {
    margin-right: auto;
