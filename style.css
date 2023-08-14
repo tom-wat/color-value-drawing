@@ -63,8 +63,8 @@ output{
   padding: 2rem;
   border-radius: 1rem;
   /* transition: 0.2s; */
-  background-color: #333;
-  border: 1px solid#eee;
+  background-color: hsl(240 5% 17%);
+  border: 1px solid#000;
   top:1rem;
   left:1rem;
 }
@@ -86,13 +86,13 @@ output{
 .open-button{
   width: 64px;
   height: 64px;
-  border: 1px solid #eee;
-  font-size: 16px;
+  border: 1px solid #000;
+  font-size: 24px;
   border-radius: 1rem;
   /* padding: 8px; */
   outline-color: darkblue;
-  background-color: #333;
-  color: #eee;
+  background-color: hsl(240 5% 17%);
+  color: hsl(0, 0%, 80%);
   display: none;
   cursor: pointer;
 }

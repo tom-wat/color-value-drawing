@@ -355,7 +355,7 @@ function drawMultilineText(
 
     context.textBaseline = "top";
     // context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-    context.fillStyle = `hsl( ${colorSet[0][i]}, ${colorSet[1][i]}%, ${colorSet[2][i]}%, ${alphaInput.value}%)`;
+    context.fillStyle = `hsl( ${colorSet[0][i]}, ${colorSet[1][i]}%, ${colorSet[2][i]}%`;
 
     drawRoundedRectangle(
       context,
@@ -371,12 +371,12 @@ function drawMultilineText(
     // } else {
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
-    context.fillStyle = `hsl( 0, 0%, 10%, ${alphaInput.value}%)`;
+    context.fillStyle = `hsl( 0, 0%, 10%)`;
     if (
       (i === 1 && colorElements[1].substring(2) < 20) ||
       (i === 1 && colorElements[1].substring(2) > 200)
     ) {
-      context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
+      context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     if (
       (i === 2 && colorElements[1].substring(2) < 45) ||
@@ -388,10 +388,10 @@ function drawMultilineText(
         colorElements[1].substring(2) < 200 &&
         colorElements[2].substring(2) < 60)
     ) {
-      context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
+      context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     if (i === 3 && colorElements[3].substring(2) <= 50) {
-      context.fillStyle = `hsl( 0, 0%, 94%, ${alphaInput.value}%)`;
+      context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     context.fillText(
       colorElement,
@@ -1007,6 +1007,5 @@ document.addEventListener("keyup", (event) => {
 // }
 
 function navToggle() {
-  console.log(navigation);
   navigation.classList.toggle("close");
 }
