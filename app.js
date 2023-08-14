@@ -374,7 +374,7 @@ function drawMultilineText(
     ) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
-    if (i === 3 && hsl.h <= 50) {
+    if (i === 3 && hsl.l <= 50) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     context.fillText(
@@ -420,7 +420,7 @@ canvas.addEventListener("click", function (event) {
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
   const columnNumberValue = columnNumber.value;
-  const colorElements = colorText.split(",");
+
   // クリックした場所のピクセルカラー情報を取得する
   // const color = ctx.getImageData(x, y, 1, 1).data;
 
