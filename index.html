@@ -21,7 +21,7 @@
         <div class="nav-content">
           <button
             id="file-button"
-            class="button flex"
+            class="button flex border-block-start border-block-end"
             onclick="fileInput.click()"
             tabindex="1"
           >
@@ -29,12 +29,16 @@
           </button>
           <input type="file" id="file-input" />
 
-          <button id="download-btn" class="button flex" tabindex="2">
+          <button
+            id="download-btn"
+            class="button flex border-block-end"
+            tabindex="2"
+          >
             <span>Download</span><span class="shortcut">P</span>
           </button>
           <button
             id="undo-btn"
-            class="button flex"
+            class="button flex border-block-end"
             class="flex"
             onclick="undo()"
             tabindex="3"
@@ -44,18 +48,22 @@
 
           <button
             id="redo-btn"
-            class="button flex"
+            class="button flex border-block-end"
             onclick="redo()"
             tabindex="4"
           >
             <span>Redo</span><span class="shortcut">Shift + Command + Z</span>
           </button>
 
-          <button class="button flex" onclick="clearCanvas()" tabindex="5">
+          <button
+            class="button flex border-block-end"
+            onclick="clearCanvas()"
+            tabindex="5"
+          >
             <span>Clear</span><span class="shortcut">E</span>
           </button>
 
-          <div class="button scale flex button-type-b">
+          <div class="button scale flex button-type-b border-block-end">
             <span>Scale</span>
             <form id="scale" class="flex margin-right">
               <input
@@ -66,7 +74,12 @@
                 tabindex="-1"
                 checked
               />
-              <label for="scale-full" tabindex="6">Full</label>
+              <label
+                for="scale-full"
+                tabindex="6"
+                class="border-inline-start border-inline-end"
+                >Full</label
+              >
               <input
                 type="radio"
                 id="scale-half"
@@ -74,7 +87,9 @@
                 value="half"
                 tabindex="-1"
               />
-              <label for="scale-half" tabindex="7">1/2</label>
+              <label for="scale-half" tabindex="7" class="border-inline-end"
+                >1/2</label
+              >
               <input
                 type="radio"
                 id="scale-quarter"
@@ -82,7 +97,9 @@
                 value="quarter"
                 tabindex="-1"
               />
-              <label for="scale-quarter" tabindex="8">1/4</label>
+              <label for="scale-quarter" tabindex="8" class="border-inline-end"
+                >1/4</label
+              >
               <input
                 type="radio"
                 id="scale-window"
@@ -90,12 +107,14 @@
                 value="window"
                 tabindex="-1"
               />
-              <label for="scale-window" tabindex="9">Window</label>
+              <label for="scale-window" tabindex="9" class="border-inline-end"
+                >Window</label
+              >
             </form>
             <span class="shortcut">V</span>
           </div>
 
-          <div class="button flex button-type-b">
+          <div class="button flex button-type-b border-block-end">
             <span>Position-X</span>
             <form id="data-drawing-position-x" class="flex margin-right">
               <input
@@ -105,7 +124,12 @@
                 value="left"
                 tabindex="-1"
               />
-              <label for="drawing-position-x-left" tabindex="10">Left</label>
+              <label
+                for="drawing-position-x-left"
+                tabindex="10"
+                class="border-inline-start border-inline-end"
+                >Left</label
+              >
               <input
                 type="radio"
                 id="drawing-position-x-right"
@@ -114,12 +138,17 @@
                 tabindex="-1"
                 checked
               />
-              <label for="drawing-position-x-right" tabindex="11">Right</label>
+              <label
+                for="drawing-position-x-right"
+                tabindex="11"
+                class="border-inline-end"
+                >Right</label
+              >
             </form>
             <span class="shortcut">A</span>
           </div>
 
-          <div class="button flex button-type-b">
+          <div class="button flex button-type-b border-block-end">
             <span>Position-Y</span>
             <form id="data-drawing-position-y" class="flex margin-right">
               <input
@@ -129,7 +158,12 @@
                 value="top"
                 tabindex="-1"
               />
-              <label for="drawing-position-y-top" tabindex="12">Top</label>
+              <label
+                for="drawing-position-y-top"
+                tabindex="12"
+                class="border-inline-start border-inline-end"
+                >Top</label
+              >
               <input
                 type="radio"
                 id="drawing-position-y-bottom"
@@ -138,14 +172,20 @@
                 tabindex="-1"
                 checked
               />
-              <label for="drawing-position-y-bottom" tabindex="13"
+              <label
+                for="drawing-position-y-bottom"
+                tabindex="13"
+                class="border-inline-end"
                 >Bottom</label
               >
             </form>
             <span class="shortcut">S</span>
           </div>
 
-          <button class="button flex button-type-b" tabindex="-1">
+          <button
+            class="button flex button-type-b border-block-end"
+            tabindex="-1"
+          >
             <span>Offset-X</span>
             <input
               type="range"
@@ -157,20 +197,29 @@
               tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="offset-x-subtract" class="inline-button" tabindex="14"
+              <span
+                id="offset-x-subtract"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="14"
                 >-</span
               >
               <output id="offset-x-output" name="offset-x-output" for="offset-x"
                 >0</output
               >
-              <span id="offset-x-add" class="inline-button" tabindex="15"
+              <span
+                id="offset-x-add"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="15"
                 >+</span
               >
             </div>
             <span class="shortcut">G, H</span>
           </button>
 
-          <button class="button flex button-type-b" tabindex="-1">
+          <button
+            class="button flex button-type-b border-block-end"
+            tabindex="-1"
+          >
             <span>Offset-Y</span>
             <input
               type="range"
@@ -182,20 +231,29 @@
               tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="offset-y-subtract" class="inline-button" tabindex="16"
+              <span
+                id="offset-y-subtract"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="16"
                 >-</span
               >
               <output id="offset-y-output" name="offset-y-output" for="offset-y"
                 >0</output
               >
-              <span id="offset-y-add" class="inline-button" tabindex="17"
+              <span
+                id="offset-y-add"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="17"
                 >+</span
               >
             </div>
             <span class="shortcut">T, Y</span>
           </button>
 
-          <button class="button flex button-type-b" tabindex="-1">
+          <button
+            class="button flex button-type-b border-block-end"
+            tabindex="-1"
+          >
             <span>Font Size</span>
             <input
               type="range"
@@ -207,7 +265,10 @@
               tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="font-size-subtract" class="inline-button" tabindex="18"
+              <span
+                id="font-size-subtract"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="18"
                 >-</span
               >
               <output
@@ -216,7 +277,10 @@
                 for="font-size"
                 >12</output
               >
-              <span id="font-size-add" class="inline-button" tabindex="19"
+              <span
+                id="font-size-add"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="19"
                 >+</span
               >
             </div>
@@ -256,7 +320,10 @@
               >
             </div>
           </div> -->
-          <button class="button flex button-type-b" tabindex="-1">
+          <button
+            class="button flex button-type-b border-block-end"
+            tabindex="-1"
+          >
             <span>Column</span>
             <input
               type="range"
@@ -268,7 +335,10 @@
               tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="column-subtract" class="inline-button" tabindex="20"
+              <span
+                id="column-subtract"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="20"
                 >-</span
               >
               <output
@@ -277,17 +347,25 @@
                 for="column-number"
                 >1</output
               >
-              <span id="column-add" class="inline-button" tabindex="21">+</span>
+              <span
+                id="column-add"
+                class="inline-button border-inline-start border-inline-end"
+                tabindex="21"
+                >+</span
+              >
             </div>
             <span class="shortcut">Z, X</span>
           </button>
-          <button class="button flex button-type-b" tabindex="-1">
+          <button
+            class="button flex button-type-b border-block-end"
+            tabindex="-1"
+          >
             <p>Color</p>
             <div id="colorInfo">L : ---, h : ---, s : ---, l : ---</div>
           </button>
           <button
             id="close-button"
-            class="button flex"
+            class="button flex border-block-end"
             onclick="navToggle()"
             tabindex="22"
           >
