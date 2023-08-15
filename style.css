@@ -45,12 +45,7 @@ input[type='range']::-moz-range-thumb{
 output{
   padding-inline: 1rem;
 }
-.border-block-start{
-  border-block-start: 1px solid #333;
-}
-.border-block-end{
-  border-block-end: 1px solid #333;
-}
+
 .button{
   font-size: 14px;
   padding-inline: 2rem;
@@ -104,7 +99,6 @@ output{
   display: inline-block;
   line-height: 2;
   padding-inline: 1rem;
-  /* border-inline: 1px solid#555; */
 }
 span.inline-button{
   outline: transparent;
@@ -273,6 +267,18 @@ input[type="radio"]:checked + label{
   }
   .shortcut{
     display: none;
+  }
+  .border-block-start{
+    border-block-start: 1px solid #333;
+  }
+  .border-block-end{
+    border-block-end: 1px solid #333;
+  }
+  .border-inline-start{
+    border-inline-start: 1px solid #333;
+  }
+  .border-inline-end{
+    border-inline-end: 1px solid #333;
   }
 }
 @media (prefers-color-scheme: dark) {
