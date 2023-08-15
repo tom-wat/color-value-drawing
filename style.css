@@ -78,7 +78,7 @@ output{
 }
 .button-type-b label{
   /* border: 1px solid #fff; */
-  display: inline-block;
+  /* display: inline-block; */
   line-height: 2;
   padding-inline: 0.8rem;
   /* border-left: 1px solid#555; */
@@ -139,6 +139,9 @@ input[type="radio"]:checked + label{
 }
 .margin-right{
   margin-right: 10px;
+}
+.height-100{
+  height: 100%;
 }
 #file-input {
   display: none;
