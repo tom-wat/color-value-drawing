@@ -5,6 +5,7 @@ const container = document.querySelector(".container");
 const dataType = document.getElementById("data-type");
 const webp = document.getElementById("webp");
 const png = document.getElementById("png");
+const clear = document.getElementById("clear-btn");
 const scale = document.getElementById("scale");
 const fontInput = document.getElementById("font-size-input");
 const fontOutput = document.getElementById("font-size-output");
@@ -58,6 +59,9 @@ const scaleWindow = document.getElementById("scale-window");
 // const tooltipInlineMargin = 10;
 // const tooltipBlockMargin = 10;
 
+const isMobile = navigator.userAgent.match(
+  /(iPhone|iPod|iPad|Android|BlackBerry)/
+);
 const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
@@ -294,7 +298,16 @@ function debounce(func, delay, immediate) {
 //   console.log(offsetX);
 //   dom.value -= 1;
 // }
-
+fileButton.addEventListener("click", function () {
+  if (!!isMobile) {
+    navToggle();
+  }
+});
+clear.addEventListener("click", function () {
+  if (!!isMobile) {
+    navToggle();
+  }
+});
 offsetXadd.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
   count += 1;
@@ -328,12 +341,16 @@ offsetYadd.addEventListener("click", function () {
   count += 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
+  offsetYadd.blur();
+  console.log(document.activeElement);
 });
 offsetYSubtract.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
   count -= 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
+  offsetYSubtract.blur();
+  console.log(document.activeElement);
 });
 offsetYadd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
@@ -341,6 +358,8 @@ offsetYadd.addEventListener("keydown", (event) => {
     count += 1;
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
+    offsetYSubtract.blur();
+    console.log(document.activeElement);
   }
 });
 offsetYSubtract.addEventListener("keydown", (event) => {
@@ -349,6 +368,8 @@ offsetYSubtract.addEventListener("keydown", (event) => {
     count -= 1;
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
+    offsetYSubtract.blur();
+    console.log(document.activeElement);
   }
 });
 fontSizeAdd.addEventListener("click", function () {
@@ -383,19 +404,22 @@ fontSizeSubtract.addEventListener("keydown", (event) => {
     changeFontSize(ctx, fontInput);
   }
 });
-columnAdd.addEventListener("click", function () {
+columnAdd.addEventListener("click", function (event) {
+  // event.stopPropagation();
   let count = parseInt(columnNumber.value);
   count += 1;
   columnNumber.value = String(count);
   updateOutput(columnNumber, columnNumberOutput);
 });
-columnSubtract.addEventListener("click", function () {
+columnSubtract.addEventListener("click", function (event) {
+  // event.stopPropagation();
   let count = parseInt(columnNumber.value);
   count -= 1;
   columnNumber.value = String(count);
   updateOutput(columnNumber, columnNumberOutput);
 });
 columnAdd.addEventListener("keydown", (event) => {
+  // event.stopPropagation();
   if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(columnNumber.value);
     count += 1;
@@ -404,6 +428,7 @@ columnAdd.addEventListener("keydown", (event) => {
   }
 });
 columnSubtract.addEventListener("keydown", (event) => {
+  // event.stopPropagation();
   if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(columnNumber.value);
     count -= 1;
