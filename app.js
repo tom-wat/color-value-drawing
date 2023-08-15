@@ -341,16 +341,12 @@ offsetYadd.addEventListener("click", function () {
   count += 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
-  offsetYadd.blur();
-  console.log(document.activeElement);
 });
 offsetYSubtract.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
   count -= 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
-  offsetYSubtract.blur();
-  console.log(document.activeElement);
 });
 offsetYadd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {

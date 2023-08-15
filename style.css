@@ -60,11 +60,6 @@ output{
 
   /* transition: 0.1s; */
 }
-
-.button:hover{
-  background-color: #eee;
-  color: #333;
-}
 /* .button:focus{
   background-color: #eee;
   color: #333;
@@ -81,10 +76,7 @@ output{
   background-color: #fff;
   color: #333;
 }
-.button-type-b:hover{
-  background-color: hsl(240 5% 17%);
-  color: #eee;
-}
+
 .button-type-b:focus-visible{
   background-color: hsl(240 5% 17%);
   color: #eee;
@@ -99,9 +91,7 @@ label{
 /* label:last-child{
   border-right: 1px solid#555;
 } */
-label:hover{
-  box-shadow:0 0 0 1px #eee inset;
-}
+
 /* label:focus{
   box-shadow:0 0 0 1px #eee inset;
 } */
@@ -119,10 +109,7 @@ label:focus-visible{
 span.inline-button{
   outline: transparent;
 }
-span.inline-button:hover{
-  background-color: #eee;
-  color: #333;
-}
+
 /* span.inline-button:focus{
   background-color: #eee;
   color: #333;
@@ -262,7 +249,23 @@ input[type="radio"]:checked + label{
   background-color: var(--background-color);
   transform: translate(-50%, 15%);
 }
-
+@media (width > 800px){
+  .button:hover{
+    background-color: #eee;
+    color: #333;
+  }
+  .button-type-b:hover{
+    background-color: hsl(240 5% 17%);
+    color: #eee;
+  }
+  span.inline-button:hover{
+    background-color: #eee;
+    color: #333;
+  }
+  label:hover{
+    box-shadow:0 0 0 1px #eee inset;
+  }
+}
 @media (max-width: 800px) {
 
   #fileInput {
@@ -276,6 +279,7 @@ input[type="radio"]:checked + label{
     bottom: 1rem;
     left: 1rem;
     width: calc(100% - 2rem);
+    max-width: 450px;
     min-width: 280px;
     padding: 1rem 0;
     height: auto;
@@ -307,6 +311,7 @@ input[type="radio"]:checked + label{
   .border-inline-end{
     border-inline-end: 1px solid #333;
   }
+
 }
 @media (prefers-color-scheme: dark) {
 
