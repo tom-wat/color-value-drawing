@@ -76,20 +76,20 @@ output{
   background-color: hsl(240 5% 17%);
   color: #eee;
 }
-.button-type-b label{
+label{
   /* border: 1px solid #fff; */
   /* display: inline-block; */
   line-height: 2;
   padding-inline: 0.8rem;
   /* border-left: 1px solid#555; */
 }
-/* .button-type-b label:last-child{
+/* label:last-child{
   border-right: 1px solid#555;
 } */
-.button-type-b label:hover{
+label:hover{
   box-shadow:0 0 0 1px #eee inset;
 }
-.button-type-b label:focus-visible{
+label:focus-visible{
   box-shadow:0 0 0 1px #eee inset;
 }
 .inline-button{
