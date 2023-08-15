@@ -70,6 +70,14 @@ let redoStates = [];
 let initialState;
 let currentStates;
 
+document.addEventListener("DOMContentLoaded", function () {
+  const tabbableElements = document.querySelectorAll("[data-tabindex]");
+
+  tabbableElements.forEach(function (element, index) {
+    element.setAttribute("tabindex", index + 1);
+  });
+});
+
 function updateOutput(inputField, outputField) {
   const inputValue = inputField.value; // 入力値を取得
 
