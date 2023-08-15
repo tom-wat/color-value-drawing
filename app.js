@@ -287,7 +287,7 @@ offsetXSubtract.addEventListener("click", function () {
   updateOutput(offsetX, offsetXOutput);
 });
 offsetXadd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetX.value);
     count += 1;
     offsetX.value = String(count);
@@ -295,7 +295,7 @@ offsetXadd.addEventListener("keydown", (event) => {
   }
 });
 offsetXSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetX.value);
     count -= 1;
     offsetX.value = String(count);
@@ -315,7 +315,7 @@ offsetYSubtract.addEventListener("click", function () {
   updateOutput(offsetY, offsetYOutput);
 });
 offsetYadd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetY.value);
     count += 1;
     offsetY.value = String(count);
@@ -323,7 +323,7 @@ offsetYadd.addEventListener("keydown", (event) => {
   }
 });
 offsetYSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetY.value);
     count -= 1;
     offsetY.value = String(count);
@@ -345,7 +345,7 @@ fontSizeSubtract.addEventListener("click", function () {
   changeFontSize(ctx, fontInput);
 });
 fontSizeAdd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(fontInput.value);
     count += 1;
     fontInput.value = String(count);
@@ -354,7 +354,7 @@ fontSizeAdd.addEventListener("keydown", (event) => {
   }
 });
 fontSizeSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(fontInput.value);
     count -= 1;
     fontInput.value = String(count);
@@ -375,7 +375,7 @@ columnSubtract.addEventListener("click", function () {
   updateOutput(columnNumber, columnNumberOutput);
 });
 columnAdd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(columnNumber.value);
     count += 1;
     columnNumber.value = String(count);
@@ -383,7 +383,7 @@ columnAdd.addEventListener("keydown", (event) => {
   }
 });
 columnSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(columnNumber.value);
     count -= 1;
     columnNumber.value = String(count);
@@ -392,47 +392,47 @@ columnSubtract.addEventListener("keydown", (event) => {
 });
 
 scaleFull.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     scaleFull.checked = true;
   }
 });
 scaleHalf.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     scaleHalf.checked = true;
   }
 });
 scaleQuarter.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     scaleQuarter.checked = true;
   }
 });
 scaleWindow.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     scaleWindow.checked = true;
   }
 });
 drawingPositionXLeft.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     drawingPositionXLeft.checked = true;
   }
 });
 drawingPositionXRight.nextElementSibling.addEventListener(
   "keydown",
   (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === " ") {
       drawingPositionXRight.checked = true;
     }
   }
 );
 drawingPositionYTop.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     drawingPositionYTop.checked = true;
   }
 });
 drawingPositionYBottom.nextElementSibling.addEventListener(
   "keydown",
   (event) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === " ") {
       drawingPositionYBottom.checked = true;
     }
   }

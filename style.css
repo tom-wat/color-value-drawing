@@ -17,7 +17,8 @@ body {
 button,
 input,
 select,
-textarea {
+textarea,
+label {
   font-family: inherit;
   outline: transparent;
   border: none;
@@ -88,6 +89,9 @@ output{
 .button-type-b label:hover{
   box-shadow:0 0 0 1px #eee inset;
 }
+.button-type-b label:focus-visible{
+  box-shadow:0 0 0 1px #eee inset;
+}
 .inline-button{
   font-weight: 600;
   background-color: hsl(240 5% 17%);
@@ -97,7 +101,14 @@ output{
   padding-inline: 1rem;
   border-inline: 1px solid#555;
 }
+span.inline-button{
+  outline: transparent;
+}
 span.inline-button:hover{
+  background-color: #eee;
+  color: #333;
+}
+span.inline-button:focus-visible{
   background-color: #eee;
   color: #333;
 }
