@@ -21,7 +21,7 @@
         <div class="nav-content">
           <button
             id="file-button"
-            class="button flex border-block-start border-block-end"
+            class="button flex border-block-start border-block-end active-button"
             onclick="fileInput.click()"
             data-tabindex
           >
@@ -31,7 +31,7 @@
 
           <button
             id="download-btn"
-            class="button flex border-block-end"
+            class="button flex border-block-end active-button"
             data-tabindex
           >
             <span>Download</span>
@@ -74,7 +74,7 @@
           </button>
           <button
             id="undo-btn"
-            class="button flex border-block-end"
+            class="button flex border-block-end active-button"
             class="flex"
             onclick="undo()"
             data-tabindex
@@ -84,7 +84,7 @@
 
           <button
             id="redo-btn"
-            class="button flex border-block-end"
+            class="button flex border-block-end active-button"
             onclick="redo()"
             data-tabindex
           >
@@ -92,7 +92,8 @@
           </button>
 
           <button
-            class="button flex border-block-end"
+            id="clear-btn"
+            class="button flex border-block-end active-button"
             onclick="clearCanvas()"
             data-tabindex
           >
@@ -235,7 +236,7 @@
             <div class="flex margin-right">
               <span
                 id="offset-x-subtract"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >-</span
               >
@@ -244,7 +245,7 @@
               >
               <span
                 id="offset-x-add"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >+</span
               >
@@ -269,7 +270,7 @@
             <div class="flex margin-right">
               <span
                 id="offset-y-subtract"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >-</span
               >
@@ -278,7 +279,7 @@
               >
               <span
                 id="offset-y-add"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >+</span
               >
@@ -303,7 +304,7 @@
             <div class="flex margin-right">
               <span
                 id="font-size-subtract"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >-</span
               >
@@ -315,7 +316,7 @@
               >
               <span
                 id="font-size-add"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >+</span
               >
@@ -373,7 +374,7 @@
             <div class="flex margin-right">
               <span
                 id="column-subtract"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >-</span
               >
@@ -385,7 +386,7 @@
               >
               <span
                 id="column-add"
-                class="inline-button border-inline-start border-inline-end"
+                class="inline-button border-inline-start border-inline-end active-button"
                 data-tabindex
                 >+</span
               >
@@ -401,7 +402,7 @@
           </button>
           <button
             id="close-button"
-            class="button flex border-block-end"
+            class="button flex border-block-end active-button"
             onclick="navToggle()"
             data-tabindex
           >

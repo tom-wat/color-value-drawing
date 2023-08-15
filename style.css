@@ -60,12 +60,25 @@ output{
 
   /* transition: 0.1s; */
 }
+
 .button:hover{
   background-color: #eee;
   color: #333;
 }
+/* .button:focus{
+  background-color: #eee;
+  color: #333;
+} */
 .button:focus-visible{
   background-color: #eee;
+  color: #333;
+}
+/* .button:active{
+  background-color: #fff;
+  color: #333;
+} */
+.active-button:active{
+  background-color: #fff;
   color: #333;
 }
 .button-type-b:hover{
@@ -89,6 +102,9 @@ label{
 label:hover{
   box-shadow:0 0 0 1px #eee inset;
 }
+/* label:focus{
+  box-shadow:0 0 0 1px #eee inset;
+} */
 label:focus-visible{
   box-shadow:0 0 0 1px #eee inset;
 }
@@ -107,8 +123,16 @@ span.inline-button:hover{
   background-color: #eee;
   color: #333;
 }
+/* span.inline-button:focus{
+  background-color: #eee;
+  color: #333;
+} */
 span.inline-button:focus-visible{
   background-color: #eee;
+  color: #333;
+}
+span.inline-button:active{
+  background-color: #fff;
   color: #333;
 }
 input[type="radio"]:checked + label{
