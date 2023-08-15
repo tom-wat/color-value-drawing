@@ -271,10 +271,10 @@ offsetXadd.addEventListener("click", function () {
   updateOutput(offsetX, offsetXOutput);
 });
 offsetXSubtract.addEventListener("click", function () {
-  let count = parseInt(offsetY.value);
+  let count = parseInt(offsetX.value);
   count -= 1;
-  offsetY.value = String(count);
-  updateOutput(offsetY, offsetYOutput);
+  offsetX.value = String(count);
+  updateOutput(offsetX, offsetYOutput);
 });
 offsetYadd.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
