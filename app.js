@@ -5,10 +5,14 @@ const container = document.querySelector(".container");
 const scale = document.getElementById("scale");
 const fontInput = document.getElementById("font-size-input");
 const fontOutput = document.getElementById("font-size-output");
+const fontSizeAdd = document.getElementById("font-size-add");
+const fontSizeSubtract = document.getElementById("font-size-subtract");
 // const colorInput = document.getElementById("font-color-input");
 // const alphaInput = document.getElementById("font-color-alpha-input");
 const columnNumber = document.getElementById("column-number");
 const columnNumberOutput = document.getElementById("column-number-output");
+const columnAdd = document.getElementById("column-add");
+const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
 const navigation = document.getElementById("navigation");
 const closeButton = document.getElementById("close-button");
@@ -16,6 +20,10 @@ const drawingPositionX = document.getElementById("data-drawing-position-x");
 const drawingPositionY = document.getElementById("data-drawing-position-y");
 const offsetX = document.getElementById("offset-x");
 const offsetXOutput = document.getElementById("offset-x-output");
+const offsetXadd = document.getElementById("offset-x-add");
+const offsetXSubtract = document.getElementById("offset-x-subtract");
+const offsetYadd = document.getElementById("offset-y-add");
+const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -242,6 +250,70 @@ function debounce(func, delay, immediate) {
     }
   };
 }
+
+// function addCount() {
+//   console.log(this.dom.value);
+//   let count = parseInt(this.dom.value);
+//   count += 1;
+//   this.dom.value = String(count);
+//   updateOutput(offsetX, offsetXOutput);
+// }
+
+// function subtractCount(dom) {
+//   console.log(offsetX);
+//   dom.value -= 1;
+// }
+
+offsetXadd.addEventListener("click", function () {
+  let count = parseInt(offsetX.value);
+  count += 1;
+  offsetX.value = String(count);
+  updateOutput(offsetX, offsetXOutput);
+});
+offsetXSubtract.addEventListener("click", function () {
+  let count = parseInt(offsetY.value);
+  count -= 1;
+  offsetY.value = String(count);
+  updateOutput(offsetY, offsetYOutput);
+});
+offsetYadd.addEventListener("click", function () {
+  let count = parseInt(offsetY.value);
+  count += 1;
+  offsetY.value = String(count);
+  updateOutput(offsetY, offsetYOutput);
+});
+offsetYSubtract.addEventListener("click", function () {
+  let count = parseInt(offsetY.value);
+  count -= 1;
+  offsetY.value = String(count);
+  updateOutput(offsetY, offsetYOutput);
+});
+fontSizeAdd.addEventListener("click", function () {
+  let count = parseInt(fontInput.value);
+  count += 1;
+  fontInput.value = String(count);
+  updateOutput(fontInput, fontOutput);
+  changeFontSize(ctx, fontInput);
+});
+fontSizeSubtract.addEventListener("click", function () {
+  let count = parseInt(fontInput.value);
+  count -= 1;
+  fontInput.value = String(count);
+  updateOutput(fontInput, fontOutput);
+  changeFontSize(ctx, fontInput);
+});
+columnAdd.addEventListener("click", function () {
+  let count = parseInt(columnNumber.value);
+  count += 1;
+  columnNumber.value = String(count);
+  updateOutput(columnNumber, columnNumberOutput);
+});
+columnSubtract.addEventListener("click", function () {
+  let count = parseInt(columnNumber.value);
+  count -= 1;
+  columnNumber.value = String(count);
+  updateOutput(columnNumber, columnNumberOutput);
+});
 
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
