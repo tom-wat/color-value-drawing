@@ -23,12 +23,13 @@
             id="file-button"
             class="button flex"
             onclick="fileInput.click()"
+            tabindex="1"
           >
             <span>Read a file</span><span class="shortcut">R</span>
           </button>
           <input type="file" id="file-input" />
 
-          <button id="download-btn" class="button flex">
+          <button id="download-btn" class="button flex" tabindex="2">
             <span>Download</span><span class="shortcut">P</span>
           </button>
           <button
@@ -36,43 +37,60 @@
             class="button flex"
             class="flex"
             onclick="undo()"
+            tabindex="3"
           >
-            <span>Undo</span><span class="shortcut">⌘Z</span>
+            <span>Undo</span><span class="shortcut">Command + Z</span>
           </button>
-          <button id="redo-btn" class="button flex" onclick="redo()">
-            <span>Redo</span><span class="shortcut">⇧⌘Z</span>
+
+          <button
+            id="redo-btn"
+            class="button flex"
+            onclick="redo()"
+            tabindex="4"
+          >
+            <span>Redo</span><span class="shortcut">Shift + Command + Z</span>
           </button>
-          <button class="button flex" onclick="clearCanvas()">
+
+          <button class="button flex" onclick="clearCanvas()" tabindex="5">
             <span>Clear</span><span class="shortcut">E</span>
           </button>
+
           <div class="button scale flex button-type-b">
             <span>Scale</span>
-
             <form id="scale" class="flex margin-right">
               <input
                 type="radio"
                 id="scale-full"
                 name="scale"
                 value="full"
+                tabindex="-1"
                 checked
               />
-              <label for="scale-full">Full</label>
-              <input type="radio" id="scale-half" name="scale" value="half" />
-              <label for="scale-half">1/2</label>
+              <label for="scale-full" tabindex="6">Full</label>
+              <input
+                type="radio"
+                id="scale-half"
+                name="scale"
+                value="half"
+                tabindex="-1"
+              />
+              <label for="scale-half" tabindex="7">1/2</label>
               <input
                 type="radio"
                 id="scale-quarter"
                 name="scale"
                 value="quarter"
+                tabindex="-1"
               />
-              <label for="scale-quarter">1/4</label>
+              <label for="scale-quarter" tabindex="8">1/4</label>
               <input
                 type="radio"
                 id="scale-window"
                 name="scale"
                 value="window"
+                tabindex="-1"
               />
-              <label for="scale-window">Window</label>
+              <label for="scale-window" tabindex="9">Window</label>
             </form>
             <span class="shortcut">V</span>
           </div>
@@ -85,16 +103,18 @@
                 id="drawing-position-x-left"
                 name="positionX"
                 value="left"
+                tabindex="-1"
               />
-              <label for="drawing-position-x-left">Left</label>
+              <label for="drawing-position-x-left" tabindex="10">Left</label>
               <input
                 type="radio"
                 id="drawing-position-x-right"
                 name="positionX"
                 value="right"
+                tabindex="-1"
                 checked
               />
-              <label for="drawing-position-x-right">Right</label>
+              <label for="drawing-position-x-right" tabindex="11">Right</label>
             </form>
             <span class="shortcut">A</span>
           </div>
@@ -107,21 +127,25 @@
                 id="drawing-position-y-top"
                 name="positionY"
                 value="top"
+                tabindex="-1"
               />
-              <label for="drawing-position-y-top">Top</label>
+              <label for="drawing-position-y-top" tabindex="12">Top</label>
               <input
                 type="radio"
                 id="drawing-position-y-bottom"
                 name="positionY"
                 value="bottom"
+                tabindex="-1"
                 checked
               />
-              <label for="drawing-position-y-bottom">Bottom</label>
+              <label for="drawing-position-y-bottom" tabindex="13"
+                >Bottom</label
+              >
             </form>
             <span class="shortcut">S</span>
           </div>
 
-          <button class="button flex button-type-b">
+          <button class="button flex button-type-b" tabindex="-1">
             <span>Offset-X</span>
             <input
               type="range"
@@ -130,18 +154,23 @@
               max="4"
               value="0"
               oninput="updateOutput(offsetX, offsetXOutput)"
+              tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="offset-x-subtract" class="inline-button">-</span>
+              <span id="offset-x-subtract" class="inline-button" tabindex="14"
+                >-</span
+              >
               <output id="offset-x-output" name="offset-x-output" for="offset-x"
                 >0</output
               >
-              <span id="offset-x-add" class="inline-button">+</span>
+              <span id="offset-x-add" class="inline-button" tabindex="15"
+                >+</span
+              >
             </div>
             <span class="shortcut">G, H</span>
           </button>
 
-          <button class="button flex button-type-b">
+          <button class="button flex button-type-b" tabindex="-1">
             <span>Offset-Y</span>
             <input
               type="range"
@@ -150,18 +179,23 @@
               max="4"
               value="0"
               oninput="updateOutput(offsetY, offsetYOutput)"
+              tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="offset-y-subtract" class="inline-button">-</span>
+              <span id="offset-y-subtract" class="inline-button" tabindex="16"
+                >-</span
+              >
               <output id="offset-y-output" name="offset-y-output" for="offset-y"
                 >0</output
               >
-              <span id="offset-y-add" class="inline-button">+</span>
+              <span id="offset-y-add" class="inline-button" tabindex="17"
+                >+</span
+              >
             </div>
             <span class="shortcut">T, Y</span>
           </button>
 
-          <button class="button flex button-type-b">
+          <button class="button flex button-type-b" tabindex="-1">
             <span>Font Size</span>
             <input
               type="range"
@@ -170,16 +204,21 @@
               max="30"
               value="12"
               oninput="updateOutput(fontInput, fontOutput)"
+              tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="font-size-subtract" class="inline-button">-</span>
+              <span id="font-size-subtract" class="inline-button" tabindex="18"
+                >-</span
+              >
               <output
                 id="font-size-output"
                 name="font-size-output"
                 for="font-size"
                 >12</output
               >
-              <span id="font-size-add" class="inline-button">+</span>
+              <span id="font-size-add" class="inline-button" tabindex="19"
+                >+</span
+              >
             </div>
             <span class="shortcut">D, F</span>
           </button>
@@ -217,22 +256,7 @@
               >
             </div>
           </div> -->
-          <button class="button flex button-type-b">
-            <!-- <label for="column-number">column-number(z,x):</label
-            ><input
-              type="range"
-              id="column-number"
-              min="1"
-              max="4"
-              value="1"
-              oninput="this.nextElementSibling.value = this.value"
-            />
-            <output
-              name="column-number"
-              for="column-number"
-              oninput="this.previousElementSibling.value = this.value"
-              >1</output
-            > -->
+          <button class="button flex button-type-b" tabindex="-1">
             <span>Column</span>
             <input
               type="range"
@@ -241,25 +265,33 @@
               max="4"
               value="1"
               oninput="updateOutput(fontInput, fontOutput)"
+              tabindex="-1"
             />
             <div class="flex margin-right">
-              <span id="column-subtract" class="inline-button">-</span>
+              <span id="column-subtract" class="inline-button" tabindex="20"
+                >-</span
+              >
               <output
                 id="column-number-output"
                 name="column-number-output"
                 for="column-number"
                 >1</output
               >
-              <span id="column-add" class="inline-button">+</span>
+              <span id="column-add" class="inline-button" tabindex="21">+</span>
             </div>
             <span class="shortcut">Z, X</span>
           </button>
-          <button class="button flex">
+          <button class="button flex button-type-b" tabindex="-1">
             <p>Color</p>
             <div id="colorInfo">L : ---, h : ---, s : ---, l : ---</div>
           </button>
-          <button id="close-button" class="button flex" onclick="navToggle()">
-            <span>Close</span><span class="shortcut">esc</span>
+          <button
+            id="close-button"
+            class="button flex"
+            onclick="navToggle()"
+            tabindex="22"
+          >
+            <span>Close</span><span class="shortcut">Escape</span>
           </button>
         </div>
         <button id="open-button" class="open-button" onclick="navToggle()">

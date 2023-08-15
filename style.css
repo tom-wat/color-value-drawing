@@ -19,7 +19,7 @@ input,
 select,
 textarea {
   font-family: inherit;
-  outline: none;
+  outline: transparent;
   border: none;
 }
 input[type='radio'] {
@@ -63,7 +63,7 @@ output{
   background-color: #eee;
   color: #333;
 }
-.button:focus{
+.button:focus-visible{
   background-color: #eee;
   color: #333;
 }
@@ -71,7 +71,7 @@ output{
   background-color: hsl(240 5% 17%);
   color: #eee;
 }
-.button-type-b:focus{
+.button-type-b:focus-visible{
   background-color: hsl(240 5% 17%);
   color: #eee;
 }
@@ -83,9 +83,10 @@ output{
   border-left: 1px solid#555;
 }
 .button-type-b label:last-child{
-
   border-right: 1px solid#555;
-
+}
+.button-type-b label:hover{
+  box-shadow:0 0 0 1px #eee inset;
 }
 .inline-button{
   font-weight: 600;
@@ -95,6 +96,10 @@ output{
   line-height: 2;
   padding-inline: 1rem;
   border-inline: 1px solid#555;
+}
+span.inline-button:hover{
+  background-color: #eee;
+  color: #333;
 }
 input[type="radio"]:checked + label{
   background-color: #eee;
@@ -168,6 +173,12 @@ input[type="radio"]:checked + label{
   color: hsl(0, 0%, 80%);
   display: none;
   cursor: pointer;
+}
+.open-button:focus{
+  box-shadow:0 0 0 1px #eee inset;
+}
+.open-button:hover{
+  box-shadow:0 0 0 1px #eee inset;
 }
 .navigation.close .open-button{
   display: block;  
