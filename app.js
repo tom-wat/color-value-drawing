@@ -2,6 +2,9 @@ const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
+const dataType = document.getElementById("data-type");
+const webp = document.getElementById("webp");
+const png = document.getElementById("png");
 const scale = document.getElementById("scale");
 const fontInput = document.getElementById("font-size-input");
 const fontOutput = document.getElementById("font-size-output");
@@ -55,6 +58,7 @@ const scaleWindow = document.getElementById("scale-window");
 // const tooltipInlineMargin = 10;
 // const tooltipBlockMargin = 10;
 
+const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
@@ -236,12 +240,21 @@ function rgbToLab(R, G, B) {
 
 function download() {
   // Canvasのイメージデータを取得する
-  const imageData = canvas.toDataURL("image/png");
+  let imageData;
+  if (png.checked) {
+    imageData = canvas.toDataURL("image/png");
+  } else {
+    imageData = canvas.toDataURL("image/webP", 0.75);
+  }
 
   // ダウンロード用のリンクを作成する
   const downloadLink = document.createElement("a");
   downloadLink.href = imageData;
-  downloadLink.download = "image.png";
+  if (png.checked) {
+    downloadLink.download = "image.png";
+  } else {
+    downloadLink.download = "image.webp";
+  }
 
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
@@ -445,6 +458,30 @@ drawingPositionYBottom.nextElementSibling.addEventListener(
     }
   }
 );
+webp.nextElementSibling.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (event.key === "Enter" || event.key === " ") {
+    webp.checked = true;
+  }
+});
+png.nextElementSibling.addEventListener("click", (event) => {
+  event.stopPropagation();
+  if (event.key === "Enter" || event.key === " ") {
+    png.checked = true;
+  }
+});
+webp.nextElementSibling.addEventListener("keydown", (event) => {
+  event.stopPropagation();
+  if (event.key === "Enter" || event.key === " ") {
+    webp.checked = true;
+  }
+});
+png.nextElementSibling.addEventListener("keydown", (event) => {
+  event.stopPropagation();
+  if (event.key === "Enter" || event.key === " ") {
+    png.checked = true;
+  }
+});
 
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
@@ -899,6 +936,24 @@ document.addEventListener("keydown", (event) => {
           //次の要素をチェック
         } else {
           scaleRadioNodeList[i + 1].checked = true;
+          break;
+        }
+      }
+    }
+  }
+  if (event.key === "l") {
+    if (keyMeta) return;
+
+    for (let i = 0; i < dataTypeRadioNodeList.length; i++) {
+      if (dataTypeRadioNodeList[i].checked) {
+        dataTypeRadioNodeList[i].checked = false;
+        //最初の要素に戻ってチェック
+        if (i + 1 === dataTypeRadioNodeList.length) {
+          dataTypeRadioNodeList[0].checked = true;
+          break;
+          //次の要素をチェック
+        } else {
+          dataTypeRadioNodeList[i + 1].checked = true;
           break;
         }
       }

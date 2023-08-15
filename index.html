@@ -34,7 +34,43 @@
             class="button flex border-block-end"
             data-tabindex
           >
-            <span>Download</span><span class="shortcut">P</span>
+            <span>Download</span>
+
+            <span class="shortcut">P</span>
+          </button>
+          <button
+            id="data-type-btn"
+            class="button flex border-block-end button-type-b"
+            data-tabindex
+          >
+            <span>Data Type</span>
+            <form id="data-type" class="flex margin-right">
+              <input
+                type="radio"
+                id="webp"
+                name="type"
+                value="webp"
+                tabindex="-1"
+                checked
+              />
+              <label
+                for="webp"
+                data-tabindex
+                class="border-inline-start border-inline-end"
+                >WebP</label
+              >
+              <input
+                type="radio"
+                id="png"
+                name="type"
+                value="png"
+                tabindex="-1"
+              />
+              <label for="png" data-tabindex class="border-inline-end"
+                >PNG</label
+              >
+            </form>
+            <span class="shortcut">L</span>
           </button>
           <button
             id="undo-btn"
