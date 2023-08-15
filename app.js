@@ -17,7 +17,15 @@ const downloadBtn = document.getElementById("download-btn");
 const navigation = document.getElementById("navigation");
 const closeButton = document.getElementById("close-button");
 const drawingPositionX = document.getElementById("data-drawing-position-x");
+const drawingPositionXLeft = document.getElementById("drawing-position-x-left");
+const drawingPositionXRight = document.getElementById(
+  "drawing-position-x-right"
+);
 const drawingPositionY = document.getElementById("data-drawing-position-y");
+const drawingPositionYTop = document.getElementById("drawing-position-y-top");
+const drawingPositionYBottom = document.getElementById(
+  "drawing-position-y-bottom"
+);
 const offsetX = document.getElementById("offset-x");
 const offsetXOutput = document.getElementById("offset-x-output");
 const offsetXadd = document.getElementById("offset-x-add");
@@ -27,9 +35,11 @@ const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
-
 const clickPointAdjustment = -2;
-
+const scaleFull = document.getElementById("scale-full");
+const scaleHalf = document.getElementById("scale-half");
+const scaleQuarter = document.getElementById("scale-quarter");
+const scaleWindow = document.getElementById("scale-window");
 // console.log(offsetX);
 // console.log(offsetXOutput);
 // const tooltip1 = document.getElementById("tooltip1");
@@ -276,6 +286,22 @@ offsetXSubtract.addEventListener("click", function () {
   offsetX.value = String(count);
   updateOutput(offsetX, offsetXOutput);
 });
+offsetXadd.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(offsetX.value);
+    count += 1;
+    offsetX.value = String(count);
+    updateOutput(offsetX, offsetXOutput);
+  }
+});
+offsetXSubtract.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(offsetX.value);
+    count -= 1;
+    offsetX.value = String(count);
+    updateOutput(offsetX, offsetXOutput);
+  }
+});
 offsetYadd.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
   count += 1;
@@ -287,6 +313,22 @@ offsetYSubtract.addEventListener("click", function () {
   count -= 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
+});
+offsetYadd.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(offsetY.value);
+    count += 1;
+    offsetY.value = String(count);
+    updateOutput(offsetY, offsetYOutput);
+  }
+});
+offsetYSubtract.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(offsetY.value);
+    count -= 1;
+    offsetY.value = String(count);
+    updateOutput(offsetY, offsetYOutput);
+  }
 });
 fontSizeAdd.addEventListener("click", function () {
   let count = parseInt(fontInput.value);
@@ -302,6 +344,24 @@ fontSizeSubtract.addEventListener("click", function () {
   updateOutput(fontInput, fontOutput);
   changeFontSize(ctx, fontInput);
 });
+fontSizeAdd.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(fontInput.value);
+    count += 1;
+    fontInput.value = String(count);
+    updateOutput(fontInput, fontOutput);
+    changeFontSize(ctx, fontInput);
+  }
+});
+fontSizeSubtract.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(fontInput.value);
+    count -= 1;
+    fontInput.value = String(count);
+    updateOutput(fontInput, fontOutput);
+    changeFontSize(ctx, fontInput);
+  }
+});
 columnAdd.addEventListener("click", function () {
   let count = parseInt(columnNumber.value);
   count += 1;
@@ -314,6 +374,69 @@ columnSubtract.addEventListener("click", function () {
   columnNumber.value = String(count);
   updateOutput(columnNumber, columnNumberOutput);
 });
+columnAdd.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(columnNumber.value);
+    count += 1;
+    columnNumber.value = String(count);
+    updateOutput(columnNumber, columnNumberOutput);
+  }
+});
+columnSubtract.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    let count = parseInt(columnNumber.value);
+    count -= 1;
+    columnNumber.value = String(count);
+    updateOutput(columnNumber, columnNumberOutput);
+  }
+});
+
+scaleFull.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    scaleFull.checked = true;
+  }
+});
+scaleHalf.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    scaleHalf.checked = true;
+  }
+});
+scaleQuarter.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    scaleQuarter.checked = true;
+  }
+});
+scaleWindow.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    scaleWindow.checked = true;
+  }
+});
+drawingPositionXLeft.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    drawingPositionXLeft.checked = true;
+  }
+});
+drawingPositionXRight.nextElementSibling.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key === "Enter") {
+      drawingPositionXRight.checked = true;
+    }
+  }
+);
+drawingPositionYTop.nextElementSibling.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    drawingPositionYTop.checked = true;
+  }
+});
+drawingPositionYBottom.nextElementSibling.addEventListener(
+  "keydown",
+  (event) => {
+    if (event.key === "Enter") {
+      drawingPositionYBottom.checked = true;
+    }
+  }
+);
 
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
