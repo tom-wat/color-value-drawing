@@ -224,14 +224,9 @@ input[type="radio"]:checked + label{
 .navigation.close .open-button{
   display: block;  
 }
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  place-items: left;
-  gap: 1rem;
-  position: relative;
-  padding:2rem;
-}
+/* .container {
+  padding-block:2rem;
+} */
 
 .image-container{
   /* padding: 1rem 0; */
