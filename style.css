@@ -268,14 +268,15 @@ input[type="radio"]:checked + label{
   label:hover{
     box-shadow:0 0 0 1px #eee inset;
   }
+  
 }
 @media (max-width: 800px) {
 
   #fileInput {
     width: 100%;
   }
-  #colorInfo {
-    margin: 0;
+  #colorInfo{
+    margin-right: 10px;
   }
   .navigation{
     position: fixed;
@@ -285,7 +286,8 @@ input[type="radio"]:checked + label{
     max-width: 450px;
     min-width: 280px;
     padding: 1rem 0;
-    height: auto;
+    /* height: auto; */
+    
   }
   .open-button{
     position: fixed;
