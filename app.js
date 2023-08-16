@@ -72,6 +72,7 @@ const undoStatesLimitNumber = 50;
 let rgb;
 let hsb;
 let lab;
+let colorCode;
 let image;
 let undoStates = [];
 let redoStates = [];
@@ -593,15 +594,15 @@ function drawMultilineText(
       yOffset =
         -yOffsetAdjustment -
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) -
+          Math.ceil(colorElements.length / columnNumber) -
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) *
+          Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     } else {
       yOffset =
         yOffsetAdjustment +
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) *
+          Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     }
 
@@ -666,6 +667,7 @@ canvas.addEventListener("click", function (e) {
     "--background-color",
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
+  colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
   colorInfoElement.textContent = `L : ${lab.L}, h : ${hsl.h}, s : ${hsl.s}, l : ${hsl.l}`;
 });
 
@@ -1014,6 +1016,7 @@ let keyShift = false;
 // let keyArrowRight = false;
 let keyMeta = false;
 let keyZ = false;
+let kryC = false;
 // let keyD = false;
 
 // Define your key press handler
@@ -1052,6 +1055,10 @@ function handleKeyPress() {
     redo();
     keyZ = false;
   }
+  if (keyMeta && keyC) {
+    copyToClipboard();
+    keyC = false;
+  }
 }
 
 // Add event listeners to track the state of each key
@@ -1076,6 +1083,9 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "z") {
     keyZ = true;
+  }
+  if (event.key === "c") {
+    keyC = true;
   }
   // if (event.key === "d") {
   //   keyD = true;
@@ -1295,4 +1305,16 @@ function navToggle() {
 if (!!isMobile) {
   scaleWindow.nextElementSibling.style.display = "none";
   console.log(scaleWindow.nextElementSibling);
+}
+
+async function copyToClipboard() {
+  if (!colorCode) {
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(colorCode);
+    console.log("テキストがクリップボードにコピーされました");
+  } catch (err) {
+    console.error("テキストのコピーに失敗しました:", err);
+  }
 }
