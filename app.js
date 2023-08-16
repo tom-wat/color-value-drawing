@@ -1016,7 +1016,7 @@ let keyShift = false;
 // let keyArrowRight = false;
 let keyMeta = false;
 let keyZ = false;
-let kryC = false;
+let keyC = false;
 // let keyD = false;
 
 // Define your key press handler
@@ -1304,7 +1304,6 @@ function navToggle() {
 
 if (!!isMobile) {
   scaleWindow.nextElementSibling.style.display = "none";
-  console.log(scaleWindow.nextElementSibling);
 }
 
 async function copyToClipboard() {
