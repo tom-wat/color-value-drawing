@@ -593,15 +593,15 @@ function drawMultilineText(
       yOffset =
         -yOffsetAdjustment -
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) -
+          Math.ceil(colorElements.length / columnNumber) -
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) *
+          Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     } else {
       yOffset =
         yOffsetAdjustment +
         (textSpaceheight + margin) *
-          Math.floor(colorElements.length / columnNumber) *
+          Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     }
 
