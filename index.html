@@ -401,12 +401,20 @@
             <div id="colorInfo">L : ---, h : ---, s : ---, l : ---</div>
           </button>
           <button
+            id="copy-button"
+            class="button flex border-block-end active-button"
+            onclick="copyToClipboard();"
+            data-tabindex
+          >
+            <span class="row-1">Copy</span><span class="shortcut">⌘C</span>
+          </button>
+          <button
             id="close-button"
             class="button flex border-block-end active-button"
             onclick="navToggle()"
             data-tabindex
           >
-            <span class="row-1">Close</span><span class="shortcut">Esc</span>
+            <span class="row-1">Close</span><span class="shortcut">⎋</span>
           </button>
         </div>
         <button id="open-button" class="open-button" onclick="navToggle()">
