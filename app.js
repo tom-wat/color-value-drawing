@@ -577,7 +577,7 @@ function drawMultilineText(
     let colorSet = [
       [0, hsl.h, hsl.h, hsl.h],
       [0, 100, hsl.s, hsl.s],
-      [97, 50, 50, hsl.l],
+      [lab.L, 50, 50, hsl.l],
     ];
 
     if (textPositionX === "left") {
@@ -625,6 +625,9 @@ function drawMultilineText(
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
     context.fillStyle = `hsl( 0, 0%, 10%)`;
+    if (i === 0 && lab.L < 60) {
+      context.fillStyle = `hsl( 0, 0%, 94%)`;
+    }
     if ((i === 1 && hsl.h < 20) || (i === 1 && hsl.h > 200)) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
