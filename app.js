@@ -548,7 +548,7 @@ function drawMultilineText(
   offsetY,
   columnNumber
 ) {
-  const colorElements = colorText.split(",");
+  const colorElements = colorText.split(" ");
   // console.log(colorElements);
   // console.log(colorElements[1]);
   let drawingPositionX = 0;
@@ -608,7 +608,7 @@ function drawMultilineText(
 
     context.textBaseline = "top";
     // context.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-    context.fillStyle = `hsl( ${colorSet[0][i]}, ${colorSet[1][i]}%, ${colorSet[2][i]}%`;
+    context.fillStyle = `hsl( ${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%`;
 
     drawRoundedRectangle(
       context,
@@ -668,7 +668,7 @@ canvas.addEventListener("click", function (e) {
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
   colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-  colorInfoElement.textContent = `L : ${lab.L}, h : ${hsl.h}, s : ${hsl.s}, l : ${hsl.l}`;
+  colorInfoElement.textContent = `L:${lab.L} h:${hsl.h} s:${hsl.s} l:${hsl.l}`;
 });
 
 canvas.addEventListener("click", function (event) {
@@ -854,14 +854,14 @@ document.addEventListener("keydown", (event) => {
   //   // tooltip7.textContent = `alpha: ${alphaInput.value}`;
   //   // tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
   // }
-  if (event.key === "f") {
+  if (event.key === "w") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     //   tooltip1.textContent = `font-size: ${fontInput.value}`;
     //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
-  if (event.key === "d") {
+  if (event.key === "q") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
