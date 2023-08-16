@@ -575,9 +575,9 @@ function drawMultilineText(
     //   [85, 95, 85, 80],
     // ];
     let colorSet = [
-      [0, hsl.h, hsl.h, hsl.h],
-      [0, 100, hsl.s, hsl.s],
-      [lab.L, 50, 50, hsl.l],
+      [hsl.h, hsl.h, hsl.h, 0],
+      [100, hsl.s, hsl.s, 0],
+      [50, 50, hsl.l, lab.L],
     ];
 
     if (textPositionX === "left") {
@@ -625,21 +625,21 @@ function drawMultilineText(
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
     context.fillStyle = `hsl( 0, 0%, 10%)`;
-    if (i === 0 && lab.L < 60) {
-      context.fillStyle = `hsl( 0, 0%, 94%)`;
-    }
-    if ((i === 1 && hsl.h < 20) || (i === 1 && hsl.h > 200)) {
+    if ((i === 0 && hsl.h < 20) || (i === 1 && hsl.h > 200)) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     if (
-      (i === 2 && hsl.h < 45) ||
-      (i === 2 && hsl.h > 200) ||
-      (i === 2 && hsl.h > 45 && hsl.s < 60) ||
-      (i === 2 && hsl.h < 200 && hsl.s < 60)
+      (i === 1 && hsl.h < 45) ||
+      (i === 1 && hsl.h > 200) ||
+      (i === 1 && hsl.h > 45 && hsl.s < 60) ||
+      (i === 1 && hsl.h < 200 && hsl.s < 60)
     ) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
-    if (i === 3 && hsl.l <= 50) {
+    if (i === 2 && hsl.l <= 50) {
+      context.fillStyle = `hsl( 0, 0%, 94%)`;
+    }
+    if (i === 3 && lab.L < 60) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     context.fillText(
@@ -671,7 +671,7 @@ canvas.addEventListener("click", function (e) {
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
   colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-  colorInfoElement.textContent = `L:${lab.L} h:${hsl.h} s:${hsl.s} l:${hsl.l}`;
+  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.L}`;
 });
 
 canvas.addEventListener("click", function (event) {
