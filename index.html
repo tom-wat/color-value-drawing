@@ -44,7 +44,7 @@
             tabindex="-1"
           >
             <span class="row-1">Data Type</span>
-            <form id="data-type" class="flex margin-right">
+            <form id="data-type" class="flex height-100 margin-right">
               <input
                 type="radio"
                 id="png"
@@ -52,7 +52,9 @@
                 value="png"
                 tabindex="-1"
               />
-              <label for="png" data-tabindex>PNG</label>
+              <label for="png" data-tabindex class="flex align-self-stretch"
+                >PNG</label
+              >
               <input
                 type="radio"
                 id="webp"
@@ -61,14 +63,16 @@
                 tabindex="-1"
                 checked
               />
-              <label for="webp" data-tabindex>WebP</label>
+              <label for="webp" data-tabindex class="flex align-self-stretch"
+                >WebP</label
+              >
             </form>
             <span class="shortcut">L</span>
           </button>
 
           <div class="button scale flex button-type-b">
             <span class="row-1">Scale</span>
-            <form id="scale" class="flex row-2 margin-right">
+            <form id="scale" class="flex row-2 height-100 margin-right">
               <input
                 type="radio"
                 id="scale-half"
@@ -76,7 +80,12 @@
                 value="half"
                 tabindex="-1"
               />
-              <label for="scale-half" data-tabindex>1/2</label>
+              <label
+                for="scale-half"
+                class="flex align-self-stretch"
+                data-tabindex
+                >1/2</label
+              >
               <input
                 type="radio"
                 id="scale-quarter"
@@ -84,7 +93,12 @@
                 value="quarter"
                 tabindex="-1"
               />
-              <label for="scale-quarter" data-tabindex>1/4</label>
+              <label
+                for="scale-quarter"
+                class="flex align-self-stretch"
+                data-tabindex
+                >1/4</label
+              >
               <input
                 type="radio"
                 id="scale-window"
@@ -92,7 +106,12 @@
                 value="window"
                 tabindex="-1"
               />
-              <label for="scale-window" data-tabindex>Window</label>
+              <label
+                for="scale-window"
+                class="flex align-self-stretch"
+                data-tabindex
+                >Window</label
+              >
               <input
                 type="radio"
                 id="scale-full"
@@ -101,7 +120,13 @@
                 tabindex="-1"
                 checked
               />
-              <label for="scale-full" data-tabindex class=" ">Full</label>
+              <label
+                for="scale-full"
+                class="flex align-self-stretch"
+                data-tabindex
+                class=" "
+                >Full</label
+              >
             </form>
             <span class="shortcut">V</span>
           </div>
@@ -136,7 +161,10 @@
 
           <div class="button flex button-type-b">
             <span class="row-1">Position-X</span>
-            <form id="data-drawing-position-x" class="flex margin-right">
+            <form
+              id="data-drawing-position-x"
+              class="flex height-100 margin-right"
+            >
               <input
                 type="radio"
                 id="drawing-position-x-left"
@@ -144,7 +172,10 @@
                 value="left"
                 tabindex="-1"
               />
-              <label for="drawing-position-x-left" data-tabindex class=" "
+              <label
+                for="drawing-position-x-left"
+                class="flex align-self-stretch"
+                data-tabindex
                 >Left</label
               >
               <input
@@ -155,14 +186,22 @@
                 tabindex="-1"
                 checked
               />
-              <label for="drawing-position-x-right" data-tabindex>Right</label>
+              <label
+                for="drawing-position-x-right"
+                class="flex align-self-stretch"
+                data-tabindex
+                >Right</label
+              >
             </form>
             <span class="shortcut">A</span>
           </div>
 
           <div class="button flex button-type-b">
             <span class="row-1">Position-Y</span>
-            <form id="data-drawing-position-y" class="flex margin-right">
+            <form
+              id="data-drawing-position-y"
+              class="flex height-100 margin-right"
+            >
               <input
                 type="radio"
                 id="drawing-position-y-top"
@@ -170,7 +209,11 @@
                 value="top"
                 tabindex="-1"
               />
-              <label for="drawing-position-y-top" data-tabindex class=" "
+              <label
+                for="drawing-position-y-top"
+                class="flex align-self-stretch"
+                data-tabindex
+                class=" "
                 >Top</label
               >
               <input
@@ -181,7 +224,10 @@
                 tabindex="-1"
                 checked
               />
-              <label for="drawing-position-y-bottom" data-tabindex
+              <label
+                for="drawing-position-y-bottom"
+                class="flex align-self-stretch"
+                data-tabindex
                 >Bottom</label
               >
             </form>
@@ -199,10 +245,10 @@
               oninput="updateOutput(offsetX, offsetXOutput)"
               tabindex="-1"
             />
-            <div class="flex margin-right">
+            <div class="flex height-100 margin-right">
               <span
                 id="offset-x-subtract"
-                class="inline-button active-button"
+                class="flex inline-button active-button align-self-stretch"
                 data-tabindex
                 >-</span
               >
@@ -211,7 +257,7 @@
               >
               <span
                 id="offset-x-add"
-                class="inline-button active-button"
+                class="flex inline-button active-button align-self-stretch"
                 data-tabindex
                 >+</span
               >
@@ -230,10 +276,10 @@
               oninput="updateOutput(offsetY, offsetYOutput)"
               tabindex="-1"
             />
-            <div class="flex margin-right">
+            <div class="flex margin-right height-100">
               <span
                 id="offset-y-subtract"
-                class="inline-button active-button"
+                class="flex align-self-stretch inline-button active-button"
                 data-tabindex
                 >-</span
               >
@@ -242,7 +288,7 @@
               >
               <span
                 id="offset-y-add"
-                class="inline-button active-button"
+                class="flex inline-button active-button align-self-stretch"
                 data-tabindex
                 >+</span
               >
@@ -261,10 +307,10 @@
               oninput="updateOutput(fontInput, fontOutput)"
               tabindex="-1"
             />
-            <div class="flex margin-right">
+            <div class="flex margin-right height-100">
               <span
                 id="font-size-subtract"
-                class="inline-button active-button"
+                class="inline-button active-button flex align-self-stretch"
                 data-tabindex
                 >-</span
               >
@@ -276,7 +322,7 @@
               >
               <span
                 id="font-size-add"
-                class="inline-button active-button"
+                class="inline-button active-button flex align-self-stretch"
                 data-tabindex
                 >+</span
               >
@@ -284,39 +330,6 @@
             <span class="shortcut">Q W</span>
           </button>
 
-          <!-- <div class="flex">
-            <div class="color-input flex">
-              <label for="font-color-input">lightness(q,w):</label
-              ><input
-                type="range"
-                id="font-color-input"
-                min="20"
-                max="100"
-                value="100"
-                step="80"
-                oninput="updateOutput(colorInput, this.value)"
-              />
-              <output name="font-color-output" for="font-color-input"
-                >100</output
-              >
-            </div>
-            <div class="alpha-input flex">
-              <label for="font-color-alpha-input">alpha(b,n):</label
-              ><input
-                type="range"
-                id="font-color-alpha-input"
-                min="10"
-                max="100"
-                value="100"
-                oninput="updateOutput(alphaInput, this.value)"
-              />
-              <output
-                name="font-color-alpha-output"
-                for="font-color-alpha-input"
-                >100</output
-              >
-            </div>
-          </div> -->
           <button class="button flex button-type-b" tabindex="-1">
             <span class="row-1">Column</span>
             <input
@@ -328,10 +341,10 @@
               oninput="updateOutput(fontInput, fontOutput)"
               tabindex="-1"
             />
-            <div class="flex margin-right">
+            <div class="flex margin-right height-100">
               <span
                 id="column-subtract"
-                class="inline-button active-button"
+                class="inline-button active-button flex align-self-stretch"
                 data-tabindex
                 >-</span
               >
@@ -343,7 +356,7 @@
               >
               <span
                 id="column-add"
-                class="inline-button active-button"
+                class="inline-button active-button flex align-self-stretch"
                 data-tabindex
                 >+</span
               >

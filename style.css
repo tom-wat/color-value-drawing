@@ -1,9 +1,9 @@
 :root{
   --primary-white: hsl(0, 0%, 94%);
   --secondary-white: hsl(0, 0%, 100%);
-  --primary-black: hsl(240, 5%, 10%);
+  --primary-black: hsl(240, 10%, 10%);
   --secondary-black: hsl(0, 0%, 20%);
-  --tertiary-black: hsl(240, 5%, 5%);
+  --tertiary-black: hsl(0, 0%, 0%);
   --grey-1:hsl(0, 0%, 50%);
 }
 *,
@@ -55,6 +55,7 @@ output{
 }
 
 .button{
+  /* height: 100%; */
   font-size: 14px;
   padding-inline: 2rem;
   /* border-radius: 4px; */
@@ -150,6 +151,7 @@ input[type="radio"]:checked + label{
   display: flex;
   align-items: center;
 }
+
 .row-1{
   min-width: 80px;
   margin-right: auto;
@@ -273,7 +275,7 @@ input[type="radio"]:checked + label{
   }
   
 }
-@media (max-width: 800px) {
+@media (width < 800px) {
 
   #fileInput {
     width: 100%;
@@ -322,7 +324,9 @@ input[type="radio"]:checked + label{
   .margin-right{
     margin-right: 0;
   }
-
+  .align-self-stretch{
+    align-self: stretch;
+  }
 }
 @media (prefers-color-scheme: dark) {
 
