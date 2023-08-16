@@ -72,51 +72,10 @@
             </form>
             <span class="shortcut">L</span>
           </button>
-          <button
-            id="undo-btn"
-            class="button flex border-block-end active-button"
-            class="flex"
-            onclick="undo()"
-            data-tabindex
-          >
-            <span class="row-1">Undo</span><span class="shortcut">⌘Z</span>
-          </button>
-
-          <button
-            id="redo-btn"
-            class="button flex border-block-end active-button"
-            onclick="redo()"
-            data-tabindex
-          >
-            <span class="row-1">Redo</span><span class="shortcut">⇧⌘Z</span>
-          </button>
-
-          <button
-            id="clear-btn"
-            class="button flex border-block-end active-button"
-            onclick="clearCanvas()"
-            data-tabindex
-          >
-            <span class="row-1">Clear</span><span class="shortcut">E</span>
-          </button>
 
           <div class="button scale flex button-type-b border-block-end">
             <span class="row-1">Scale</span>
             <form id="scale" class="flex row-2 margin-right">
-              <input
-                type="radio"
-                id="scale-full"
-                name="scale"
-                value="full"
-                tabindex="-1"
-                checked
-              />
-              <label
-                for="scale-full"
-                data-tabindex
-                class="border-inline-start border-inline-end"
-                >Full</label
-              >
               <input
                 type="radio"
                 id="scale-half"
@@ -147,9 +106,51 @@
               <label for="scale-window" data-tabindex class="border-inline-end"
                 >Window</label
               >
+              <input
+                type="radio"
+                id="scale-full"
+                name="scale"
+                value="full"
+                tabindex="-1"
+                checked
+              />
+              <label
+                for="scale-full"
+                data-tabindex
+                class="border-inline-start border-inline-end"
+                >Full</label
+              >
             </form>
             <span class="shortcut">V</span>
           </div>
+
+          <button
+            id="undo-btn"
+            class="button flex border-block-end active-button"
+            class="flex"
+            onclick="undo()"
+            data-tabindex
+          >
+            <span class="row-1">Undo</span><span class="shortcut">⌘Z</span>
+          </button>
+
+          <button
+            id="redo-btn"
+            class="button flex border-block-end active-button"
+            onclick="redo()"
+            data-tabindex
+          >
+            <span class="row-1">Redo</span><span class="shortcut">⇧⌘Z</span>
+          </button>
+
+          <button
+            id="clear-btn"
+            class="button flex border-block-end active-button"
+            onclick="clearCanvas()"
+            data-tabindex
+          >
+            <span class="row-1">Clear</span><span class="shortcut">E</span>
+          </button>
 
           <div class="button flex button-type-b border-block-end">
             <span class="row-1">Position-X</span>
