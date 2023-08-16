@@ -1291,3 +1291,8 @@ document.addEventListener("keyup", (event) => {
 function navToggle() {
   navigation.classList.toggle("close");
 }
+
+if (!!isMobile) {
+  scaleWindow.nextElementSibling.style.display = "none";
+  console.log(scaleWindow.nextElementSibling);
+}
