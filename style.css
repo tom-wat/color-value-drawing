@@ -20,7 +20,7 @@ body {
   /* Light mode styles */
   background-color: var(--secondary-black);
   color: var(--primary-white);
-  font-family: sans-serif;
+  font-family: "Inter", sans-serif;
 }
 button,
 input,
@@ -56,7 +56,7 @@ output{
 
 .button{
   /* height: 100%; */
-  font-size: 14px;
+  font-size: 16px;
   padding-inline: 2rem;
   /* border-radius: 4px; */
   font-weight: 600;
@@ -161,7 +161,7 @@ input[type="radio"]:checked + label{
 }
 .shortcut{
   color: var(--grey-1);
-  min-width: 40px;
+  min-width: 45px;
   text-align: right;
 }
 .margin-right{
