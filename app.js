@@ -244,6 +244,9 @@ function rgbToLab(R, G, B) {
 }
 
 function download() {
+  if (!!initialState === false) {
+    return;
+  }
   // Canvasのイメージデータを取得する
   let imageData;
   if (png.checked) {
