@@ -628,7 +628,7 @@ function drawMultilineText(
     //   context.fillStyle = `hsl( 0, 0%, 100%, ${alphaInput.value}%)`;
     // }
     context.fillStyle = `hsl( 0, 0%, 10%)`;
-    if ((i === 0 && hsl.h < 20) || (i === 1 && hsl.h > 200)) {
+    if ((i === 0 && hsl.h < 20) || (i === 0 && hsl.h > 200)) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     if (
