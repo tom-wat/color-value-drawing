@@ -5,7 +5,8 @@
   --secondary-white: hsl(0, 0%, 100%);
   --primary-black: hsl(240, 10%, 10%);
   --secondary-black: hsl(0, 0%, 20%);
-  --tertiary-black: hsl(0, 0%, 0%);
+  --tertiary-black: hsl(240, 10%, 15%);
+  --quaternary-black: hsl(240, 10%, 5%);
   --grey-1:hsl(0, 0%, 50%);
   --font-weight: 500;
   --font-size-large: 20px;
@@ -304,9 +305,12 @@ input[type="radio"]:checked + label{
     padding: 1rem 0;
     /* height: auto; */ 
   }
-  /* .button:nth-child(even){
-    background-color: var(--tertiary-black);
-  } */
+  .button:nth-child(odd){
+    background-color: var(--tertiary-black)
+  }
+  .button:nth-child(even){
+    background-color: var(--quaternary-black)
+  }
   .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
