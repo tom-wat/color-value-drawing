@@ -175,6 +175,9 @@ input[type="radio"]:checked + label{
 .margin-right{
   margin-right: 1rem;
 }
+.margin-block-end-1{
+  margin-block-end: 1rem;
+}
 .height-100{
   height: 100%;
 }
@@ -213,7 +216,7 @@ input[type="radio"]:checked + label{
   color:var(--grey-1);
   font-size: var(--font-size-small);
   padding-inline-start: 2rem;
-  padding-block-start: calc(1rem / 2);
+  padding-block: calc(1rem / 2);
 }
 .open-button{
   width: 64px;
@@ -305,12 +308,15 @@ input[type="radio"]:checked + label{
     padding: 1rem 0;
     /* height: auto; */ 
   }
-  .button:nth-child(odd){
+  .nav-content .button:nth-child(odd){
     background-color: var(--tertiary-black)
   }
-  .button:nth-child(even){
+  /* .button:nth-child(even){
     background-color: var(--quaternary-black)
   }
+  .button:last-child{
+    background-color: var(--primary-black)
+  } */
   .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
