@@ -1,3 +1,5 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap'); */
+
 :root{
   --primary-white: hsl(0, 0%, 94%);
   --secondary-white: hsl(0, 0%, 100%);
@@ -5,6 +7,7 @@
   --secondary-black: hsl(0, 0%, 20%);
   --tertiary-black: hsl(0, 0%, 0%);
   --grey-1:hsl(0, 0%, 50%);
+  --font-weight: 500
 }
 *,
 *::before,
@@ -59,7 +62,7 @@ output{
   font-size: 16px;
   padding-inline: 2rem;
   /* border-radius: 4px; */
-  font-weight: 600;
+  font-weight: var(--font-weight);
   background-color: var(--primary-black);
   color: var(--primary-white);
   line-height: 2;
@@ -108,7 +111,7 @@ label:focus-visible{
   box-shadow:0 0 0 1px var(--primary-white) inset;
 }
 .inline-button{
-  font-weight: 600;
+  font-weight: var(--font-weight);
   background-color: inherit;
   color: var(--primary-white);
   display: inline-block;
@@ -144,7 +147,7 @@ input[type="radio"]:checked + label{
   color: var(--secondary-black);
   background-color: var(--secondary-white);
   border-radius: 4px;
-  font-weight: bold;
+  font-weight: var(--font-weight);
   z-index: 1;
 } */
 .flex{
