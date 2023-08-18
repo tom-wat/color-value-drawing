@@ -7,7 +7,11 @@
   --secondary-black: hsl(0, 0%, 20%);
   --tertiary-black: hsl(0, 0%, 0%);
   --grey-1:hsl(0, 0%, 50%);
-  --font-weight: 500
+  --font-weight: 500;
+  --font-size-large: 20px;
+  --font-size-medium: 16px;
+  --font-size-small: 14px;
+  --font-size-ss:12px;
 }
 *,
 *::before,
@@ -59,8 +63,8 @@ output{
 
 .button{
   /* height: 100%; */
-  font-size: 16px;
-  padding-inline: 2rem;
+  font-size: var(--font-size-medium);
+  padding-inline: 3rem;
   /* border-radius: 4px; */
   font-weight: var(--font-weight);
   background-color: var(--primary-black);
@@ -204,10 +208,16 @@ input[type="radio"]:checked + label{
 .navigation.close .nav-content{
   display: none;  
 }
+.object{
+  color:var(--grey-1);
+  font-size: var(--font-size-small);
+  padding-inline-start: 2rem;
+  padding-block-start: calc(1rem / 2);
+}
 .open-button{
   width: 64px;
   height: 64px;
-  font-size: 16px;
+  font-size: var(--font-size-ss);
   border-radius: 1rem;
   /* padding: 8px; */
   background-color: var(--primary-black);
@@ -224,6 +234,9 @@ input[type="radio"]:checked + label{
 .open-button:hover{
   box-shadow:0 0 0 1px var(--primary-white) inset;
 }
+.close-button{
+  font-size: var(--font-size-ss);
+}
 .navigation.close .open-button{
   display: block;  
 }
@@ -234,7 +247,6 @@ input[type="radio"]:checked + label{
 .image-container{
   /* padding: 1rem 0; */
   height: auto;
-
 }
 
 #canvas {
@@ -245,7 +257,7 @@ input[type="radio"]:checked + label{
 #colorInfo {
   --background-color: var(--secondary-white);
   position: relative;
-  margin-right: calc(1rem + 40px);
+  margin-right: calc(1rem + 45px);
 }
 #colorInfo::before {
   content: "";
@@ -292,9 +304,9 @@ input[type="radio"]:checked + label{
     padding: 1rem 0;
     /* height: auto; */ 
   }
-  .button:nth-child(even){
+  /* .button:nth-child(even){
     background-color: var(--tertiary-black);
-  }
+  } */
   .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
@@ -315,6 +327,9 @@ input[type="radio"]:checked + label{
     min-width: 280px;
     padding-inline: 2rem;
   }
+  .object{
+    padding-inline-start: 2rem;
+  }
   .shortcut{
     display: none;
   }
@@ -325,7 +340,4 @@ input[type="radio"]:checked + label{
   .align-self-stretch{
     align-self: stretch;
   }
-}
-@media (prefers-color-scheme: dark) {
-
 }

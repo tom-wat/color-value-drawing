@@ -19,56 +19,15 @@
     <div class="container">
       <nav id="navigation" class="navigation">
         <div class="nav-content">
+          <div class="object">🖼️ Image FIle</div>
           <button
             id="file-button"
             class="button flex active-button"
             onclick="fileInput.click()"
             data-tabindex
           >
-            <span class="row-1">Read File</span><span class="shortcut">R</span>
+            <span class="row-1">Read</span><span class="shortcut">R</span>
           </button>
-
-          <button
-            id="download-btn"
-            class="button flex active-button"
-            data-tabindex
-          >
-            <span class="row-1">Download</span>
-
-            <span class="shortcut">P</span>
-          </button>
-          <button
-            id="data-type-btn"
-            class="button flex button-type-b"
-            tabindex="-1"
-          >
-            <span class="row-1">Data Type</span>
-            <form id="data-type" class="flex height-100 margin-right">
-              <input
-                type="radio"
-                id="png"
-                name="type"
-                value="png"
-                tabindex="-1"
-              />
-              <label for="png" data-tabindex class="flex align-self-stretch"
-                >PNG</label
-              >
-              <input
-                type="radio"
-                id="webp"
-                name="type"
-                value="webp"
-                tabindex="-1"
-                checked
-              />
-              <label for="webp" data-tabindex class="flex align-self-stretch"
-                >WebP</label
-              >
-            </form>
-            <span class="shortcut">L</span>
-          </button>
-
           <div class="button scale flex button-type-b">
             <span class="row-1">Scale</span>
             <form id="scale" class="flex row-2 height-100 margin-right">
@@ -130,6 +89,60 @@
             <span class="shortcut">V</span>
           </div>
 
+          <button
+            id="download-btn"
+            class="button flex active-button"
+            data-tabindex
+          >
+            <span class="row-1">Download</span>
+
+            <span class="shortcut">P</span>
+          </button>
+          <button
+            id="data-type-btn"
+            class="button flex button-type-b"
+            tabindex="-1"
+          >
+            <span class="row-1">Data Type</span>
+            <form id="data-type" class="flex height-100 margin-right">
+              <input
+                type="radio"
+                id="png"
+                name="type"
+                value="png"
+                tabindex="-1"
+              />
+              <label for="png" data-tabindex class="flex align-self-stretch"
+                >PNG</label
+              >
+              <input
+                type="radio"
+                id="webp"
+                name="type"
+                value="webp"
+                tabindex="-1"
+                checked
+              />
+              <label for="webp" data-tabindex class="flex align-self-stretch"
+                >WebP</label
+              >
+            </form>
+            <span class="shortcut">L</span>
+          </button>
+
+          <div class="object">🎨 Color Data</div>
+          <button class="button flex button-type-b" tabindex="-1">
+            <span class="row-1">Color</span>
+            <div id="colorInfo">h:-- s:-- l:-- L:--</div>
+          </button>
+          <button
+            id="copy-button"
+            class="button flex active-button"
+            onclick="copyToClipboard();"
+            data-tabindex
+          >
+            <span class="row-1">Copy</span><span class="shortcut">⌘C</span>
+          </button>
           <button
             id="undo-btn"
             class="button flex active-button"
@@ -362,25 +375,14 @@
             </div>
             <span class="shortcut">Z X</span>
           </button>
-          <button class="button flex button-type-b" tabindex="-1">
-            <span class="row-1">Color</span>
-            <div id="colorInfo">h:--- s:--- l:--- L:---</div>
-          </button>
-          <button
-            id="copy-button"
-            class="button flex active-button"
-            onclick="copyToClipboard();"
-            data-tabindex
-          >
-            <span class="row-1">Copy</span><span class="shortcut">⌘C</span>
-          </button>
           <button
             id="close-button"
             class="button flex active-button"
             onclick="navToggle()"
             data-tabindex
           >
-            <span class="row-1">Close</span><span class="shortcut">⎋</span>
+            <span class="row-1 close-button">▼</span
+            ><span class="shortcut">⎋</span>
           </button>
         </div>
         <input type="file" id="file-input" />

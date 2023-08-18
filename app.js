@@ -85,6 +85,13 @@ document.addEventListener("DOMContentLoaded", function () {
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
+
+  if (isMobile) {
+    fontInput.value = String(12);
+    updateOutput(fontInput, fontOutput);
+    changeFontSize(ctx, fontInput);
+    scaleQuarter.checked = true;
+  }
 });
 
 function updateOutput(inputField, outputField) {
