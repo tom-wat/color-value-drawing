@@ -511,8 +511,7 @@ png.nextElementSibling.addEventListener("keydown", (event) => {
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
 
-  context.font = `600 ${fontSize}px Inter`;
-  // context.font = `600 ${fontSize}px sans-serif`;
+  context.font = `500 ${fontSize}px Inter`;
 }
 
 fontInput.addEventListener("input", function () {
@@ -686,7 +685,7 @@ canvas.addEventListener("click", function (event) {
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
   const offsetYValue = parseInt(offsetY.value);
-  const lineHeight = fontSize + fontSize / 8;
+  const lineHeight = fontSize * 1.3;
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
   const columnNumberValue = columnNumber.value;
