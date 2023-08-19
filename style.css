@@ -175,9 +175,9 @@ input[type="radio"]:checked + label{
 .margin-right{
   margin-right: 1rem;
 }
-.margin-block-end-0{
+/* .margin-block-end-0{
   margin-block-end: calc(1rem / 2);
-}
+} */
 .margin-block-end-1{
   margin-block-end: 1rem;
 }
@@ -274,7 +274,9 @@ input[type="radio"]:checked + label{
   background-color: var(--background-color);
   transform: translate(-50%, 15%);
 }
-
+#close-button{
+  padding-block-start: calc(1rem / 2);
+}
 
 .nav-content::-webkit-scrollbar-track {
   border-radius: 3px;
