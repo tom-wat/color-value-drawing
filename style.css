@@ -25,7 +25,6 @@ html{
   overflow: auto;
 }
 body {
-  /* Light mode styles */
   background-color: var(--secondary-black);
   color: var(--primary-white);
   font-family: "Inter", sans-serif;
@@ -89,9 +88,9 @@ output{
   background-color: var(--secondary-white);
   color: var(--secondary-black);
 } */
-.active-button:active{
-  background-color: var(--secondary-white);
-  color: var(--secondary-black);
+.nav-content .active-button:active{
+  background-color: var(--quaternary-black);
+  color: var(--secondary-white);
 }
 
 .button-type-b:focus-visible{
@@ -201,7 +200,7 @@ input[type="radio"]:checked + label{
   display: grid;
   /* gap: 0.5rem; */
   height: 100%;
-  /* overflow: auto; */
+  overflow: auto;
 }
 .navigation.close{
   width: 0;
@@ -323,6 +322,10 @@ input[type="radio"]:checked + label{
     color: var(--secondary-black);
   }
   .active-button:active{
+    background-color: var(--secondary-white);
+    color: var(--secondary-black);
+  }
+  .nav-content .active-button:active{
     background-color: var(--secondary-white);
     color: var(--secondary-black);
   }
