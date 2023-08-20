@@ -4,13 +4,13 @@
   --primary-white: hsl(0, 0%, 85%);
   --secondary-white: hsl(0, 0%, 96%);
   --tertiary-white: hsl(0, 0%, 70%);
-  --primary-black: hsl(240, 10%, 10%);
+  --primary-black: hsl(240, 15%, 10%);
   --secondary-black: hsl(0, 0%, 20%);
   --tertiary-black: hsl(240, 10%, 15%);
   --quaternary-black: hsl(240, 10%, 5%);
   --grey-1:hsl(0, 0%, 50%);
   --grey-2:hsl(0, 0%, 25%);
-  --grey-3:hsl(0, 0%, 35%);
+  --grey-3:hsl(0, 0%, 45%);
   --font-weight: 500;
   --font-size-large: 20px;
   --font-size-medium: 16px;
@@ -169,7 +169,7 @@ input[type="radio"]:checked + label{
   margin-left: 1.5rem;
 }
 .shortcut{
-  color: var(--grey-3);
+  color: var(--grey-1);
   min-width: 45px;
   text-align: right;
 }
