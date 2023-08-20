@@ -19,18 +19,22 @@
     <div class="container">
       <nav id="navigation" class="navigation">
         <div class="nav-content">
-          <div class="object">🖼️ Image FIle</div>
+          <div class="object">
+            <span class="object-icon">🖼️</span> Image FIle
+          </div>
           <button
             id="file-button"
             class="button flex active-button"
             onclick="fileInput.click()"
             data-tabindex
           >
+            <span class="icon">📄</span>
             <span class="row-1">Read</span><span class="shortcut">R</span>
           </button>
           <div class="button scale flex button-type-b">
+            <span class="icon">📄</span>
             <span class="row-1">Scale</span>
-            <form id="scale" class="flex row-2 height-100 margin-right">
+            <form id="scale" class="flex margin-left height-100 margin-right">
               <input
                 type="radio"
                 id="scale-half"
@@ -94,6 +98,7 @@
             class="button flex active-button"
             data-tabindex
           >
+            <span class="icon">⬇️</span>
             <span class="row-1">Download</span>
 
             <span class="shortcut">P</span>
@@ -103,6 +108,7 @@
             class="button flex button-type-b margin-block-end-1"
             tabindex="-1"
           >
+            <span class="icon">⬇️</span>
             <span class="row-1">Format</span>
             <form id="data-type" class="flex height-100 margin-right">
               <input
@@ -130,8 +136,11 @@
             <span class="shortcut">L</span>
           </button>
 
-          <div class="object">🎨 Color Data</div>
+          <div class="object">
+            <span class="object-icon">🎨</span> Color Data
+          </div>
           <button class="button flex button-type-b" tabindex="-1">
+            <span class="icon">🎨</span>
             <span class="row-1">Color</span>
             <div id="colorInfo">h:-- s:-- l:-- L:--</div>
           </button>
@@ -141,6 +150,7 @@
             onclick="copyToClipboard();"
             data-tabindex
           >
+            <span class="icon">✂️</span>
             <span class="row-1">Copy</span><span class="shortcut">⌘C</span>
           </button>
           <button
@@ -150,6 +160,7 @@
             onclick="undo()"
             data-tabindex
           >
+            <span class="icon">↩️</span>
             <span class="row-1">Undo</span><span class="shortcut">⌘Z</span>
           </button>
 
@@ -159,6 +170,7 @@
             onclick="redo()"
             data-tabindex
           >
+            <span class="icon">↪️</span>
             <span class="row-1">Redo</span><span class="shortcut">⇧⌘Z</span>
           </button>
 
@@ -168,10 +180,12 @@
             onclick="clearCanvas()"
             data-tabindex
           >
+            <span class="icon">⏮️</span>
             <span class="row-1">Clear</span><span class="shortcut">E</span>
           </button>
 
           <div class="button flex button-type-b">
+            <span class="icon">↔️</span>
             <span class="row-1">Position-X</span>
             <form
               id="data-drawing-position-x"
@@ -209,6 +223,7 @@
           </div>
 
           <div class="button flex button-type-b">
+            <span class="icon">↕️</span>
             <span class="row-1">Position-Y</span>
             <form
               id="data-drawing-position-y"
@@ -247,6 +262,7 @@
           </div>
 
           <button class="button flex button-type-b" tabindex="-1">
+            <span class="icon">↔️</span>
             <span class="row-1">Offset-X</span>
             <input
               type="range"
@@ -278,6 +294,7 @@
           </button>
 
           <button class="button flex button-type-b" tabindex="-1">
+            <span class="icon">↕️</span>
             <span class="row-1">Offset-Y</span>
             <input
               type="range"
@@ -309,6 +326,7 @@
           </button>
 
           <button class="button flex button-type-b" tabindex="-1">
+            <span class="icon">🖌️</span>
             <span class="row-1">Font Size</span>
             <input
               type="range"
@@ -343,6 +361,7 @@
           </button>
 
           <button class="button flex button-type-b" tabindex="-1">
+            <span class="icon">🏛️</span>
             <span class="row-1">Column</span>
             <input
               type="range"
