@@ -4,6 +4,7 @@
   --primary-white: hsl(0, 0%, 85%);
   --secondary-white: hsl(0, 0%, 96%);
   --tertiary-white: hsl(0, 0%, 70%);
+  --icon: hsl(240, 0%, 50%);
   --primary-black: hsl(240, 15%, 10%);
   --secondary-black: hsl(0, 0%, 20%);
   --tertiary-black: hsl(240, 10%, 15%);
@@ -63,13 +64,25 @@ input[type='range']::-moz-range-thumb{
 output{
   padding-inline: 1rem;
 }
-.icon{
-  width: 28px;
-  font-size: var(--font-size-small);
-  display: none;
+.icon svg{
+  width: 14px;
+  fill: var(--icon);
+  margin-inline-end: 8px;
+  transform: translateY(2px);
+  /* display: none; */
 }
-.object-icon{
-  padding-inline-end: 4px;
+.object-icon svg{
+  fill: var(--primary-white);
+  width: 14px;
+  height: 14px;
+  vertical-align: top;
+  transform: translateY(1px);
+}
+.margin-inline-end-4px{
+  margin-inline-end: 4px;
+}
+.margin-inline-end-8px{
+  margin-inline-end: 8px;
 }
 .button{
   /* height: 100%; */
@@ -93,6 +106,9 @@ output{
 .button:focus-visible{
   background-color: var(--primary-white);
   color: var(--secondary-black);
+}
+.button:focus-visible svg{
+  fill: var(--secondary-black);
 }
 /* .button:active{
   background-color: var(--secondary-white);
@@ -312,9 +328,15 @@ input[type="radio"]:checked + label{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
+  .button:hover svg{
+    fill: var(--secondary-black);
+  }
   .button-type-b:hover{
     background-color: var(--primary-black);
     color: var(--primary-white);
+  }
+  .button-type-b:hover svg{
+    fill: var(--icon);
   }
   span.inline-button:hover{
     background-color: var(--tertiary-white);
@@ -327,9 +349,9 @@ input[type="radio"]:checked + label{
 }
 @media (width < 800px) {
 
-  .icon{
+  /* .icon{
     display: none;
-  }
+  } */
   #fileInput {
     width: 100%;
   }
