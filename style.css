@@ -66,6 +66,7 @@ output{
 .icon{
   width: 28px;
   font-size: var(--font-size-small);
+  display: none;
 }
 .object-icon{
   padding-inline-end: 4px;
