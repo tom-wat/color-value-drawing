@@ -1,3 +1,4 @@
+const board = document.getElementById("board");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
@@ -106,7 +107,7 @@ const openFile = (event) => {
     console.error("No file selected.");
     return;
   }
-
+  board.style.display = "none";
   const reader = new FileReader();
   reader.onload = function () {
     canvas.style.display = "block";
