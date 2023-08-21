@@ -559,31 +559,57 @@ function drawMultilineText(
   columnNumber
 ) {
   const colorElements = colorText.split(" ");
+  const padding = 4 + (fontSize * 2) / 15;
+  const margin = 4 + (fontSize * 2) / 15;
+  const magicNumber = 1;
   // console.log(colorElements);
   // console.log(colorElements[1]);
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
   let yOffset = 0;
+  let maxWidth = 0;
+
+  for (let i = 0; i < colorElements.length; i++) {
+    const row = colorElements.slice(i * columnNumber, (i + 1) * columnNumber);
+    let rowWidth = row.reduce(
+      (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
+      0
+    );
+    rowWidth -= margin;
+    maxWidth = Math.max(maxWidth, rowWidth);
+    if ((i + 2) * columnNumber > colorElements.length) {
+      break;
+    }
+  }
+  // const row1 = colorElements.slice(0, columnNumber);
+  // let row1Width = row1.reduce(
+  //   (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
+  //   0
+  // );
+  // row1Width -= margin;
+  // maxWidth = row1Width;
+  // if (columnNumber === 2) {
+  //   const row2 = colorElements.slice(2);
+  //   let row2Width = row2.reduce(
+  //     (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
+  //     0
+  //   );
+  //   row2Width -= margin;
+  //   maxWidth = Math.max(row1Width, row2Width);
+  // }
 
   for (let i = 0; i < colorElements.length; i++) {
     const colorElement = colorElements[i];
     const lineWidth = context.measureText(colorElement).width;
     const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
-    const padding = 4 + (fontSize * 2) / 15;
-    const margin = 4 + (fontSize * 2) / 15;
-    const magicNumber = 2;
     const textSpaceWidth = lineWidth + padding * 2;
     const textSpaceheight = lineHeight + padding;
     const xOffsetAdjustment = fontSize / 3 + fontSize / 2;
     const yOffsetAdjustment = fontSize / 2;
     const offSetXWidth = fontSize * columnNumber;
-    // let colorSet = [
-    //   [185, 300, 120, 50],
-    //   [100, 100, 100, 100],
-    //   [85, 95, 85, 80],
-    // ];
+
     let colorSet = [
       [hsl.h, hsl.h, hsl.h, 0],
       [100, hsl.s, hsl.s, 0],
@@ -593,8 +619,7 @@ function drawMultilineText(
     if (textPositionX === "left") {
       xOffset =
         -xOffsetAdjustment -
-        textSpaceWidth -
-        drawingPositionX * 2 -
+        maxWidth -
         offSetXWidth * offsetXValue[offsetX] -
         magicNumber;
     } else {
@@ -695,7 +720,7 @@ canvas.addEventListener("click", function (event) {
   const lineHeight = fontSize * 1.3;
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
-  const columnNumberValue = columnNumber.value;
+  const columnNumberValue = parseInt(columnNumber.value);
 
   // クリックした場所のピクセルカラー情報を取得する
   // const color = ctx.getImageData(x, y, 1, 1).data;
