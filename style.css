@@ -64,6 +64,62 @@ input[type='range']::-moz-range-thumb{
 output{
   padding-inline: 1rem;
 }
+#board{
+  padding-block: 3rem;
+  padding-inline: 3rem;
+}
+#board .flex{
+  gap: 3rem;
+  align-items: end;
+}
+#board svg{
+  width: 360px;
+  height: 360px;
+  min-width: 360px;
+}
+.description{
+  background-color: var(--primary-black);
+  padding: 2rem;
+  padding-inline: 3rem;
+  border-radius: 2rem;
+  font-weight: 300;
+  font-feature-settings: "palt";
+}
+.description button{
+  padding-inline: 12px;
+  padding-block: 4px;
+  background-color: var(--primary-black);
+  color: var(--primary-white);
+  border: 1px solid var(--primary-white);
+  border-radius: 1rem;
+  margin-inline-end: 8px;
+  cursor: pointer;
+}
+.description button:hover{
+  background-color: var(--primary-white);
+  color: var(--primary-black);
+}
+.description ol{
+	counter-reset: list;
+}
+.description li {
+  position: relative;
+  list-style: none;
+  padding-inline-start: 2rem;
+  line-height: 1.6;
+}
+.description li::before{
+  position: absolute;
+	top: 0;
+	left: 0;
+	font-weight: 600;
+	color: var(--primary-white);
+	counter-increment: list;
+	content: counter(list)'.';
+}
+.description li + li{
+  margin-block-start: 1rem;
+}
 .icon svg{
   width: 14px;
   fill: var(--icon);
@@ -352,6 +408,25 @@ input[type="radio"]:checked + label{
   /* .icon{
     display: none;
   } */
+  #board{
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+  #board .flex{
+    flex-direction: column;
+    align-items: start;
+    gap: 1rem;
+  }
+  #board svg{
+    width: 240px;
+    height: 240px;
+    min-width: 240px;
+  }
+  .description{
+    padding: 1.5rem;
+    padding-inline: 2rem;
+    border-radius: 1.5rem;
+  }
   #fileInput {
     width: 100%;
   }
