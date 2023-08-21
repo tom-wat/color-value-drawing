@@ -111,6 +111,7 @@ output{
   list-style: none;
   padding-inline-start: 2rem;
   line-height: 1.6;
+  text-wrap: balance;
 }
 .description li::before{
   position: absolute;
@@ -434,7 +435,7 @@ input[type="radio"]:checked + label{
     padding-inline: 2rem;
     border-radius: 1.5rem;
   }
-  .description button:active{
+  #board .description button:active{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
@@ -477,6 +478,7 @@ input[type="radio"]:checked + label{
     background-color: var(--secondary-white);
     color: var(--secondary-black);
   }
+  
   .open-button{
     position: fixed;
     bottom: 1rem;
