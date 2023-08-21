@@ -518,7 +518,7 @@ png.nextElementSibling.addEventListener("keydown", (event) => {
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
 
-  context.font = `500 ${fontSize}px Inter`;
+  context.font = `500 ${fontSize}px 'Inter','Helevetica Neue', Arial, sans-serif `;
 }
 
 fontInput.addEventListener("input", function () {
