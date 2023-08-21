@@ -95,9 +95,13 @@ output{
   margin-inline-end: 8px;
   cursor: pointer;
 }
-.description button:hover{
+.description button:focus-visible{
   background-color: var(--primary-white);
-  color: var(--primary-black);
+  color: var(--secondary-black);
+}
+#board .description button:active{
+  background-color: var(--primary-black);
+  color: var(--primary-white);
 }
 .description ol{
 	counter-reset: list;
@@ -401,7 +405,10 @@ input[type="radio"]:checked + label{
   label:hover{
     box-shadow:0 0 0 1px var(--tertiary-white) inset;
   }
-  
+  .description button:hover{
+    background-color: var(--primary-white);
+    color: var(--primary-black);
+  }
 }
 @media (width < 800px) {
 
@@ -426,6 +433,10 @@ input[type="radio"]:checked + label{
     padding: 1.5rem;
     padding-inline: 2rem;
     border-radius: 1.5rem;
+  }
+  .description button:active{
+    background-color: var(--primary-white);
+    color: var(--secondary-black);
   }
   #fileInput {
     width: 100%;
