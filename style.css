@@ -379,7 +379,7 @@ input[type="radio"]:checked + label{
   .button:last-child{
     background-color: var(--primary-black)
   } */
-  .button:focus-visible{
+  .nav-content .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
