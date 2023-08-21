@@ -366,7 +366,7 @@ input[type="radio"]:checked + label{
     width: calc(100% - 2rem);
     max-width: 450px;
     min-width: 280px;
-    min-height: 630px;
+    /* min-height: 630px; */
     padding: 1rem 0;
     /* height: auto; */ 
   }
