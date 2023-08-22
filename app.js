@@ -19,7 +19,7 @@ const columnNumberOutput = document.getElementById("column-number-output");
 const columnAdd = document.getElementById("column-add");
 const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
-const navigation = document.getElementById("navigation");
+const menu = document.getElementById("menu");
 const closeButton = document.getElementById("close-button");
 const drawingPositionX = document.getElementById("data-drawing-position-x");
 const drawingPositionXLeft = document.getElementById("drawing-position-x-left");
@@ -310,6 +310,70 @@ function debounce(func, delay, immediate) {
 //   console.log(offsetX);
 //   dom.value -= 1;
 // }
+function changeCheckedScale() {
+  for (let i = 0; i < scaleRadioNodeList.length; i++) {
+    if (scaleRadioNodeList[i].checked) {
+      scaleRadioNodeList[i].checked = false;
+      //最初の要素に戻ってチェック
+      if (i + 1 === scaleRadioNodeList.length) {
+        scaleRadioNodeList[0].checked = true;
+        break;
+        //次の要素をチェック
+      } else {
+        scaleRadioNodeList[i + 1].checked = true;
+        break;
+      }
+    }
+  }
+}
+function changeCheckedFormat() {
+  for (let i = 0; i < dataTypeRadioNodeList.length; i++) {
+    if (dataTypeRadioNodeList[i].checked) {
+      dataTypeRadioNodeList[i].checked = false;
+      //最初の要素に戻ってチェック
+      if (i + 1 === dataTypeRadioNodeList.length) {
+        dataTypeRadioNodeList[0].checked = true;
+        break;
+        //次の要素をチェック
+      } else {
+        dataTypeRadioNodeList[i + 1].checked = true;
+        break;
+      }
+    }
+  }
+}
+
+function changeCheckedPositionX() {
+  for (let i = 0; i < positionXRadioNodeList.length; i++) {
+    if (positionXRadioNodeList[i].checked) {
+      // console.log(positionXRadioNodeList[i]);
+      // console.log(positionXRadioNodeList.length);
+      // console.log(i);
+      positionXRadioNodeList[i].checked = false;
+      if (i + 1 === positionXRadioNodeList.length) {
+        positionXRadioNodeList[0].checked = true;
+        break;
+      } else {
+        positionXRadioNodeList[i + 1].checked = true;
+        break;
+      }
+    }
+  }
+}
+function changeCheckedPositionY() {
+  for (let i = 0; i < positionYRadioNodeList.length; i++) {
+    if (positionYRadioNodeList[i].checked) {
+      positionYRadioNodeList[i].checked = false;
+      if (i + 1 === positionYRadioNodeList.length) {
+        positionYRadioNodeList[0].checked = true;
+        break;
+      } else {
+        positionYRadioNodeList[i + 1].checked = true;
+        break;
+      }
+    }
+  }
+}
 fileButton.addEventListener("click", function () {
   if (!!isMobile) {
     navToggle();
@@ -445,76 +509,76 @@ columnSubtract.addEventListener("keydown", (event) => {
   }
 });
 
-scaleFull.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    scaleFull.checked = true;
-  }
-});
-scaleHalf.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    scaleHalf.checked = true;
-  }
-});
-scaleQuarter.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    scaleQuarter.checked = true;
-  }
-});
-scaleWindow.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    scaleWindow.checked = true;
-  }
-});
-drawingPositionXLeft.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    drawingPositionXLeft.checked = true;
-  }
-});
-drawingPositionXRight.nextElementSibling.addEventListener(
-  "keydown",
-  (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      drawingPositionXRight.checked = true;
-    }
-  }
-);
-drawingPositionYTop.nextElementSibling.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    drawingPositionYTop.checked = true;
-  }
-});
-drawingPositionYBottom.nextElementSibling.addEventListener(
-  "keydown",
-  (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      drawingPositionYBottom.checked = true;
-    }
-  }
-);
-webp.nextElementSibling.addEventListener("click", (event) => {
-  event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    webp.checked = true;
-  }
-});
-png.nextElementSibling.addEventListener("click", (event) => {
-  event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    png.checked = true;
-  }
-});
-webp.nextElementSibling.addEventListener("keydown", (event) => {
-  event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    webp.checked = true;
-  }
-});
-png.nextElementSibling.addEventListener("keydown", (event) => {
-  event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    png.checked = true;
-  }
-});
+// scaleFull.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     scaleFull.checked = true;
+//   }
+// });
+// scaleHalf.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     scaleHalf.checked = true;
+//   }
+// });
+// scaleQuarter.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     scaleQuarter.checked = true;
+//   }
+// });
+// scaleWindow.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     scaleWindow.checked = true;
+//   }
+// });
+// drawingPositionXLeft.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     drawingPositionXLeft.checked = true;
+//   }
+// });
+// drawingPositionXRight.nextElementSibling.addEventListener(
+//   "keydown",
+//   (event) => {
+//     if (event.key === "Enter" || event.key === " ") {
+//       drawingPositionXRight.checked = true;
+//     }
+//   }
+// );
+// drawingPositionYTop.nextElementSibling.addEventListener("keydown", (event) => {
+//   if (event.key === "Enter" || event.key === " ") {
+//     drawingPositionYTop.checked = true;
+//   }
+// });
+// drawingPositionYBottom.nextElementSibling.addEventListener(
+//   "keydown",
+//   (event) => {
+//     if (event.key === "Enter" || event.key === " ") {
+//       drawingPositionYBottom.checked = true;
+//     }
+//   }
+// );
+// webp.nextElementSibling.addEventListener("click", (event) => {
+//   event.stopPropagation();
+//   if (event.key === "Enter" || event.key === " ") {
+//     webp.checked = true;
+//   }
+// });
+// png.nextElementSibling.addEventListener("click", (event) => {
+//   event.stopPropagation();
+//   if (event.key === "Enter" || event.key === " ") {
+//     png.checked = true;
+//   }
+// });
+// webp.nextElementSibling.addEventListener("keydown", (event) => {
+//   event.stopPropagation();
+//   if (event.key === "Enter" || event.key === " ") {
+//     webp.checked = true;
+//   }
+// });
+// png.nextElementSibling.addEventListener("keydown", (event) => {
+//   event.stopPropagation();
+//   if (event.key === "Enter" || event.key === " ") {
+//     png.checked = true;
+//   }
+// });
 
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
@@ -988,22 +1052,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "a") {
     if (keyMeta) return;
-
-    for (let i = 0; i < positionXRadioNodeList.length; i++) {
-      if (positionXRadioNodeList[i].checked) {
-        // console.log(positionXRadioNodeList[i]);
-        // console.log(positionXRadioNodeList.length);
-        // console.log(i);
-        positionXRadioNodeList[i].checked = false;
-        if (i + 1 === positionXRadioNodeList.length) {
-          positionXRadioNodeList[0].checked = true;
-          break;
-        } else {
-          positionXRadioNodeList[i + 1].checked = true;
-          break;
-        }
-      }
-    }
+    changeCheckedPositionX();
     // const previousTextWidth = tooltip3.textContent.length * 7;
     // tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
     // tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
@@ -1015,19 +1064,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "s") {
     if (keyMeta) return;
-
-    for (let i = 0; i < positionYRadioNodeList.length; i++) {
-      if (positionYRadioNodeList[i].checked) {
-        positionYRadioNodeList[i].checked = false;
-        if (i + 1 === positionYRadioNodeList.length) {
-          positionYRadioNodeList[0].checked = true;
-          break;
-        } else {
-          positionYRadioNodeList[i + 1].checked = true;
-          break;
-        }
-      }
-    }
+    changeCheckedPositionY();
     // tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
     // tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   }
@@ -1039,38 +1076,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "v") {
     if (keyMeta) return;
 
-    for (let i = 0; i < scaleRadioNodeList.length; i++) {
-      if (scaleRadioNodeList[i].checked) {
-        scaleRadioNodeList[i].checked = false;
-        //最初の要素に戻ってチェック
-        if (i + 1 === scaleRadioNodeList.length) {
-          scaleRadioNodeList[0].checked = true;
-          break;
-          //次の要素をチェック
-        } else {
-          scaleRadioNodeList[i + 1].checked = true;
-          break;
-        }
-      }
-    }
+    changeCheckedScale();
   }
   if (event.key === "l") {
     if (keyMeta) return;
 
-    for (let i = 0; i < dataTypeRadioNodeList.length; i++) {
-      if (dataTypeRadioNodeList[i].checked) {
-        dataTypeRadioNodeList[i].checked = false;
-        //最初の要素に戻ってチェック
-        if (i + 1 === dataTypeRadioNodeList.length) {
-          dataTypeRadioNodeList[0].checked = true;
-          break;
-          //次の要素をチェック
-        } else {
-          dataTypeRadioNodeList[i + 1].checked = true;
-          break;
-        }
-      }
-    }
+    changeCheckedFormat();
   }
   if (event.key === "e") {
     if (keyMeta) return;
@@ -1406,11 +1417,7 @@ document.addEventListener("keyup", (event) => {
 // }
 
 function navToggle() {
-  navigation.classList.toggle("close");
-}
-
-if (!!isMobile) {
-  scaleWindow.nextElementSibling.style.display = "none";
+  menu.classList.toggle("close");
 }
 
 async function copyToClipboard() {

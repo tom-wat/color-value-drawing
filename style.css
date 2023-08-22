@@ -33,6 +33,9 @@ body {
   color: var(--primary-white);
   font-family: "Inter", sans-serif;
 }
+ul,li{
+  list-style: none;
+}
 button,
 input,
 select,
@@ -62,7 +65,10 @@ input[type='range']::-moz-range-thumb{
   border:0px;
 }
 output{
-  padding-inline: 1rem;
+  /* padding-inline: 1rem; */
+  width: 2ch;
+  text-align: right;
+  margin-inline-end: 1ch;
 }
 #board{
   padding-block: 3rem;
@@ -146,10 +152,12 @@ output{
   margin-inline-end: 8px;
 }
 .button{
+  width: 95%;
+  margin-inline: auto;
   /* height: 100%; */
   font-size: var(--font-size-medium);
-  padding-inline: 3rem;
-  /* border-radius: 4px; */
+  padding-inline: 2.5rem;
+  border-radius: 8px;
   font-weight: var(--font-weight);
   background-color: var(--primary-black);
   color: var(--primary-white);
@@ -171,13 +179,56 @@ output{
 .button:focus-visible svg{
   fill: var(--secondary-black);
 }
+.button:focus-visible label{
+  color: var(--secondary-black);
+}
 /* .button:active{
   background-color: var(--secondary-white);
   color: var(--secondary-black);
 } */
-.nav-content .active-button:active{
-  background-color: var(--quaternary-black);
-  color: var(--secondary-white);
+.menu{
+  min-width: 480px;
+  max-height: 700px;
+  position: fixed;
+  padding-block-start: 1.5rem;
+  padding-block-end: 3rem;
+  border-radius: 1rem;
+  /* transition: 0.2s; */
+  background-color: var(--primary-black);
+  /* border: 1px solid#000; */
+  bottom:3rem;
+  left:3rem;
+  height: calc(90vh - 1rem);
+}
+.menu-content{
+  display: grid;
+  /* gap: 0.5rem; */
+  height: 100%;
+  overflow: auto;
+}
+.menu.close{
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border:none;
+}
+.menu.close .menu-content{
+  display: none;  
+}
+.menu.close #close-button{
+  display: none;
+}
+.menu-content .active-button:active{
+  background-color: var(--secondary-white);
+  color: var(--primary-black);
+}
+.menu-content .active-button:active svg{
+
+  fill: var(--primary-black);
+}
+.menu-content .active-button:active label{
+
+  color: var(--primary-black);
 }
 
 .button-type-b:focus-visible{
@@ -186,7 +237,9 @@ output{
 }
 .button label{
   color: var(--tertiary-white);
+  display: none;
 }
+
 .button output{
   color: var(--tertiary-white);
 }
@@ -205,7 +258,7 @@ label:focus-visible{
   display: inline-block;
   line-height: 1.5;
   padding-inline: 1rem;
-  border-radius: 1rem;
+  border-radius: 8px;
 }
 span.inline-button{
   outline: transparent;
@@ -224,9 +277,9 @@ span.inline-button:active{
   color: var(--secondary-black);
 }
 input[type="radio"]:checked + label{
-  background-color: var(--tertiary-white);
-  color: var(--secondary-black);
-  
+  /* background-color: var(--tertiary-white);
+  color: var(--secondary-black); */
+  display: block;
 }
 
 /* .tooltip {
@@ -275,34 +328,7 @@ input[type="radio"]:checked + label{
 #file-input {
   display: none;
 }
-.navigation{
-  min-width: 400px;
-  max-height: 700px;
-  position: fixed;
-  padding: 1.5rem 0;
-  border-radius: 1rem;
-  /* transition: 0.2s; */
-  background-color: var(--primary-black);
-  /* border: 1px solid#000; */
-  bottom:3rem;
-  left:3rem;
-  height: calc(90vh - 1rem);
-}
-.nav-content{
-  display: grid;
-  /* gap: 0.5rem; */
-  height: 100%;
-  overflow: auto;
-}
-.navigation.close{
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  border:none;
-}
-.navigation.close .nav-content{
-  display: none;  
-}
+
 .object{
   color:var(--grey-1);
   font-size: var(--font-size-small);
@@ -332,7 +358,7 @@ input[type="radio"]:checked + label{
 .close-button{
   font-size: var(--font-size-ss);
 }
-.navigation.close .open-button{
+.menu.close .open-button{
   display: block;  
 }
 /* .container {
@@ -354,6 +380,7 @@ input[type="radio"]:checked + label{
   position: relative;
   margin-right: calc(1rem + 45px);
   color: var(--tertiary-white);
+  padding-inline-end: 1rem;
 }
 #colorInfo::before {
   content: "";
@@ -364,20 +391,28 @@ input[type="radio"]:checked + label{
   transform: translate(-50%, 15%);
 }
 #close-button{
-  padding-block-start: calc(1rem / 2);
+  padding-block: calc(1rem / 2);
+  width: 95%;
+  /* position: absolute; */
+}
+#close-button span{
+  transform: translateY(-4px);
+}
+#close-button span + span{
+  transform: translateY(-6px);
 }
 
-.nav-content::-webkit-scrollbar-track {
+.menu-content::-webkit-scrollbar-track {
   border-radius: 3px;
   background-color: var(--primary-black);
 }
 
-.nav-content::-webkit-scrollbar-thumb {
+.menu-content::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: var(--grey-2)
 }
 
-.nav-content::-webkit-scrollbar{
+.menu-content::-webkit-scrollbar{
   background-color: white;
   width: 3px;
   height: 3px;
@@ -392,6 +427,9 @@ input[type="radio"]:checked + label{
   .button:hover svg{
     fill: var(--secondary-black);
   }
+  .button:hover label{
+    color: var(--secondary-black);
+  }
   .button-type-b:hover{
     background-color: var(--primary-black);
     color: var(--primary-white);
@@ -403,9 +441,9 @@ input[type="radio"]:checked + label{
     background-color: var(--tertiary-white);
     color: var(--secondary-black);
   }
-  label:hover{
+  /* label:hover{
     box-shadow:0 0 0 1px var(--tertiary-white) inset;
-  }
+  } */
   .description button:hover{
     background-color: var(--primary-white);
     color: var(--primary-black);
@@ -446,7 +484,7 @@ input[type="radio"]:checked + label{
 
     margin-right: 0;
   }
-  .navigation{
+  .menu{
     position: fixed;
     bottom: 1rem;
     left: 1rem;
@@ -454,29 +492,30 @@ input[type="radio"]:checked + label{
     max-width: 450px;
     min-width: 280px;
     /* min-height: 630px; */
-    padding: 1rem 0;
     /* height: auto; */ 
   }
-  .nav-content .button:nth-child(odd){
+  /* .menu-content .button:nth-child(odd){
     background-color: var(--tertiary-black)
-  }
+  } */
   /* .button:nth-child(even){
     background-color: var(--quaternary-black)
   }
   .button:last-child{
     background-color: var(--primary-black)
   } */
-  .nav-content .button:focus-visible{
+  .menu-content .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
-  .active-button:active{
-    background-color: var(--secondary-white);
+  .menu-content .active-button:active label{
     color: var(--secondary-black);
   }
-  .nav-content .active-button:active{
-    background-color: var(--secondary-white);
+  .menu-content .active-button:active{
+    background-color: var(--primary-white);
     color: var(--secondary-black);
+  }
+  #close-button span{
+    transform: translateY(0px);
   }
   
   .open-button{
@@ -489,7 +528,8 @@ input[type="radio"]:checked + label{
   }
   .button{
     min-width: 280px;
-    padding-inline: 2rem;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 1rem;
   }
   .object{
     padding-inline-start: 2rem;
