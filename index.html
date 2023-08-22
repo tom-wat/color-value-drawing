@@ -220,7 +220,11 @@
             </button>
           </li>
           <li>
-            <div class="button scale flex button-type-b">
+            <button
+              class="button scale flex active-button"
+              onclick="changeCheckedScale()"
+              data-tabindex
+            >
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -242,10 +246,7 @@
                   value="half"
                   tabindex="-1"
                 />
-                <label
-                  for="scale-half"
-                  class="flex align-self-stretch"
-                  data-tabindex
+                <label for="scale-half" class="flex align-self-stretch"
                   >1/2</label
                 >
                 <input
@@ -255,10 +256,7 @@
                   value="quarter"
                   tabindex="-1"
                 />
-                <label
-                  for="scale-quarter"
-                  class="flex align-self-stretch"
-                  data-tabindex
+                <label for="scale-quarter" class="flex align-self-stretch"
                   >1/4</label
                 >
                 <input
@@ -268,10 +266,7 @@
                   value="window"
                   tabindex="-1"
                 />
-                <label
-                  for="scale-window"
-                  class="flex align-self-stretch"
-                  data-tabindex
+                <label for="scale-window" class="flex align-self-stretch"
                   >Window</label
                 >
                 <input
@@ -282,16 +277,12 @@
                   tabindex="-1"
                   checked
                 />
-                <label
-                  for="scale-full"
-                  class="flex align-self-stretch"
-                  data-tabindex
-                  class=" "
+                <label for="scale-full" class="flex align-self-stretch"
                   >Full</label
                 >
               </form>
               <span class="shortcut">V</span>
-            </div>
+            </button>
           </li>
           <li>
             <button
@@ -319,8 +310,9 @@
           <li>
             <button
               id="data-type-btn"
-              class="button flex button-type-b margin-block-end-1"
-              tabindex="-1"
+              class="button flex active-button"
+              data-tabindex=""
+              onclick="changeCheckedFormat()"
             >
               <span class="icon"
                 ><svg
@@ -343,9 +335,7 @@
                   value="png"
                   tabindex="-1"
                 />
-                <label for="png" data-tabindex class="flex align-self-stretch"
-                  >PNG</label
-                >
+                <label for="png" class="flex align-self-stretch">PNG</label>
                 <input
                   type="radio"
                   id="webp"
@@ -354,9 +344,7 @@
                   tabindex="-1"
                   checked
                 />
-                <label for="webp" data-tabindex class="flex align-self-stretch"
-                  >WebP</label
-                >
+                <label for="webp" class="flex align-self-stretch">WebP</label>
               </form>
               <span class="shortcut">L</span>
             </button>
@@ -486,7 +474,11 @@
             </button>
           </li>
           <li>
-            <div class="button flex button-type-b">
+            <button
+              class="button flex active-button"
+              data-tabindex
+              onclick="changeCheckedPositionX()"
+            >
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +506,6 @@
                 <label
                   for="drawing-position-x-left"
                   class="flex align-self-stretch"
-                  data-tabindex
                   >Left</label
                 >
                 <input
@@ -528,15 +519,18 @@
                 <label
                   for="drawing-position-x-right"
                   class="flex align-self-stretch"
-                  data-tabindex
                   >Right</label
                 >
               </form>
               <span class="shortcut">A</span>
-            </div>
+            </button>
           </li>
           <li>
-            <div class="button flex button-type-b">
+            <div
+              class="button flex active-button"
+              data-tabindex
+              onclick="changeCheckedPositionY()"
+            >
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -564,7 +558,6 @@
                 <label
                   for="drawing-position-y-top"
                   class="flex align-self-stretch"
-                  data-tabindex
                   class=" "
                   >Top</label
                 >
@@ -579,7 +572,6 @@
                 <label
                   for="drawing-position-y-bottom"
                   class="flex align-self-stretch"
-                  data-tabindex
                   >Bottom</label
                 >
               </form>
@@ -774,19 +766,17 @@
               <span class="shortcut">Z X</span>
             </button>
           </li>
-          <li>
-            <button
-              id="close-button"
-              class="button flex active-button"
-              onclick="navToggle()"
-              data-tabindex
-            >
-              <span class="row-1 close-button">▼</span
-              ><span class="shortcut">esc</span>
-            </button>
-          </li>
         </div>
         <input type="file" id="file-input" />
+        <button
+          id="close-button"
+          class="button flex active-button"
+          onclick="navToggle()"
+          data-tabindex
+        >
+          <span class="row-1 close-button">▼</span
+          ><span class="shortcut">esc</span>
+        </button>
         <button id="open-button" class="open-button" onclick="navToggle()">
           ▲
         </button>
