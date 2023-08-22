@@ -1093,19 +1093,21 @@ document.addEventListener("keydown", (event) => {
     // tooltip8.textContent = `column-number: ${columnNumber.value}`;
     // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
-  if (event.key === "Escape") {
+  if (event.key === "1") {
     navToggle();
   }
 });
 
 // Set up an object to track the current state of each key
 let keyShift = false;
+let keyControl = false;
 // let keyArrowUp = false;
 // let keyArrowLeft = false;
 // let keyArrowDown = false;
 // let keyArrowRight = false;
 let keyMeta = false;
 let keyZ = false;
+let keyX = false;
 let keyC = false;
 // let keyD = false;
 
@@ -1156,6 +1158,9 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Shift") {
     keyShift = true;
   }
+  // if (event.key === "Control") {
+  //   keyControl = true;
+  // }
   // if (event.key === "ArrowUp") {
   //   keyArrowUp = true;
   // }
@@ -1174,6 +1179,9 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "z") {
     keyZ = true;
   }
+  if (event.key === "x") {
+    keyX = true;
+  }
   if (event.key === "c") {
     keyC = true;
   }
@@ -1191,6 +1199,9 @@ document.addEventListener("keyup", (event) => {
   if (event.key === "Shift") {
     keyShift = false;
   }
+  // if (event.key === "Control") {
+  //   keyControl = false;
+  // }
   // if (event.key === "ArrowUp") {
   //   keyArrowUp = false;
   // }
@@ -1208,6 +1219,12 @@ document.addEventListener("keyup", (event) => {
   }
   if (event.key === "z") {
     keyZ = false;
+  }
+  // if (event.key === "x") {
+  //   keyX = false;
+  // }
+  if (event.key === "c") {
+    keyC = false;
   }
   // if (event.key === "d") {
   //   keyD = false;
