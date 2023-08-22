@@ -1093,7 +1093,7 @@ document.addEventListener("keydown", (event) => {
     // tooltip8.textContent = `column-number: ${columnNumber.value}`;
     // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
-  if (event.key === "1") {
+  if (event.key === "Escape") {
     navToggle();
   }
 });
