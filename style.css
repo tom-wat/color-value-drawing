@@ -92,7 +92,7 @@ output{
   color: var(--primary-white);
   border: 1px solid var(--primary-white);
   border-radius: 1rem;
-  margin-inline-end: 8px;
+  margin-inline-end: 6px;
   cursor: pointer;
 }
 .description button:focus-visible{
