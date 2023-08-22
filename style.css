@@ -33,6 +33,9 @@ body {
   color: var(--primary-white);
   font-family: "Inter", sans-serif;
 }
+ul,li{
+  list-style: none;
+}
 button,
 input,
 select,
@@ -146,6 +149,7 @@ output{
   margin-inline-end: 8px;
 }
 .button{
+  width: 100%;
   /* height: 100%; */
   font-size: var(--font-size-medium);
   padding-inline: 3rem;
@@ -175,7 +179,7 @@ output{
   background-color: var(--secondary-white);
   color: var(--secondary-black);
 } */
-.nav-content .active-button:active{
+.menu-content .active-button:active{
   background-color: var(--quaternary-black);
   color: var(--secondary-white);
 }
@@ -275,7 +279,7 @@ input[type="radio"]:checked + label{
 #file-input {
   display: none;
 }
-.navigation{
+.menu{
   min-width: 400px;
   max-height: 700px;
   position: fixed;
@@ -288,19 +292,19 @@ input[type="radio"]:checked + label{
   left:3rem;
   height: calc(90vh - 1rem);
 }
-.nav-content{
+.menu-content{
   display: grid;
   /* gap: 0.5rem; */
   height: 100%;
   overflow: auto;
 }
-.navigation.close{
+.menu.close{
   width: 0;
   min-width: 0;
   padding: 0;
   border:none;
 }
-.navigation.close .nav-content{
+.menu.close .menu-content{
   display: none;  
 }
 .object{
@@ -332,7 +336,7 @@ input[type="radio"]:checked + label{
 .close-button{
   font-size: var(--font-size-ss);
 }
-.navigation.close .open-button{
+.menu.close .open-button{
   display: block;  
 }
 /* .container {
@@ -367,17 +371,17 @@ input[type="radio"]:checked + label{
   padding-block-start: calc(1rem / 2);
 }
 
-.nav-content::-webkit-scrollbar-track {
+.menu-content::-webkit-scrollbar-track {
   border-radius: 3px;
   background-color: var(--primary-black);
 }
 
-.nav-content::-webkit-scrollbar-thumb {
+.menu-content::-webkit-scrollbar-thumb {
   border-radius: 3px;
   background-color: var(--grey-2)
 }
 
-.nav-content::-webkit-scrollbar{
+.menu-content::-webkit-scrollbar{
   background-color: white;
   width: 3px;
   height: 3px;
@@ -446,7 +450,7 @@ input[type="radio"]:checked + label{
 
     margin-right: 0;
   }
-  .navigation{
+  .menu{
     position: fixed;
     bottom: 1rem;
     left: 1rem;
@@ -457,7 +461,7 @@ input[type="radio"]:checked + label{
     padding: 1rem 0;
     /* height: auto; */ 
   }
-  .nav-content .button:nth-child(odd){
+  .menu-content .button:nth-child(odd){
     background-color: var(--tertiary-black)
   }
   /* .button:nth-child(even){
@@ -466,7 +470,7 @@ input[type="radio"]:checked + label{
   .button:last-child{
     background-color: var(--primary-black)
   } */
-  .nav-content .button:focus-visible{
+  .menu-content .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
@@ -474,7 +478,7 @@ input[type="radio"]:checked + label{
     background-color: var(--secondary-white);
     color: var(--secondary-black);
   }
-  .nav-content .active-button:active{
+  .menu-content .active-button:active{
     background-color: var(--secondary-white);
     color: var(--secondary-black);
   }

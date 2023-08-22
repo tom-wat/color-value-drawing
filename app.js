@@ -19,7 +19,7 @@ const columnNumberOutput = document.getElementById("column-number-output");
 const columnAdd = document.getElementById("column-add");
 const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
-const navigation = document.getElementById("navigation");
+const menu = document.getElementById("menu");
 const closeButton = document.getElementById("close-button");
 const drawingPositionX = document.getElementById("data-drawing-position-x");
 const drawingPositionXLeft = document.getElementById("drawing-position-x-left");
@@ -1406,7 +1406,7 @@ document.addEventListener("keyup", (event) => {
 // }
 
 function navToggle() {
-  navigation.classList.toggle("close");
+  menu.classList.toggle("close");
 }
 
 if (!!isMobile) {
