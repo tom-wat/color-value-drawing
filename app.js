@@ -34,9 +34,9 @@ const drawingPositionYBottom = document.getElementById(
 );
 const offsetX = document.getElementById("offset-x");
 const offsetXOutput = document.getElementById("offset-x-output");
-const offsetXadd = document.getElementById("offset-x-add");
+const offsetXAdd = document.getElementById("offset-x-add");
 const offsetXSubtract = document.getElementById("offset-x-subtract");
-const offsetYadd = document.getElementById("offset-y-add");
+const offsetYAdd = document.getElementById("offset-y-add");
 const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
@@ -74,6 +74,7 @@ const undoStatesLimitNumber = 50;
 let rgb;
 let hsb;
 let lab;
+let oklch;
 let colorCode;
 let image;
 let undoStates = [];
@@ -212,45 +213,114 @@ function rgbToHsl(r, g, b) {
   return { h, s, l };
 }
 
-function rgbToLab(R, G, B) {
+// function rgbToLab(R, G, B) {
+//   // Convert RGB to XYZ
+//   const rLinear = R / 255;
+//   const gLinear = G / 255;
+//   const bLinear = B / 255;
+
+//   const rSrgb =
+//     rLinear > 0.04045 ? ((rLinear + 0.055) / 1.055) ** 2.4 : rLinear / 12.92;
+//   const gSrgb =
+//     gLinear > 0.04045 ? ((gLinear + 0.055) / 1.055) ** 2.4 : gLinear / 12.92;
+//   const bSrgb =
+//     bLinear > 0.04045 ? ((bLinear + 0.055) / 1.055) ** 2.4 : bLinear / 12.92;
+
+//   const x = rSrgb * 0.4124 + gSrgb * 0.3576 + bSrgb * 0.1805;
+//   const y = rSrgb * 0.2126 + gSrgb * 0.7152 + bSrgb * 0.0722;
+//   const z = rSrgb * 0.0193 + gSrgb * 0.1192 + bSrgb * 0.9505;
+
+//   // Convert XYZ to Lab
+//   const xRef = 0.95047;
+//   const yRef = 1.0;
+//   const zRef = 1.08883;
+
+//   const xRatio = x / xRef;
+//   const yRatio = y / yRef;
+//   const zRatio = z / zRef;
+
+//   const epsilon = 0.008856;
+//   const kappa = 903.3;
+
+//   const fx = xRatio > epsilon ? xRatio ** (1 / 3) : (kappa * xRatio + 16) / 116;
+//   const fy = yRatio > epsilon ? yRatio ** (1 / 3) : (kappa * yRatio + 16) / 116;
+//   const fz = zRatio > epsilon ? zRatio ** (1 / 3) : (kappa * zRatio + 16) / 116;
+
+//   const L = Math.round(116 * fy - 16);
+//   const a = Math.round(500 * (fx - fy));
+//   const b = Math.round(200 * (fy - fz));
+
+//   // console.log(L, a, b);
+//   return { L, a, b };
+// }
+
+function rgbToLab(r, g, b) {
   // Convert RGB to XYZ
-  const rLinear = R / 255;
-  const gLinear = G / 255;
-  const bLinear = B / 255;
+  r /= 255;
+  g /= 255;
+  b /= 255;
 
-  const rSrgb =
-    rLinear > 0.04045 ? ((rLinear + 0.055) / 1.055) ** 2.4 : rLinear / 12.92;
-  const gSrgb =
-    gLinear > 0.04045 ? ((gLinear + 0.055) / 1.055) ** 2.4 : gLinear / 12.92;
-  const bSrgb =
-    bLinear > 0.04045 ? ((bLinear + 0.055) / 1.055) ** 2.4 : bLinear / 12.92;
+  if (r > 0.04045) {
+    r = Math.pow((r + 0.055) / 1.055, 2.4);
+  } else {
+    r = r / 12.92;
+  }
 
-  const x = rSrgb * 0.4124 + gSrgb * 0.3576 + bSrgb * 0.1805;
-  const y = rSrgb * 0.2126 + gSrgb * 0.7152 + bSrgb * 0.0722;
-  const z = rSrgb * 0.0193 + gSrgb * 0.1192 + bSrgb * 0.9505;
+  if (g > 0.04045) {
+    g = Math.pow((g + 0.055) / 1.055, 2.4);
+  } else {
+    g = g / 12.92;
+  }
 
-  // Convert XYZ to Lab
-  const xRef = 0.95047;
-  const yRef = 1.0;
-  const zRef = 1.08883;
+  if (b > 0.04045) {
+    b = Math.pow((b + 0.055) / 1.055, 2.4);
+  } else {
+    b = b / 12.92;
+  }
 
-  const xRatio = x / xRef;
-  const yRatio = y / yRef;
-  const zRatio = z / zRef;
+  r *= 100;
+  g *= 100;
+  b *= 100;
 
-  const epsilon = 0.008856;
-  const kappa = 903.3;
+  const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
+  const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
+  const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
 
-  const fx = xRatio > epsilon ? xRatio ** (1 / 3) : (kappa * xRatio + 16) / 116;
-  const fy = yRatio > epsilon ? yRatio ** (1 / 3) : (kappa * yRatio + 16) / 116;
-  const fz = zRatio > epsilon ? zRatio ** (1 / 3) : (kappa * zRatio + 16) / 116;
+  // Convert XYZ to CIELAB
+  const refX = 95.047;
+  const refY = 100.0;
+  const refZ = 108.883;
 
-  const L = Math.round(116 * fy - 16);
-  const a = Math.round(500 * (fx - fy));
-  const b = Math.round(200 * (fy - fz));
+  let xRatio = x / refX;
+  let yRatio = y / refY;
+  let zRatio = z / refZ;
 
-  // console.log(L, a, b);
-  return { L, a, b };
+  if (xRatio > 0.008856) {
+    xRatio = Math.pow(xRatio, 1 / 3);
+  } else {
+    xRatio = (903.3 * xRatio + 16) / 116;
+  }
+
+  if (yRatio > 0.008856) {
+    yRatio = Math.pow(yRatio, 1 / 3);
+  } else {
+    yRatio = (903.3 * yRatio + 16) / 116;
+  }
+
+  if (zRatio > 0.008856) {
+    zRatio = Math.pow(zRatio, 1 / 3);
+  } else {
+    zRatio = (903.3 * zRatio + 16) / 116;
+  }
+  const LabLRaw = 116 * yRatio - 16;
+  const LabARaw = 500 * (xRatio - yRatio);
+  const LabBRaw = 200 * (yRatio - zRatio);
+
+  const LabL = Math.round(116 * yRatio - 16);
+  const LabA = Math.round(500 * (xRatio - yRatio));
+  const LabB = Math.round(200 * (yRatio - zRatio));
+
+  return { LabL, LabA, LabB, LabLRaw, LabARaw, LabBRaw };
 }
 
 function download() {
@@ -386,7 +456,7 @@ clear.addEventListener("click", function () {
     navToggle();
   }
 });
-offsetXadd.addEventListener("click", function () {
+offsetXAdd.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
   count += 1;
   offsetX.value = String(count);
@@ -398,7 +468,7 @@ offsetXSubtract.addEventListener("click", function () {
   offsetX.value = String(count);
   updateOutput(offsetX, offsetXOutput);
 });
-offsetXadd.addEventListener("keydown", (event) => {
+offsetXAdd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetX.value);
     count += 1;
@@ -414,7 +484,7 @@ offsetXSubtract.addEventListener("keydown", (event) => {
     updateOutput(offsetX, offsetXOutput);
   }
 });
-offsetYadd.addEventListener("click", function () {
+offsetYAdd.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
   count += 1;
   offsetY.value = String(count);
@@ -426,7 +496,7 @@ offsetYSubtract.addEventListener("click", function () {
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
 });
-offsetYadd.addEventListener("keydown", (event) => {
+offsetYAdd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
     let count = parseInt(offsetY.value);
     count += 1;
@@ -585,7 +655,7 @@ columnSubtract.addEventListener("keydown", (event) => {
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
 
-  context.font = `500 ${fontSize}px 'Inter','Helevetica Neue', Arial, sans-serif `;
+  context.font = `500 ${fontSize}px 'Inter','Helvetica Neue', Arial, sans-serif `;
 }
 
 fontInput.addEventListener("input", function () {
@@ -684,7 +754,7 @@ function drawMultilineText(
     const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
     const textSpaceWidth = lineWidth + padding * 2;
-    const textSpaceheight = lineHeight + padding;
+    const textSpaceHeight = lineHeight + padding;
     const xOffsetAdjustment = fontSize / 3 + fontSize / 2;
     const yOffsetAdjustment = fontSize / 2;
     const offSetXWidth = fontSize * columnNumber;
@@ -692,7 +762,7 @@ function drawMultilineText(
     let colorSet = [
       [hsl.h, hsl.h, hsl.h, 0],
       [100, hsl.s, hsl.s, 0],
-      [50, 50, hsl.l, lab.L],
+      [50, 50, hsl.l, lab.LabL],
     ];
 
     if (textPositionX === "left") {
@@ -707,15 +777,15 @@ function drawMultilineText(
     if (textPositionY === "top") {
       yOffset =
         -yOffsetAdjustment -
-        (textSpaceheight + margin) *
+        (textSpaceHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) -
-        (textSpaceheight + margin) *
+        (textSpaceHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     } else {
       yOffset =
         yOffsetAdjustment +
-        (textSpaceheight + margin) *
+        (textSpaceHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     }
@@ -728,7 +798,7 @@ function drawMultilineText(
       pointX + drawingPositionX + xOffset,
       pointY + drawingPositionY + yOffset,
       textSpaceWidth,
-      textSpaceheight,
+      textSpaceHeight,
       padding,
       false
     );
@@ -758,7 +828,7 @@ function drawMultilineText(
     );
 
     if ((i + 1) % columnNumber === 0) {
-      drawingPositionY += textSpaceheight + margin;
+      drawingPositionY += textSpaceHeight + margin;
       drawingPositionX = 0;
     } else {
       drawingPositionX += textSpaceWidth + margin;
@@ -780,7 +850,7 @@ canvas.addEventListener("click", function (e) {
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
   colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.L}`;
+  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.LabL}`;
 });
 
 canvas.addEventListener("click", function (event) {
