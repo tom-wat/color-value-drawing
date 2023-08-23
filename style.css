@@ -107,7 +107,6 @@ output{
   padding-inline: 3rem;
   border-radius: 2rem;
   font-weight: 300;
-  font-feature-settings: "palt";
 }
 .description button{
   padding-inline: 12px;
@@ -155,7 +154,6 @@ output{
   padding-inline: 3rem;
   border-radius: 1.5rem;
   font-weight: 300;
-  font-feature-settings: "palt";
   line-height: 1.6;
 }
 .note span{
@@ -199,8 +197,8 @@ output{
   color: var(--primary-white);
   line-height: 2;
   text-align: left;
-  /* border-top: 1px solidvar(--secondary-black);
-  border-bottom: 1px solidvar(--secondary-black); */
+  /* border-top: 1px solid var(--secondary-black);
+  border-bottom: 1px solid　var(--secondary-black); */
 
   /* transition: 0.1s; */
 }
