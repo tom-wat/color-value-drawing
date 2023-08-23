@@ -35,8 +35,7 @@ body {
 }
 ul,li{
   list-style: none;
-  padding: 0;
-  margin: 0;
+  outline: none;
 }
 button,
 input,
@@ -44,7 +43,7 @@ select,
 textarea,
 label {
   font-family: inherit;
-  outline: transparent;
+  outline: none;
   border: none;
 }
 input[type='radio'] {
@@ -264,7 +263,7 @@ label:focus-visible{
   border-radius: 8px;
 }
 span.inline-button{
-  outline: transparent;
+  outline: none;
 }
 
 /* span.inline-button:focus{
