@@ -13,8 +13,6 @@ const fontInput = document.getElementById("font-size-input");
 const fontOutput = document.getElementById("font-size-output");
 const fontSizeAdd = document.getElementById("font-size-add");
 const fontSizeSubtract = document.getElementById("font-size-subtract");
-// const colorInput = document.getElementById("font-color-input");
-// const alphaInput = document.getElementById("font-color-alpha-input");
 const columnNumber = document.getElementById("column-number");
 const columnNumberOutput = document.getElementById("column-number-output");
 const columnAdd = document.getElementById("column-add");
@@ -46,20 +44,6 @@ const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
-// console.log(offsetX);
-// console.log(offsetXOutput);
-// const tooltip1 = document.getElementById("tooltip1");
-// const tooltip2 = document.getElementById("tooltip2");
-// const tooltip3 = document.getElementById("tooltip3");
-// const tooltip4 = document.getElementById("tooltip4");
-// const tooltip5 = document.getElementById("tooltip5");
-// const tooltip6 = document.getElementById("tooltip6");
-// const tooltip7 = document.getElementById("tooltip7");
-// const tooltip8 = document.getElementById("tooltip8");
-// const tooltipPositionAdjustmentValueX = 15;
-// const tooltipPositionAdjustmentValueY = 15;
-// const tooltipInlineMargin = 10;
-// const tooltipBlockMargin = 10;
 
 const isMobile = navigator.userAgent.match(
   /(iPhone|iPod|iPad|Android|BlackBerry)/
@@ -117,11 +101,6 @@ const openFile = (event) => {
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
-      // if (fullScale.checked) {
-      //   dividedDrawImage(1);
-      // } else {
-      //   adjustedDrawImage();
-      // }
       switch (scaleRadioNodeList.value) {
         case "full":
           dividedDrawImage(1);
@@ -136,7 +115,6 @@ const openFile = (event) => {
           adjustedDrawImage();
       }
       changeFontSize(ctx, fontInput);
-      // changeColor(ctx, colorInput, alphaInput);
       undoStates = [];
       getCurrentImageState();
       initialState = undoStates[0];
@@ -279,7 +257,7 @@ function rgbToLab(r, g, b) {
   const LabA = Math.round(500 * (xRatio - yRatio));
   const LabB = Math.round(200 * (yRatio - zRatio));
 
-  return { LabL, LabA, LabB, LabLRaw, LabARaw, LabBRaw };
+  return { LabL, LabA, LabB };
 }
 
 function download() {
@@ -676,7 +654,7 @@ function drawMultilineText(
     if (i === 2 && hsl.l <= 50) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
-    if (i === 3 && lab.L < 60) {
+    if (i === 3 && lab.LabL < 60) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     context.fillText(
@@ -839,30 +817,7 @@ canvas.addEventListener("click", function (event) {
     undoStates.length = undoStatesLimitNumber;
   }
   console.log(undoStates);
-  // ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-  // ctx.fillRect(x - 2, y - 2, 5, 5);
 });
-
-// const changeColor = (context, colorInput, alphaInput) => {
-//   const colorValue = colorInput.value;
-//   const hue = 0; // 色相 (0-360)
-//   const saturation = 0; // 彩度 (0-100)
-//   const lightness = colorValue; // 明度 (0-100)
-//   const alphaValue = alphaInput.value;
-//   // console.log(colorInput.value);
-//   // console.log(alphaInput.value);
-//   context.fillStyle =
-//     // "hsl(" + hue + ", " + saturation + "%, " + lightness + "%)";
-//     `hsl( ${hue}, ${saturation}%, ${lightness}%, ${alphaValue}%)`;
-// };
-
-// colorInput.addEventListener("input", function () {
-//   changeColor(ctx, colorInput, alphaInput);
-// });
-
-// alphaInput.addEventListener("input", function () {
-//   changeColor(ctx, colorInput, alphaInput);
-// });
 
 function getCurrentImageState() {
   currentStates = ctx.getImageData(0, 0, image.width, image.height);
@@ -910,34 +865,6 @@ document.addEventListener("keydown", (event) => {
 
     fileInput.click();
   }
-  // if (event.key === "w") {
-  //   colorInput.value = (parseInt(colorInput.value) + 80).toString();
-  //   colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
-  //   changeColor(ctx, colorInput, alphaInput);
-  //   // tooltip2.textContent = `lightness: ${colorInput.value}`;
-  //   // tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-  // }
-  // if (event.key === "q") {
-  //   colorInput.value = (parseInt(colorInput.value) - 80).toString();
-  //   colorInput.nextElementSibling.value = colorInput.value.padStart(3, "0");
-  //   changeColor(ctx, colorInput, alphaInput);
-  //   // tooltip2.textContent = `lightness: ${colorInput.value}`;
-  //   // tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-  // }
-  // if (event.key === "n") {
-  //   alphaInput.value = (parseInt(alphaInput.value) + 10).toString();
-  //   alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
-  //   changeColor(ctx, colorInput, alphaInput);
-  //   // tooltip7.textContent = `alpha: ${alphaInput.value}`;
-  //   // tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-  // }
-  // if (event.key === "b") {
-  //   alphaInput.value = (parseInt(alphaInput.value) - 10).toString();
-  //   alphaInput.nextElementSibling.value = alphaInput.value.padStart(3, "0");
-  //   changeColor(ctx, colorInput, alphaInput);
-  //   // tooltip7.textContent = `alpha: ${alphaInput.value}`;
-  //   // tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-  // }
   if (event.key === "w") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     updateOutput(fontInput, fontOutput);
@@ -957,46 +884,28 @@ document.addEventListener("keydown", (event) => {
     updateOutput(offsetX, offsetXOutput);
     console.log(offsetX.value);
     console.log(offsetXOutput.textContent);
-    // tooltip5.textContent = `offset-x: ${offsetX.value}`;
-    // tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
   if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     updateOutput(offsetX, offsetXOutput);
     console.log(offsetX.value);
     console.log(offsetXOutput.textContent);
-    // tooltip5.textContent = `offset-x: ${offsetX.value}`;
-    // tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
   }
   if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
     updateOutput(offsetY, offsetYOutput);
-    // tooltip6.textContent = `offset-y: ${offsetY.value}`;
-    // tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
   if (event.key === "t") {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     updateOutput(offsetY, offsetYOutput);
-    //   tooltip6.textContent = `offset-y: ${offsetY.value}`;
-    //   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
   }
   if (event.key === "a") {
     if (keyMeta) return;
     changeCheckedPositionX();
-    // const previousTextWidth = tooltip3.textContent.length * 7;
-    // tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
-    // tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
-    // const currentTextWidth = tooltip3.textContent.length * 7;
-    // const textWidthDifference = previousTextWidth - currentTextWidth;
-    // const tooltip4Style = window.getComputedStyle(tooltip4);
-    // const tooltip4LeftValue = parseInt(tooltip4Style.left);
-    // tooltip4.style.left = tooltip4LeftValue - textWidthDifference + "px";
   }
   if (event.key === "s") {
     if (keyMeta) return;
     changeCheckedPositionY();
-    // tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
-    // tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
   }
   if (event.key === "p") {
     if (keyMeta) return;
@@ -1023,16 +932,12 @@ document.addEventListener("keydown", (event) => {
 
     columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
     updateOutput(columnNumber, columnNumberOutput);
-    // tooltip8.textContent = `column-number: ${columnNumber.value}`;
-    // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
   if (event.key === "z") {
     if (keyMeta) return;
 
     columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
     updateOutput(columnNumber, columnNumberOutput);
-    // tooltip8.textContent = `column-number: ${columnNumber.value}`;
-    // tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
   }
   if (event.key === "Escape") {
     navToggle();
@@ -1174,180 +1079,6 @@ document.addEventListener("keyup", (event) => {
   //   keyD = false;
   // }
 });
-
-// // マウス移動時に実行する関数
-// function showTooltip(event) {
-//   // console.log(event);
-//   // ページのスクロール量を取得
-//   const scrollTop =
-//     document.documentElement.scrollTop || document.body.scrollTop;
-//   const scrollLeft =
-//     document.documentElement.scrollLeft || document.body.scrollLeft;
-
-//   // マウスポインタの位置を取得
-//   const x = event.clientX + scrollLeft;
-//   const y = event.clientY + scrollTop;
-
-//   // ツールチップに表示する文字列を設定
-//   tooltip1.textContent = `font-size: ${fontInput.value}`;
-//   tooltip2.textContent = `lightness: ${colorInput.value}`;
-//   tooltip3.textContent = `position-x: ${positionXRadioNodeList.value}`;
-//   tooltip4.textContent = `position-y: ${positionYRadioNodeList.value}`;
-//   tooltip5.textContent = `offset-x: ${offsetX.value}`;
-//   tooltip6.textContent = `offset-y: ${offsetY.value}`;
-//   tooltip7.textContent = `alpha: ${alphaInput.value}`;
-//   tooltip8.textContent = `column-number: ${columnNumber.value}`;
-
-//   //ツールチップの幅をツールチップの文字数から指定
-//   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
-//   tooltip2.style.width = `${tooltip2.textContent.length * 7 + 5}px`;
-//   tooltip3.style.width = `${tooltip3.textContent.length * 7}px`;
-//   tooltip4.style.width = `${tooltip4.textContent.length * 7 + 5}px`;
-//   tooltip5.style.width = `${tooltip5.textContent.length * 7}px`;
-//   tooltip6.style.width = `${tooltip6.textContent.length * 7}px`;
-//   tooltip7.style.width = `${tooltip7.textContent.length * 8}px`;
-//   tooltip8.style.width = `${tooltip8.textContent.length * 8}px`;
-
-//   //ツールチップの幅と高さを取得（ツールチップの表示位置を指定するときに使用）
-//   const tooltip1Width = tooltip1.offsetWidth;
-//   const tooltip1Height = tooltip1.offsetHeight;
-//   const tooltip3Width = tooltip3.offsetWidth;
-//   const tooltip3Height = tooltip3.offsetHeight;
-//   const tooltip5Width = tooltip5.offsetWidth;
-//   const tooltip5Height = tooltip5.offsetHeight;
-//   const tooltip6Width = tooltip6.offsetWidth;
-
-//   // ツールチップを表示する位置を設定
-//   tooltip1.style.left = x + tooltipPositionAdjustmentValueX + "px";
-//   tooltip1.style.top = y + tooltipPositionAdjustmentValueY + "px";
-
-//   tooltip2.style.left =
-//     x +
-//     tooltip1Width +
-//     tooltipPositionAdjustmentValueX +
-//     tooltipInlineMargin +
-//     "px";
-//   tooltip2.style.top = y + tooltipPositionAdjustmentValueY + "px";
-
-//   tooltip3.style.left = x + tooltipPositionAdjustmentValueX + "px";
-//   tooltip3.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin +
-//     "px";
-
-//   tooltip4.style.left =
-//     x +
-//     tooltip3Width +
-//     tooltipPositionAdjustmentValueX +
-//     tooltipInlineMargin +
-//     "px";
-//   tooltip4.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin +
-//     "px";
-
-//   tooltip5.style.left = x + tooltipPositionAdjustmentValueX + "px";
-//   tooltip5.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltip3Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin * 2 +
-//     "px";
-
-//   tooltip6.style.left =
-//     x +
-//     tooltip5Width +
-//     tooltipPositionAdjustmentValueX +
-//     tooltipInlineMargin +
-//     "px";
-//   tooltip6.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltip3Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin * 2 +
-//     "px";
-
-//   tooltip7.style.left =
-//     x +
-//     tooltip5Width +
-//     tooltip6Width +
-//     tooltipPositionAdjustmentValueX +
-//     tooltipInlineMargin * 2 +
-//     "px";
-//   tooltip7.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltip3Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin * 2 +
-//     "px";
-
-//   tooltip8.style.left = x + tooltipPositionAdjustmentValueX + "px";
-//   tooltip8.style.top =
-//     y +
-//     tooltip1Height +
-//     tooltip3Height +
-//     tooltip5Height +
-//     tooltipPositionAdjustmentValueY +
-//     tooltipBlockMargin * 3 +
-//     "px";
-//   // // ウィンドウの幅とツールチップの幅を取得
-//   // const windowWidth = window.innerWidth;
-//   // const tooltipWidth = tooltip.offsetWidth;
-
-//   // // ツールチップがウィンドウの右端を超える場合は left 座標を調整
-//   // if (x + tooltipWidth + tooltipPositionAdjustmentValueX > windowWidth) {
-//   //   tooltip.style.left =
-//   //     x - tooltipWidth - tooltipPositionAdjustmentValueX + "px";
-//   // }
-
-//   // ツールチップの高さを取得
-//   // const tooltipHeight = tooltip.offsetHeight;
-
-//   // // ツールチップがウィンドウの下端を超える場合は top 座標を調整
-//   // if (
-//   //   y + tooltipHeight + tooltipPositionAdjustmentValueY >
-//   //   document.body.scrollHeight
-//   // ) {
-//   //   tooltip.style.top =
-//   //     y - tooltipHeight - tooltipPositionAdjustmentValueY + "px";
-//   // }
-
-//   // ツールチップを表示する
-//   tooltip1.style.display = "block";
-//   tooltip2.style.display = "block";
-//   tooltip3.style.display = "block";
-//   tooltip4.style.display = "block";
-//   tooltip5.style.display = "block";
-//   tooltip6.style.display = "block";
-//   tooltip7.style.display = "block";
-//   tooltip8.style.display = "block";
-// }
-
-// // マウス移動時に実行する関数を登録
-// document.addEventListener("mousemove", showTooltip);
-
-// // スマートフォン、タブレットの場合ツールチップを非表示
-// const isMobile = navigator.userAgent.match(
-//   /(iPhone|iPod|iPad|Android|BlackBerry)/
-// );
-// if (!!isMobile) {
-//   document.removeEventListener("mousemove", showTooltip);
-//   tooltip1.style.display = "none";
-//   tooltip2.style.display = "none";
-//   tooltip3.style.display = "none";
-//   tooltip4.style.display = "none";
-//   tooltip5.style.display = "none";
-//   tooltip6.style.display = "none";
-//   tooltip7.style.display = "none";
-//   tooltip8.style.display = "none";
-// }
 
 function navToggle() {
   menu.classList.toggle("close");
