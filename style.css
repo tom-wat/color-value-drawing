@@ -156,6 +156,7 @@ output{
   border-radius: 1.5rem;
   font-weight: 300;
   font-feature-settings: "palt";
+  line-height: 1.6;
 }
 .note span{
   font-weight: 600;
