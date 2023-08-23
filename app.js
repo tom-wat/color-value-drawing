@@ -249,9 +249,6 @@ function rgbToLab(r, g, b) {
   } else {
     zRatio = (903.3 * zRatio + 16) / 116;
   }
-  const LabLRaw = 116 * yRatio - 16;
-  const LabARaw = 500 * (xRatio - yRatio);
-  const LabBRaw = 200 * (yRatio - zRatio);
 
   const LabL = Math.round(116 * yRatio - 16);
   const LabA = Math.round(500 * (xRatio - yRatio));
@@ -738,10 +735,7 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
   // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
   // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-  if (lab.L > 85) {
-    // ctx.strokeRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.strokeRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.strokeRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
+  if (lab.LabL > 85) {
     ctx.shadowColor = `hsl( 0, 0%, 70%)`; // 影の色
     ctx.shadowOffsetY = 1;
   }
