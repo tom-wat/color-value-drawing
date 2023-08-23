@@ -1076,7 +1076,7 @@ document.addEventListener("keydown", (event) => {
 
     debouncedDownload();
   }
-  if (event.key === "v") {
+  if (event.key === "d") {
     if (keyMeta) return;
 
     changeCheckedScale();
@@ -1110,7 +1110,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     navToggle();
   }
-  if (event.key === "f") {
+  if (event.key === "v") {
     [...shortCut].forEach((element) => element.classList.toggle("show"));
   }
 });
