@@ -89,6 +89,7 @@ output{
   width: 360px;
   height: 360px;
   min-width: 360px;
+  vertical-align: bottom;
 }
 #board .flex{
   gap: 2rem;
