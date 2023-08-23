@@ -45,6 +45,7 @@ const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
+const shortCut = document.getElementsByClassName("shortcut");
 // console.log(offsetX);
 // console.log(offsetXOutput);
 // const tooltip1 = document.getElementById("tooltip1");
@@ -1106,6 +1107,9 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "Escape") {
     navToggle();
+  }
+  if (event.key === "f") {
+    [...shortCut].forEach((element) => element.classList.toggle("show"));
   }
 });
 

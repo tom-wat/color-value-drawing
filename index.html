@@ -18,7 +18,7 @@
     <div id="tooltip8" class="tooltip"></div> -->
     <div class="container">
       <section id="board">
-        <div class="flex">
+        <div class="grid">
           <svg
             width="100%"
             height="100%"
@@ -154,8 +154,9 @@
               </g>
             </g>
           </svg>
-          <div class="description">
-            <!-- <p>
+          <div class="flex flex-direction-column">
+            <div class="description">
+              <!-- <p>
               <span>1.</span><button>Read</button>a image file. (.jpg, .png,
               .webp ... )
             </p>
@@ -164,17 +165,24 @@
               Click or touch anywhere you like.<br />then the color value and
               the pointer will be drawn.
             </p> -->
-            <ol>
-              <li>
-                <button id="description-button" onclick="fileInput.click()">
-                  Read</button
-                >a image file. (.jpg, .png, .webp ... )
-              </li>
-              <li>
-                Touch or click anywhere you like.<br />Then the color value and
-                the pointer will be drawn.
-              </li>
-            </ol>
+              <ol>
+                <li>
+                  <button id="description-button" onclick="fileInput.click()">
+                    Read</button
+                  >a image file. (.jpg, .png, .webp ... )
+                </li>
+                <li>
+                  Touch or click anywhere you like.<br />Then the color value
+                  and the pointer will be drawn.
+                </li>
+              </ol>
+            </div>
+            <div class="note">
+              <p class="flex">
+                <span>Note:</span
+                ><span>Show/Hide shortcuts on the menu with the f key.</span>
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -238,7 +246,7 @@
                 </svg>
               </span>
               <span class="row-1">Scale</span>
-              <form id="scale" class="flex margin-left height-100 margin-right">
+              <form id="scale" class="flex margin-left height-100">
                 <input
                   type="radio"
                   id="scale-half"
@@ -327,7 +335,7 @@
                 </svg>
               </span>
               <span class="row-1">Format</span>
-              <form id="data-type" class="flex height-100 margin-right">
+              <form id="data-type" class="flex height-100">
                 <input
                   type="radio"
                   id="png"
@@ -492,10 +500,7 @@
                 </svg>
               </span>
               <span class="row-1">Position-X</span>
-              <form
-                id="data-drawing-position-x"
-                class="flex height-100 margin-right"
-              >
+              <form id="data-drawing-position-x" class="flex height-100">
                 <input
                   type="radio"
                   id="drawing-position-x-left"
@@ -544,10 +549,7 @@
                 </svg>
               </span>
               <span class="row-1">Position-Y</span>
-              <form
-                id="data-drawing-position-y"
-                class="flex height-100 margin-right"
-              >
+              <form id="data-drawing-position-y" class="flex height-100">
                 <input
                   type="radio"
                   id="drawing-position-y-top"
@@ -601,7 +603,7 @@
                 oninput="updateOutput(offsetX, offsetXOutput)"
                 tabindex="-1"
               />
-              <div class="flex height-100 margin-right">
+              <div class="flex height-100">
                 <span
                   id="offset-x-subtract"
                   class="flex inline-button active-button align-self-stretch"
@@ -648,7 +650,7 @@
                 oninput="updateOutput(offsetY, offsetYOutput)"
                 tabindex="-1"
               />
-              <div class="flex margin-right height-100">
+              <div class="flex height-100">
                 <span
                   id="offset-y-subtract"
                   class="flex align-self-stretch inline-button active-button"
@@ -695,7 +697,7 @@
                 oninput="updateOutput(fontInput, fontOutput)"
                 tabindex="-1"
               />
-              <div class="flex margin-right height-100">
+              <div class="flex height-100">
                 <span
                   id="font-size-subtract"
                   class="inline-button active-button flex align-self-stretch"
@@ -742,7 +744,7 @@
                 oninput="updateOutput(fontInput, fontOutput)"
                 tabindex="-1"
               />
-              <div class="flex margin-right height-100">
+              <div class="flex height-100">
                 <span
                   id="column-subtract"
                   class="inline-button active-button flex align-self-stretch"
