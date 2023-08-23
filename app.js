@@ -1,4 +1,5 @@
 const board = document.getElementById("board");
+const note = document.querySelector(".note");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
@@ -93,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     scaleQuarter.checked = true;
+    note.style.display = "none";
   }
 });
 
