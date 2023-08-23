@@ -71,20 +71,37 @@ output{
   text-align: right;
   margin-inline-end: 1ch;
 }
+.grid{
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: 360px minmax(360px, max-content);
+  grid-template-areas:
+  "title description";
+  gap: 2rem;
+  place-items: end start;
+}
 #board{
   padding-block: 3rem;
   padding-inline: 3rem;
 }
-#board .flex{
-  gap: 3rem;
-  align-items: end;
-}
 #board svg{
+  grid-area: title;
   width: 360px;
   height: 360px;
   min-width: 360px;
 }
+#board .flex{
+  gap: 2rem;
+  align-items: start;
+}
+#board .note .flex{
+  gap: 0;
+}
+.flex-direction-column{
+  flex-direction: column;
+}
 .description{
+  grid-area: description;
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
@@ -132,6 +149,21 @@ output{
 .description li + li{
   margin-block-start: 1rem;
 }
+.note{
+  background-color: var(--primary-black);
+  padding: 2rem;
+  padding-inline: 3rem;
+  border-radius: 1.5rem;
+  font-weight: 300;
+  font-feature-settings: "palt";
+}
+.note span{
+  font-weight: 600;
+}
+.note span + span{
+  font-weight: 300;
+  padding-inline-start: 1rem;
+}
 .icon svg{
   width: 14px;
   fill: var(--icon);
@@ -158,7 +190,8 @@ output{
   margin-inline: auto;
   /* height: 100%; */
   font-size: var(--font-size-medium);
-  padding-inline: 2.5rem;
+  padding-inline-start: 2.5rem;
+  padding-inline-end: 1.5rem;
   border-radius: 8px;
   font-weight: var(--font-weight);
   background-color: var(--primary-black);
@@ -189,7 +222,7 @@ output{
   color: var(--secondary-black);
 } */
 .menu{
-  min-width: 480px;
+  min-width: 420px;
   max-height: 700px;
   position: fixed;
   padding-block-start: 1.5rem;
@@ -247,7 +280,7 @@ output{
 }
 label{
   line-height: 1.5;
-  padding-inline: 0.8rem;
+  padding-inline: 1rem;
   border-radius: 1rem;
 }
 label:focus-visible{
@@ -301,20 +334,28 @@ input[type="radio"]:checked + label{
 }
 
 .row-1{
-  min-width: 80px;
   margin-right: auto;
 }
 .margin-left{
   margin-left: 1.5rem;
 }
 .shortcut{
-  color: var(--grey-1);
+  background-color: var(--primary-black);
+  color: var(--tertiary-white);
   min-width: 45px;
-  text-align: right;
+  text-align: center;
+  line-height: 1.4;
+  border-radius: 6px;
+  position: absolute;
+  right: -5rem;
+  padding-inline: 0.8rem;
+  padding-block: 4px;
+  display: none;
 }
-.margin-right{
-  margin-right: 1rem;
+.shortcut.show{
+  display: block;
 }
+
 .margin-left{
   margin-left: 1.5rem;
 }
@@ -381,7 +422,6 @@ input[type="radio"]:checked + label{
 #colorInfo {
   --background-color: var(--tertiary-white);
   position: relative;
-  margin-right: calc(1rem + 45px);
   color: var(--tertiary-white);
   padding-inline-end: 1rem;
 }
@@ -399,12 +439,7 @@ input[type="radio"]:checked + label{
   height: auto;
   /* position: absolute; */
 }
-#close-button span{
-  transform: translateY(-4px);
-}
-#close-button span + span{
-  transform: translateY(-6px);
-}
+
 
 .menu-content::-webkit-scrollbar-track {
   border-radius: 3px;
@@ -455,9 +490,17 @@ input[type="radio"]:checked + label{
 }
 @media (width < 800px) {
 
-  /* .icon{
-    display: none;
-  } */
+  .grid{
+    grid-template-areas:
+    "title"
+    "description";
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  .note{
+    border-radius: 1rem;
+    padding-inline: 2rem;
+  }
   #board{
     padding-block: 1rem;
     padding-inline: 1rem;
@@ -481,13 +524,13 @@ input[type="radio"]:checked + label{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
+  #board .note .flex{
+    flex-direction: row;
+  }
   #fileInput {
     width: 100%;
   }
-  #colorInfo {
 
-    margin-right: 0;
-  }
   .menu{
     position: fixed;
     bottom: 1rem;
@@ -533,18 +576,12 @@ input[type="radio"]:checked + label{
   .button{
     min-width: 280px;
     padding-inline-start: 1.5rem;
-    padding-inline-end: 1rem;
+    padding-inline-end: 0;
   }
   .object{
     padding-inline-start: 1.5rem;
   }
-  .shortcut{
-    display: none;
-  }
 
-  .margin-right{
-    margin-right: 0;
-  }
   .margin-left{
     margin-left: 0;
   }
