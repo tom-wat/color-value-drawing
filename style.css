@@ -236,6 +236,9 @@ output{
   left:3rem;
   height: calc(90vh - 1rem);
 }
+.menu.show .shortcut{
+  display: block;
+}
 .menu-content{
   display: grid;
   /* gap: 0.5rem; */
