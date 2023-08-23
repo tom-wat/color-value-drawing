@@ -74,7 +74,7 @@ const undoStatesLimitNumber = 50;
 let rgb;
 let hsb;
 let lab;
-let oklch;
+let oklab;
 let colorCode;
 let image;
 let undoStates = [];
@@ -213,47 +213,6 @@ function rgbToHsl(r, g, b) {
   return { h, s, l };
 }
 
-// function rgbToLab(R, G, B) {
-//   // Convert RGB to XYZ
-//   const rLinear = R / 255;
-//   const gLinear = G / 255;
-//   const bLinear = B / 255;
-
-//   const rSrgb =
-//     rLinear > 0.04045 ? ((rLinear + 0.055) / 1.055) ** 2.4 : rLinear / 12.92;
-//   const gSrgb =
-//     gLinear > 0.04045 ? ((gLinear + 0.055) / 1.055) ** 2.4 : gLinear / 12.92;
-//   const bSrgb =
-//     bLinear > 0.04045 ? ((bLinear + 0.055) / 1.055) ** 2.4 : bLinear / 12.92;
-
-//   const x = rSrgb * 0.4124 + gSrgb * 0.3576 + bSrgb * 0.1805;
-//   const y = rSrgb * 0.2126 + gSrgb * 0.7152 + bSrgb * 0.0722;
-//   const z = rSrgb * 0.0193 + gSrgb * 0.1192 + bSrgb * 0.9505;
-
-//   // Convert XYZ to Lab
-//   const xRef = 0.95047;
-//   const yRef = 1.0;
-//   const zRef = 1.08883;
-
-//   const xRatio = x / xRef;
-//   const yRatio = y / yRef;
-//   const zRatio = z / zRef;
-
-//   const epsilon = 0.008856;
-//   const kappa = 903.3;
-
-//   const fx = xRatio > epsilon ? xRatio ** (1 / 3) : (kappa * xRatio + 16) / 116;
-//   const fy = yRatio > epsilon ? yRatio ** (1 / 3) : (kappa * yRatio + 16) / 116;
-//   const fz = zRatio > epsilon ? zRatio ** (1 / 3) : (kappa * zRatio + 16) / 116;
-
-//   const L = Math.round(116 * fy - 16);
-//   const a = Math.round(500 * (fx - fy));
-//   const b = Math.round(200 * (fy - fz));
-
-//   // console.log(L, a, b);
-//   return { L, a, b };
-// }
-
 function rgbToLab(r, g, b) {
   // Convert RGB to XYZ
   r /= 255;
@@ -370,18 +329,6 @@ function debounce(func, delay, immediate) {
   };
 }
 
-// function addCount() {
-//   console.log(this.dom.value);
-//   let count = parseInt(this.dom.value);
-//   count += 1;
-//   this.dom.value = String(count);
-//   updateOutput(offsetX, offsetXOutput);
-// }
-
-// function subtractCount(dom) {
-//   console.log(offsetX);
-//   dom.value -= 1;
-// }
 function changeCheckedScale() {
   for (let i = 0; i < scaleRadioNodeList.length; i++) {
     if (scaleRadioNodeList[i].checked) {
@@ -581,77 +528,6 @@ columnSubtract.addEventListener("keydown", (event) => {
   }
 });
 
-// scaleFull.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     scaleFull.checked = true;
-//   }
-// });
-// scaleHalf.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     scaleHalf.checked = true;
-//   }
-// });
-// scaleQuarter.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     scaleQuarter.checked = true;
-//   }
-// });
-// scaleWindow.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     scaleWindow.checked = true;
-//   }
-// });
-// drawingPositionXLeft.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     drawingPositionXLeft.checked = true;
-//   }
-// });
-// drawingPositionXRight.nextElementSibling.addEventListener(
-//   "keydown",
-//   (event) => {
-//     if (event.key === "Enter" || event.key === " ") {
-//       drawingPositionXRight.checked = true;
-//     }
-//   }
-// );
-// drawingPositionYTop.nextElementSibling.addEventListener("keydown", (event) => {
-//   if (event.key === "Enter" || event.key === " ") {
-//     drawingPositionYTop.checked = true;
-//   }
-// });
-// drawingPositionYBottom.nextElementSibling.addEventListener(
-//   "keydown",
-//   (event) => {
-//     if (event.key === "Enter" || event.key === " ") {
-//       drawingPositionYBottom.checked = true;
-//     }
-//   }
-// );
-// webp.nextElementSibling.addEventListener("click", (event) => {
-//   event.stopPropagation();
-//   if (event.key === "Enter" || event.key === " ") {
-//     webp.checked = true;
-//   }
-// });
-// png.nextElementSibling.addEventListener("click", (event) => {
-//   event.stopPropagation();
-//   if (event.key === "Enter" || event.key === " ") {
-//     png.checked = true;
-//   }
-// });
-// webp.nextElementSibling.addEventListener("keydown", (event) => {
-//   event.stopPropagation();
-//   if (event.key === "Enter" || event.key === " ") {
-//     webp.checked = true;
-//   }
-// });
-// png.nextElementSibling.addEventListener("keydown", (event) => {
-//   event.stopPropagation();
-//   if (event.key === "Enter" || event.key === " ") {
-//     png.checked = true;
-//   }
-// });
-
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
 
@@ -711,8 +587,6 @@ function drawMultilineText(
   const padding = 4 + (fontSize * 2) / 15;
   const margin = 4 + (fontSize * 2) / 15;
   const magicNumber = 1;
-  // console.log(colorElements);
-  // console.log(colorElements[1]);
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
@@ -731,22 +605,6 @@ function drawMultilineText(
       break;
     }
   }
-  // const row1 = colorElements.slice(0, columnNumber);
-  // let row1Width = row1.reduce(
-  //   (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
-  //   0
-  // );
-  // row1Width -= margin;
-  // maxWidth = row1Width;
-  // if (columnNumber === 2) {
-  //   const row2 = colorElements.slice(2);
-  //   let row2Width = row2.reduce(
-  //     (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
-  //     0
-  //   );
-  //   row2Width -= margin;
-  //   maxWidth = Math.max(row1Width, row2Width);
-  // }
 
   for (let i = 0; i < colorElements.length; i++) {
     const colorElement = colorElements[i];
