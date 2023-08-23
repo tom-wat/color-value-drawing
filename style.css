@@ -35,6 +35,8 @@ body {
 }
 ul,li{
   list-style: none;
+  padding: 0;
+  margin: 0;
 }
 button,
 input,
@@ -153,6 +155,7 @@ output{
 }
 .button{
   width: 95%;
+  height: 100%;
   margin-inline: auto;
   /* height: 100%; */
   font-size: var(--font-size-medium);
@@ -334,6 +337,7 @@ input[type="radio"]:checked + label{
   font-size: var(--font-size-small);
   padding-inline-start: 2rem;
   padding-block: calc(1rem / 2);
+  transform: translateY(4px);
 }
 .open-button{
   width: 64px;
@@ -393,6 +397,7 @@ input[type="radio"]:checked + label{
 #close-button{
   padding-block: calc(1rem / 2);
   width: 95%;
+  height: auto;
   /* position: absolute; */
 }
 #close-button span{
@@ -532,7 +537,7 @@ input[type="radio"]:checked + label{
     padding-inline-end: 1rem;
   }
   .object{
-    padding-inline-start: 2rem;
+    padding-inline-start: 1.5rem;
   }
   .shortcut{
     display: none;
