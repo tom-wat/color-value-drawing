@@ -53,12 +53,10 @@ const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 
-// console.log(scaleRadioNodeList.value);
 const undoStatesLimitNumber = 50;
 let rgb;
 let hsb;
 let lab;
-let oklab;
 let colorCode;
 let image;
 let undoStates = [];
@@ -88,7 +86,6 @@ function updateOutput(inputField, outputField) {
   outputField.textContent = inputValue; // 出力要素に処理後の値を表示
 }
 const openFile = (event) => {
-  console.log(event.target.files);
   const file = event.target.files[0];
   if (!file) {
     console.error("No file selected.");
@@ -118,12 +115,6 @@ const openFile = (event) => {
       undoStates = [];
       getCurrentImageState();
       initialState = undoStates[0];
-
-      // console.log(undoStates.length);
-      // console.log(undoStates);
-      // console.log(initialState);
-      // console.log(undoStates[0]);
-      // console.log(initialState === undoStates[0]);
     };
   };
 
@@ -187,7 +178,6 @@ function rgbToHsl(r, g, b) {
   s = Math.round(s * 100);
   l = Math.round(l * 100);
 
-  // console.log(h, s, l);
   return { h, s, l };
 }
 
@@ -250,11 +240,11 @@ function rgbToLab(r, g, b) {
     zRatio = (903.3 * zRatio + 16) / 116;
   }
 
-  const LabL = Math.round(116 * yRatio - 16);
-  const LabA = Math.round(500 * (xRatio - yRatio));
-  const LabB = Math.round(200 * (yRatio - zRatio));
+  const labL = Math.round(116 * yRatio - 16);
+  const labA = Math.round(500 * (xRatio - yRatio));
+  const labB = Math.round(200 * (yRatio - zRatio));
 
-  return { LabL, LabA, LabB };
+  return { labL, labA, labB };
 }
 
 function download() {
@@ -308,11 +298,9 @@ function changeCheckedScale() {
   for (let i = 0; i < scaleRadioNodeList.length; i++) {
     if (scaleRadioNodeList[i].checked) {
       scaleRadioNodeList[i].checked = false;
-      //最初の要素に戻ってチェック
       if (i + 1 === scaleRadioNodeList.length) {
         scaleRadioNodeList[0].checked = true;
         break;
-        //次の要素をチェック
       } else {
         scaleRadioNodeList[i + 1].checked = true;
         break;
@@ -324,11 +312,9 @@ function changeCheckedFormat() {
   for (let i = 0; i < dataTypeRadioNodeList.length; i++) {
     if (dataTypeRadioNodeList[i].checked) {
       dataTypeRadioNodeList[i].checked = false;
-      //最初の要素に戻ってチェック
       if (i + 1 === dataTypeRadioNodeList.length) {
         dataTypeRadioNodeList[0].checked = true;
         break;
-        //次の要素をチェック
       } else {
         dataTypeRadioNodeList[i + 1].checked = true;
         break;
@@ -340,9 +326,6 @@ function changeCheckedFormat() {
 function changeCheckedPositionX() {
   for (let i = 0; i < positionXRadioNodeList.length; i++) {
     if (positionXRadioNodeList[i].checked) {
-      // console.log(positionXRadioNodeList[i]);
-      // console.log(positionXRadioNodeList.length);
-      // console.log(i);
       positionXRadioNodeList[i].checked = false;
       if (i + 1 === positionXRadioNodeList.length) {
         positionXRadioNodeList[0].checked = true;
@@ -425,7 +408,6 @@ offsetYAdd.addEventListener("keydown", (event) => {
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
     offsetYSubtract.blur();
-    console.log(document.activeElement);
   }
 });
 offsetYSubtract.addEventListener("keydown", (event) => {
@@ -435,7 +417,6 @@ offsetYSubtract.addEventListener("keydown", (event) => {
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
     offsetYSubtract.blur();
-    console.log(document.activeElement);
   }
 });
 fontSizeAdd.addEventListener("click", function () {
@@ -595,7 +576,7 @@ function drawMultilineText(
     let colorSet = [
       [hsl.h, hsl.h, hsl.h, 0],
       [100, hsl.s, hsl.s, 0],
-      [50, 50, hsl.l, lab.LabL],
+      [50, 50, hsl.l, lab.labL],
     ];
 
     if (textPositionX === "left") {
@@ -651,7 +632,7 @@ function drawMultilineText(
     if (i === 2 && hsl.l <= 50) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
-    if (i === 3 && lab.LabL < 60) {
+    if (i === 3 && lab.labL < 60) {
       context.fillStyle = `hsl( 0, 0%, 94%)`;
     }
     context.fillText(
@@ -683,7 +664,7 @@ canvas.addEventListener("click", function (e) {
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
   colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.LabL}`;
+  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
 });
 
 canvas.addEventListener("click", function (event) {
@@ -735,7 +716,7 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
   // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
   // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-  if (lab.LabL > 85) {
+  if (lab.labL > 85) {
     ctx.shadowColor = `hsl( 0, 0%, 70%)`; // 影の色
     ctx.shadowOffsetY = 1;
   }
@@ -810,7 +791,6 @@ canvas.addEventListener("click", function (event) {
   if (undoStates.length > undoStatesLimitNumber) {
     undoStates.length = undoStatesLimitNumber;
   }
-  console.log(undoStates);
 });
 
 function getCurrentImageState() {
@@ -824,8 +804,6 @@ function undo() {
   redoStates.unshift(firstUndoStates);
   // redraw canvas
   ctx.putImageData(undoStates[0], 0, 0);
-  console.log(`undoStates:${undoStates.length}`);
-  console.log(`redoStates:${redoStates.length}`);
 }
 
 // function to redo
@@ -836,8 +814,6 @@ function redo() {
   undoStates.unshift(firstRedoStates);
   // redraw canvas
   ctx.putImageData(undoStates[0], 0, 0);
-  console.log(`undoStates:${undoStates.length}`);
-  console.log(`redoStates:${redoStates.length}`);
 }
 
 function clearCanvas() {
@@ -846,8 +822,6 @@ function clearCanvas() {
   undoStates.unshift(initialState);
   redoStates = [];
   ctx.putImageData(initialState, 0, 0);
-  console.log(`undoStates:${undoStates.length}`);
-  console.log(`redoStates:${redoStates.length}`);
 }
 
 // keyboard shortcuts
@@ -876,14 +850,10 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     updateOutput(offsetX, offsetXOutput);
-    console.log(offsetX.value);
-    console.log(offsetXOutput.textContent);
   }
   if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     updateOutput(offsetX, offsetXOutput);
-    console.log(offsetX.value);
-    console.log(offsetXOutput.textContent);
   }
   if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
@@ -1031,10 +1001,6 @@ document.addEventListener("keydown", (event) => {
   // if (event.key === "d") {
   //   keyD = true;
   // }
-  // console.log(event.key);
-  // console.log(`keyShift:${keyShift}`);
-  // console.log(`keyMeta:${keyMeta}`);
-  // console.log(`keyZ:${keyZ}`);
   handleKeyPress();
 });
 
@@ -1084,7 +1050,6 @@ async function copyToClipboard() {
   }
   try {
     await navigator.clipboard.writeText(colorCode);
-    console.log("テキストがクリップボードにコピーされました");
   } catch (err) {
     console.error("テキストのコピーに失敗しました:", err);
   }
