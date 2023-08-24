@@ -74,9 +74,10 @@ output{
 .grid{
   max-width: 980px;
   display: grid;
-  grid-template-columns: 360px minmax(360px, max-content);
+  grid-template-columns: 360px 1fr;
   grid-template-areas:
-  "title description";
+  "title description"
+  ". note";
   gap: 2rem;
   place-items: end start;
 }
@@ -84,23 +85,17 @@ output{
   padding-block: 3rem;
   padding-inline: 3rem;
 }
-#board svg{
+.title{
   grid-area: title;
+  min-width: 360px;
+  max-width: 360px;
+}
+#board svg{
   width: 360px;
   height: 360px;
-  min-width: 360px;
   vertical-align: bottom;
 }
-#board .flex{
-  gap: 2rem;
-  align-items: start;
-}
-#board .note .flex{
-  gap: 0;
-}
-.flex-direction-column{
-  flex-direction: column;
-}
+
 .description{
   grid-area: description;
   background-color: var(--primary-black);
@@ -150,6 +145,7 @@ output{
   margin-block-start: 1rem;
 }
 .note{
+  grid-area: note;
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
@@ -333,6 +329,9 @@ input[type="radio"]:checked + label{
 } */
 .flex{
   display: flex;
+}
+.flex-center{
+  display: flex;
   align-items: center;
 }
 
@@ -496,9 +495,10 @@ input[type="radio"]:checked + label{
   .grid{
     grid-template-areas:
     "title"
-    "description";
+    "description"
+    "note";
     gap: 1rem;
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
   .note{
     border-radius: 1rem;
@@ -541,18 +541,7 @@ input[type="radio"]:checked + label{
     width: calc(100% - 2rem);
     max-width: 450px;
     min-width: 280px;
-    /* min-height: 630px; */
-    /* height: auto; */ 
   }
-  /* .menu-content .button:nth-child(odd){
-    background-color: var(--tertiary-black)
-  } */
-  /* .button:nth-child(even){
-    background-color: var(--quaternary-black)
-  }
-  .button:last-child{
-    background-color: var(--primary-black)
-  } */
   .menu-content .button:focus-visible{
     background-color: var(--primary-white);
     color: var(--secondary-black);
