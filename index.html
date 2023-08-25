@@ -190,7 +190,7 @@
           <li>
             <button
               id="file-button"
-              class="button flex active-button"
+              class="button flex-center active-button"
               onclick="fileInput.click()"
               data-tabindex
             >
@@ -211,7 +211,7 @@
           </li>
           <li>
             <button
-              class="button scale flex active-button"
+              class="button scale flex-center active-button"
               onclick="changeCheckedScale()"
               data-tabindex
             >
@@ -300,7 +300,7 @@
           <li>
             <button
               id="data-type-btn"
-              class="button flex active-button"
+              class="button flex-center active-button"
               data-tabindex=""
               onclick="changeCheckedFormat()"
             >
@@ -357,7 +357,7 @@
             </div>
           </li>
           <li>
-            <button class="button flex button-type-b" tabindex="-1">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -377,7 +377,7 @@
           <li>
             <button
               id="copy-button"
-              class="button flex active-button"
+              class="button flex-center active-button"
               onclick="copyToClipboard();"
               data-tabindex
             >
@@ -399,7 +399,7 @@
           <li>
             <button
               id="undo-btn"
-              class="button flex active-button"
+              class="button flex-center active-button"
               class="flex"
               onclick="undo()"
               data-tabindex
@@ -422,7 +422,7 @@
           <li>
             <button
               id="redo-btn"
-              class="button flex active-button"
+              class="button flex-center active-button"
               onclick="redo()"
               data-tabindex
             >
@@ -444,7 +444,7 @@
           <li>
             <button
               id="clear-btn"
-              class="button flex active-button"
+              class="button flex-center active-button"
               onclick="clearCanvas()"
               data-tabindex
             >
@@ -465,7 +465,7 @@
           </li>
           <li>
             <button
-              class="button flex active-button"
+              class="button flex-center active-button"
               data-tabindex
               onclick="changeCheckedPositionX()"
             >
@@ -514,7 +514,7 @@
           </li>
           <li>
             <button
-              class="button flex active-button"
+              class="button flex-center active-button"
               data-tabindex
               onclick="changeCheckedPositionY()"
             >
@@ -562,7 +562,7 @@
             </button>
           </li>
           <li>
-            <button class="button flex button-type-b" tabindex="-1">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -585,10 +585,10 @@
                 oninput="updateOutput(offsetX, offsetXOutput)"
                 tabindex="-1"
               />
-              <div class="flex height-100">
+              <div class="flex-center height-100">
                 <span
                   id="offset-x-subtract"
-                  class="flex inline-button active-button align-self-stretch"
+                  class="flex-center inline-button active-button align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -600,7 +600,7 @@
                 >
                 <span
                   id="offset-x-add"
-                  class="flex inline-button active-button align-self-stretch"
+                  class="flex-center inline-button active-button align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -609,7 +609,7 @@
             </button>
           </li>
           <li>
-            <button class="button flex button-type-b" tabindex="-1">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -632,10 +632,10 @@
                 oninput="updateOutput(offsetY, offsetYOutput)"
                 tabindex="-1"
               />
-              <div class="flex height-100">
+              <div class="flex-center height-100">
                 <span
                   id="offset-y-subtract"
-                  class="flex align-self-stretch inline-button active-button"
+                  class="flex-center align-self-stretch inline-button active-button"
                   data-tabindex
                   >-</span
                 >
@@ -647,7 +647,7 @@
                 >
                 <span
                   id="offset-y-add"
-                  class="flex inline-button active-button align-self-stretch"
+                  class="flex-center inline-button active-button align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -656,7 +656,7 @@
             </button>
           </li>
           <li>
-            <button class="button flex button-type-b" tabindex="-1">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -679,10 +679,10 @@
                 oninput="updateOutput(fontInput, fontOutput)"
                 tabindex="-1"
               />
-              <div class="flex height-100">
+              <div class="flex-center height-100">
                 <span
                   id="font-size-subtract"
-                  class="inline-button active-button flex align-self-stretch"
+                  class="inline-button active-button flex-center align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -694,7 +694,7 @@
                 >
                 <span
                   id="font-size-add"
-                  class="inline-button active-button flex align-self-stretch"
+                  class="inline-button active-button flex-center align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -703,7 +703,7 @@
             </button>
           </li>
           <li>
-            <button class="button flex button-type-b" tabindex="-1">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon"
                 ><svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -726,10 +726,10 @@
                 oninput="updateOutput(fontInput, fontOutput)"
                 tabindex="-1"
               />
-              <div class="flex height-100">
+              <div class="flex-center height-100">
                 <span
                   id="column-subtract"
-                  class="inline-button active-button flex align-self-stretch"
+                  class="inline-button active-button flex-center align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -741,7 +741,7 @@
                 >
                 <span
                   id="column-add"
-                  class="inline-button active-button flex align-self-stretch"
+                  class="inline-button active-button flex-center align-self-stretch"
                   data-tabindex
                   >+</span
                 >
