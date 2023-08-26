@@ -705,8 +705,8 @@ canvas.addEventListener("click", function (event) {
 
   if (lab.labL > 85) {
     ctx.beginPath();
-    ctx.moveTo(pointX - 7, pointY + clickPointAdjustment + 3);
-    ctx.lineTo(pointX - 2, pointY + clickPointAdjustment + 3);
+    ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustment + 3);
+    ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustment + 3);
     ctx.stroke();
 
     ctx.beginPath();
@@ -715,13 +715,13 @@ canvas.addEventListener("click", function (event) {
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustment, pointY - 2);
-    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2);
+    ctx.moveTo(pointX + clickPointAdjustment, pointY - 2.5);
+    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2.5);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustment, pointY + 6);
-    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6);
+    ctx.moveTo(pointX + clickPointAdjustment, pointY + 6.5);
+    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6.5);
     ctx.stroke();
   }
 
@@ -813,10 +813,10 @@ canvas.addEventListener("click", function (event) {
   //   false
   // );
 
-  ctx.fillRect(pointX - 7, pointY + clickPointAdjustment, 5, 3);
+  ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
   ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
-  ctx.fillRect(pointX + clickPointAdjustment, pointY - 7, 3.5, 5);
-  ctx.fillRect(pointX + clickPointAdjustment, pointY + 1, 3.5, 5);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
 
   // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
   // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
