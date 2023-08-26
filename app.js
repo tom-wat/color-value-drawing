@@ -698,10 +698,32 @@ canvas.addEventListener("click", function (event) {
     columnNumberValue
   );
 
-  ctx.lineWidth = 1.5;
   // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
   ctx.fillStyle = `hsl( 0, 0%, 100%)`;
-  ctx.strokeStyle = `hsl( 0, 0%, 70%)`;
+  ctx.lineWidth = 0.5;
+  ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
+
+  if (lab.labL > 85) {
+    ctx.beginPath();
+    ctx.moveTo(pointX - 7, pointY + clickPointAdjustment + 3);
+    ctx.lineTo(pointX - 2, pointY + clickPointAdjustment + 3);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustment + 3);
+    ctx.lineTo(pointX + 7, pointY + clickPointAdjustment + 3);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + clickPointAdjustment, pointY - 2);
+    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + clickPointAdjustment, pointY + 6);
+    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6);
+    ctx.stroke();
+  }
 
   // ctx.lineWidth = 2;
   // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
@@ -716,50 +738,85 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
   // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
   // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-  if (lab.labL > 85) {
-    ctx.shadowColor = `hsl( 0, 0%, 70%)`; // 影の色
-    ctx.shadowOffsetY = 1;
-  }
-  drawRoundedRectangle(
-    ctx,
-    pointX - 12.5,
-    pointY + clickPointAdjustment,
-    10,
-    3,
-    cornerRadius,
-    false
-  );
-  drawRoundedRectangle(
-    ctx,
-    pointX + 1.5,
-    pointY + clickPointAdjustment,
-    10,
-    3,
-    cornerRadius,
-    false
-  );
-  drawRoundedRectangle(
-    ctx,
-    pointX + clickPointAdjustment,
-    pointY - 12,
-    3.5,
-    10,
-    cornerRadius,
-    false
-  );
-  drawRoundedRectangle(
-    ctx,
-    pointX + clickPointAdjustment,
-    pointY + 1,
-    3.5,
-    10,
-    cornerRadius,
-    false
-  );
-  // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 10, 3);
-  // ctx.fillRect(pointX + 2, pointY + clickPointAdjustment, 10, 3);
-  // ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 10);
-  // ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 10);
+
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX - 12.5,
+  //   pointY + clickPointAdjustment,
+  //   10,
+  //   3,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + 1.5,
+  //   pointY + clickPointAdjustment,
+  //   10,
+  //   3,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + clickPointAdjustment,
+  //   pointY - 12,
+  //   3.5,
+  //   10,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + clickPointAdjustment,
+  //   pointY + 1,
+  //   3.5,
+  //   10,
+  //   cornerRadius,
+  //   false
+  // );
+
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX - 7,
+  //   pointY + clickPointAdjustment,
+  //   5,
+  //   3,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + 1.5,
+  //   pointY + clickPointAdjustment,
+  //   5.2,
+  //   3,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + clickPointAdjustment,
+  //   pointY - 7,
+  //   3.5,
+  //   5,
+  //   cornerRadius,
+  //   false
+  // );
+  // drawRoundedRectangle(
+  //   ctx,
+  //   pointX + clickPointAdjustment,
+  //   pointY + 1,
+  //   3.5,
+  //   5,
+  //   cornerRadius,
+  //   false
+  // );
+
+  ctx.fillRect(pointX - 7, pointY + clickPointAdjustment, 5, 3);
+  ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY - 7, 3.5, 5);
+  ctx.fillRect(pointX + clickPointAdjustment, pointY + 1, 3.5, 5);
 
   // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
   // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
@@ -770,20 +827,6 @@ canvas.addEventListener("click", function (event) {
   // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
   // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
   // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
-
-  // //水平線
-  // ctx.beginPath();
-  // ctx.moveTo(pointX - 8.5, pointY + clickPointAdjustment);
-  // ctx.lineTo(pointX + 4.5, pointY + clickPointAdjustment);
-  // ctx.stroke();
-
-  // // 垂直線
-  // ctx.beginPath();
-  // ctx.moveTo(pointX + clickPointAdjustment, pointY - 8);
-  // ctx.lineTo(pointX + clickPointAdjustment, pointY + 4.5);
-  // ctx.stroke();
-
-  ctx.shadowOffsetY = 0;
 
   // update current state
   redoStates = [];
