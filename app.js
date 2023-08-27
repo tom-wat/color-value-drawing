@@ -72,10 +72,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   if (isMobile) {
-    fontInput.value = String(12);
+    // fontInput.value = String(12);
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
-    scaleQuarter.checked = true;
     note.style.display = "none";
   }
 });
