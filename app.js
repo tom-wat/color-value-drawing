@@ -255,7 +255,7 @@ function download() {
   if (png.checked) {
     imageData = canvas.toDataURL("image/png");
   } else {
-    imageData = canvas.toDataURL("image/webP", 0.75);
+    imageData = canvas.toDataURL("image/webP", 0.8);
   }
 
   // ダウンロード用のリンクを作成する
