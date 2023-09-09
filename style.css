@@ -12,7 +12,8 @@
   --grey-1:hsl(0, 0%, 50%);
   --grey-2:hsl(0, 0%, 25%);
   --grey-3:hsl(0, 0%, 45%);
-  --font-weight: 500;
+  --font-weight-medium: 500;
+  --font-weight-light: 300;
   --font-size-large: 20px;
   --font-size-medium: 16px;
   --font-size-small: 14px;
@@ -100,7 +101,7 @@ output{
   padding: 2rem;
   padding-inline: 3rem;
   border-radius: 2rem;
-  font-weight: 300;
+  font-weight: var(--font-weight-light);
 }
 .description button{
   padding-inline: 12px;
@@ -134,7 +135,7 @@ output{
   position: absolute;
 	top: 0;
 	left: 0;
-	font-weight: 600;
+	font-weight: var(--font-weight-medium);
 	color: var(--primary-white);
 	counter-increment: list;
 	content: counter(list)'.';
@@ -148,14 +149,14 @@ output{
   padding: 2rem;
   padding-inline: 3rem;
   border-radius: 1.5rem;
-  font-weight: 300;
+  font-weight: var(--font-weight-light);
   line-height: 1.6;
 }
 .note span{
-  font-weight: 600;
+  font-weight: var(--font-weight-medium);
 }
 .note span + span{
-  font-weight: 300;
+  font-weight: var(--font-weight-light);
   padding-inline-start: 1rem;
 }
 .icon svg{
@@ -187,7 +188,7 @@ output{
   padding-inline-start: 2.5rem;
   padding-inline-end: 1.5rem;
   border-radius: 8px;
-  font-weight: var(--font-weight);
+  font-weight: var(--font-weight-medium);
   background-color: var(--primary-black);
   color: var(--primary-white);
   line-height: 2;
@@ -284,7 +285,7 @@ label:focus-visible{
   box-shadow:0 0 0 1px var(--tertiary-white) inset;
 }
 .inline-button{
-  font-weight: var(--font-weight);
+  font-weight: var(--font-weight-medium);
   background-color: inherit;
   color: var(--tertiary-white);
   display: inline-block;
@@ -322,7 +323,7 @@ input[type="radio"]:checked + label{
   color: var(--secondary-black);
   background-color: var(--secondary-white);
   border-radius: 4px;
-  font-weight: var(--font-weight);
+  font-weight: var(--font-weight-medium);
   z-index: 1;
 } */
 .flex{
@@ -342,12 +343,12 @@ input[type="radio"]:checked + label{
 .shortcut{
   background-color: var(--primary-black);
   color: var(--tertiary-white);
-  min-width: 45px;
+  min-width: 64px;
   text-align: center;
   line-height: 1.4;
   border-radius: 6px;
   position: absolute;
-  right: -5rem;
+  left: calc(100% + 8px);
   padding-inline: 0.8rem;
   padding-block: 4px;
   display: none;
