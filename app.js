@@ -48,6 +48,7 @@ const scaleWindow = document.getElementById("scale-window");
 const isMobile = navigator.userAgent.match(
   /(iPhone|iPod|iPad|Android|BlackBerry)/
 );
+// const isWindows = /Windows/.test(navigator.userAgent);
 const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
@@ -70,7 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
-
+  // if (isWindows) {
+  //   // Windowsの場合の処理
+  // }
   if (isMobile) {
     // fontInput.value = String(12);
     updateOutput(fontInput, fontOutput);
