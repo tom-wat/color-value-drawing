@@ -54,6 +54,7 @@ const isMobile = navigator.userAgent.match(
 // const isWindows = /Windows/.test(navigator.userAgent);
 const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
+const colorModeNodeList = colorMode.elements.colorMode;
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
 const pointerRadioNodeList = pointer.pointer;
@@ -72,6 +73,45 @@ let redoStates = [];
 let initialState;
 let currentStates;
 
+function setStyles() {
+  const settingScale = localStorage.getItem("scale");
+  const settingFormat = localStorage.getItem("format");
+  const settingColorMode = localStorage.getItem("colorMode");
+  const settingPositionX = localStorage.getItem("positionX");
+  const settingPositionY = localStorage.getItem("positionY");
+  const settingOffsetX = localStorage.getItem("offset-x");
+  const settingOffsetY = localStorage.getItem("offset-y");
+  const settingFontSize = localStorage.getItem("font-size-input");
+  const settingColumn = localStorage.getItem("column-number");
+  const settingPointer = localStorage.getItem("pointer");
+
+  setStringValue(scaleRadioNodeList, settingScale);
+  setStringValue(dataTypeRadioNodeList, settingFormat);
+  changeColorMode(settingColorMode);
+  setStringValue(positionXRadioNodeList, settingPositionX);
+  setStringValue(positionYRadioNodeList, settingPositionY);
+  offsetX.value = settingOffsetX;
+  updateOutput(offsetX, offsetXOutput);
+  offsetY.value = settingOffsetY;
+  updateOutput(offsetY, offsetYOutput);
+  fontInput.value = settingFontSize;
+  updateOutput(fontInput, fontOutput);
+  changeFontSize(ctx, fontInput);
+  columnNumber.value = settingColumn;
+  updateOutput(columnNumber, columnNumberOutput);
+  setStringValue(pointerRadioNodeList, settingPointer);
+}
+
+function setStringValue(nodeList, stringValue) {
+  if (!stringValue) return;
+  for (let i = 0; i < nodeList.length; i++) {
+    nodeList[i].checked = false;
+    if (nodeList[i].value === stringValue) {
+      nodeList[i].checked = true;
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const tabbableElements = document.querySelectorAll("[data-tabindex]");
 
@@ -87,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
     changeFontSize(ctx, fontInput);
     Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
+  setStyles();
 });
 
 const openFile = (event) => {
@@ -330,14 +371,6 @@ function changeColorMode(colorModeValue) {
       colorCode = hex;
       colorInfoElement.textContent = hex;
       break;
-    case "hsl":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:-- L:--`;
-        break;
-      }
-      colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
-      break;
     case "hsb":
       if (isInitialValue) {
         colorInfoElement.textContent = `H:-- S:-- B:--`;
@@ -346,20 +379,24 @@ function changeColorMode(colorModeValue) {
       colorCode = `h:${hsb.hsbH} s:${hsb.hsbS} b:${hsb.hsbB}`;
       colorInfoElement.textContent = `H:${hsb.hsbH} S:${hsb.hsbS} B:${hsb.hsbB}`;
       break;
-    default:
+    case "hsl":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:-- L:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
+      break;
+    case "hsl+l":
       if (isInitialValue) {
         colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
         break;
       }
       colorCode = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
       colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+    default:
+      break;
   }
-}
-
-function updateOutput(inputField, outputField) {
-  const inputValue = inputField.value; // 入力値を取得
-
-  outputField.textContent = inputValue; // 出力要素に処理後の値を表示
 }
 
 function getCurrentImageState() {
@@ -497,19 +534,21 @@ function drawMultilineText(
       case "hex":
         context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
         break;
-      case "hsl":
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-        break;
       case "hsb":
         context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
         break;
-      default:
+      case "hsl":
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        break;
+      case "hsl+l":
         colorSet = [
           [hsl.h, hsl.h, hsl.h, 0],
           [100, hsl.s, hsl.s, 0],
           [50, 50, hsl.l, lab.labL],
         ];
         context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
+      default:
+        break;
     }
 
     if (textPositionX === "left") {
@@ -1080,7 +1119,6 @@ function debounce(func, delay, immediate) {
 
 function changeFontSize(context, fontInput) {
   const fontSize = parseInt(fontInput.value);
-
   context.font = `500 ${fontSize}px 'Inter','Helvetica Neue', Arial, sans-serif `;
 }
 
@@ -1088,17 +1126,25 @@ fontInput.addEventListener("input", function () {
   changeFontSize(ctx, fontInput);
 });
 
+function updateOutput(inputField, outputField) {
+  const inputValue = inputField.value; // 入力値を取得
+  outputField.textContent = inputValue; // 出力要素に処理後の値を表示
+  localStorage.setItem(`${inputField.id}`, inputField.value);
+}
+
 function changeCheckedColorMode() {
   for (let i = 0; i < colorMode.length; i++) {
     if (colorMode[i].checked) {
       colorMode[i].checked = false;
       if (i + 1 === colorMode.length) {
         colorMode[0].checked = true;
-        changeColorMode(colorMode.elements.colorMode.value);
+        changeColorMode(colorModeNodeList.value);
+        localStorage.setItem("colorMode", colorMode[0].value);
         break;
       } else {
         colorMode[i + 1].checked = true;
-        changeColorMode(colorMode.elements.colorMode.value);
+        changeColorMode(colorModeNodeList.value);
+        localStorage.setItem("colorMode", colorMode[i + 1].value);
         break;
       }
     }
@@ -1111,9 +1157,11 @@ function changeCheckedScale() {
       scaleRadioNodeList[i].checked = false;
       if (i + 1 === scaleRadioNodeList.length) {
         scaleRadioNodeList[0].checked = true;
+        localStorage.setItem("scale", scaleRadioNodeList[0].value);
         break;
       } else {
         scaleRadioNodeList[i + 1].checked = true;
+        localStorage.setItem("scale", scaleRadioNodeList[i + 1].value);
         break;
       }
     }
@@ -1125,9 +1173,11 @@ function changeCheckedFormat() {
       dataTypeRadioNodeList[i].checked = false;
       if (i + 1 === dataTypeRadioNodeList.length) {
         dataTypeRadioNodeList[0].checked = true;
+        localStorage.setItem("format", dataTypeRadioNodeList[0].value);
         break;
       } else {
         dataTypeRadioNodeList[i + 1].checked = true;
+        localStorage.setItem("format", dataTypeRadioNodeList[i + 1].value);
         break;
       }
     }
@@ -1140,9 +1190,11 @@ function changeCheckedPositionX() {
       positionXRadioNodeList[i].checked = false;
       if (i + 1 === positionXRadioNodeList.length) {
         positionXRadioNodeList[0].checked = true;
+        localStorage.setItem("positionX", positionXRadioNodeList[0].value);
         break;
       } else {
         positionXRadioNodeList[i + 1].checked = true;
+        localStorage.setItem("positionX", positionXRadioNodeList[i + 1].value);
         break;
       }
     }
@@ -1155,9 +1207,11 @@ function changeCheckedPositionY() {
       positionYRadioNodeList[i].checked = false;
       if (i + 1 === positionYRadioNodeList.length) {
         positionYRadioNodeList[0].checked = true;
+        localStorage.setItem("positionY", positionYRadioNodeList[0].value);
         break;
       } else {
         positionYRadioNodeList[i + 1].checked = true;
+        localStorage.setItem("positionY", positionYRadioNodeList[i + 1].value);
         break;
       }
     }
@@ -1169,9 +1223,11 @@ function changeCheckedPointer() {
       pointerRadioNodeList[i].checked = false;
       if (i + 1 === pointerRadioNodeList.length) {
         pointerRadioNodeList[0].checked = true;
+        localStorage.setItem("pointer", pointerRadioNodeList[0].value);
         break;
       } else {
         pointerRadioNodeList[i + 1].checked = true;
+        localStorage.setItem("pointer", pointerRadioNodeList[i + 1].value);
         break;
       }
     }
