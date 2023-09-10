@@ -1,5 +1,3 @@
-/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap'); */
-
 :root{
   --primary-white: hsl(0, 0%, 85%);
   --secondary-white: hsl(0, 0%, 96%);
@@ -37,6 +35,9 @@ body {
 ul,li{
   list-style: none;
   outline: none;
+}
+.list li{
+  padding-inline-start: 2rem;
 }
 button,
 input,
@@ -78,9 +79,9 @@ output{
   grid-template-columns: 360px 1fr;
   grid-template-areas:
   "title description"
-  ". note";
+  "title notes";
   gap: 2rem;
-  place-items: end start;
+  place-items: start;
 }
 #board{
   padding-block: 3rem;
@@ -89,6 +90,7 @@ output{
 .title{
   grid-area: title;
 }
+
 #board svg{
   width: 360px;
   height: 360px;
@@ -143,8 +145,14 @@ output{
 .description li + li{
   margin-block-start: 1rem;
 }
+.notes{
+  grid-area: notes;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
 .note{
-  grid-area: note;
+  /* grid-area: note; */
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
@@ -434,6 +442,10 @@ input[type="radio"]:checked + label{
   background-color: var(--background-color);
   transform: translate(-50%, 15%);
 }
+.button:focus-visible #colorInfo {
+  color: var(--secondary-black);
+}
+
 #close-button{
   padding-block: calc(1rem / 2);
   width: 95%;
@@ -470,6 +482,9 @@ input[type="radio"]:checked + label{
   .button:hover label{
     color: var(--secondary-black);
   }
+  .button:hover #colorInfo{
+    color: var(--secondary-black);
+  }
   .button-type-b:hover{
     background-color: var(--primary-black);
     color: var(--primary-white);
@@ -495,7 +510,7 @@ input[type="radio"]:checked + label{
     grid-template-areas:
     "title"
     "description"
-    "note";
+    "notes";
     gap: 1rem;
     grid-template-columns: 100%;
   }
@@ -510,7 +525,7 @@ input[type="radio"]:checked + label{
   #board .flex{
     flex-direction: column;
     align-items: start;
-    gap: 1rem;
+    /* gap: 1rem; */
   }
   #board svg{
     width: 240px;
@@ -546,6 +561,9 @@ input[type="radio"]:checked + label{
     color: var(--secondary-black);
   }
   .menu-content .active-button:active label{
+    color: var(--secondary-black);
+  }
+  .menu-content .active-button:active #colorInfo{
     color: var(--secondary-black);
   }
   .menu-content .active-button:active{
