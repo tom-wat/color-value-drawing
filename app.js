@@ -79,29 +79,30 @@ function setStyles() {
   const settingColorMode = localStorage.getItem("colorMode");
   const settingPositionX = localStorage.getItem("positionX");
   const settingPositionY = localStorage.getItem("positionY");
-  const settingOffsetX = localStorage.getItem("offset-x");
-  const settingOffsetY = localStorage.getItem("offset-y");
-  const settingFontSize = localStorage.getItem("font-size-input");
-  const settingColumn = localStorage.getItem("column-number");
+  const settingOffsetX = localStorage.getItem("offsetX");
+  const settingOffsetY = localStorage.getItem("offsetY");
+  const settingFontSize = localStorage.getItem("fontSize");
+  const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
 
   setStringValue(scaleRadioNodeList, settingScale);
   setStringValue(dataTypeRadioNodeList, settingFormat);
+  setStringValue(colorModeNodeList, settingColorMode);
   changeColorMode(settingColorMode);
   setStringValue(positionXRadioNodeList, settingPositionX);
   setStringValue(positionYRadioNodeList, settingPositionY);
-  offsetX.value = settingOffsetX;
-  updateOutput(offsetX, offsetXOutput);
-  offsetY.value = settingOffsetY;
-  updateOutput(offsetY, offsetYOutput);
-  fontInput.value = settingFontSize;
-  updateOutput(fontInput, fontOutput);
-  changeFontSize(ctx, fontInput);
-  columnNumber.value = settingColumn;
-  updateOutput(columnNumber, columnNumberOutput);
   setStringValue(pointerRadioNodeList, settingPointer);
+  setValue(offsetX, settingOffsetX, offsetXOutput);
+  setValue(offsetY, settingOffsetY, offsetYOutput);
+  setValue(fontInput, settingFontSize, fontOutput);
+  changeFontSize(ctx, fontInput);
+  setValue(columnNumber, settingColumn, columnNumberOutput);
 }
-
+function setValue(element, value, output) {
+  if (!value) return;
+  element.value = value;
+  updateOutput(element, output);
+}
 function setStringValue(nodeList, stringValue) {
   if (!stringValue) return;
   for (let i = 0; i < nodeList.length; i++) {
@@ -1129,7 +1130,6 @@ fontInput.addEventListener("input", function () {
 function updateOutput(inputField, outputField) {
   const inputValue = inputField.value; // 入力値を取得
   outputField.textContent = inputValue; // 出力要素に処理後の値を表示
-  localStorage.setItem(`${inputField.id}`, inputField.value);
 }
 
 function changeCheckedColorMode() {
@@ -1249,12 +1249,14 @@ offsetXAdd.addEventListener("click", function () {
   count += 1;
   offsetX.value = String(count);
   updateOutput(offsetX, offsetXOutput);
+  localStorage.setItem("offsetX", offsetX.value);
 });
 offsetXSubtract.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
   count -= 1;
   offsetX.value = String(count);
   updateOutput(offsetX, offsetXOutput);
+  localStorage.setItem("offsetX", offsetX.value);
 });
 offsetXAdd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
@@ -1262,6 +1264,7 @@ offsetXAdd.addEventListener("keydown", (event) => {
     count += 1;
     offsetX.value = String(count);
     updateOutput(offsetX, offsetXOutput);
+    localStorage.setItem("offsetX", offsetX.value);
   }
 });
 offsetXSubtract.addEventListener("keydown", (event) => {
@@ -1270,6 +1273,7 @@ offsetXSubtract.addEventListener("keydown", (event) => {
     count -= 1;
     offsetX.value = String(count);
     updateOutput(offsetX, offsetXOutput);
+    localStorage.setItem("offsetX", offsetX.value);
   }
 });
 offsetYAdd.addEventListener("click", function () {
@@ -1277,12 +1281,14 @@ offsetYAdd.addEventListener("click", function () {
   count += 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
+  localStorage.setItem("offsetY", offsetY.value);
 });
 offsetYSubtract.addEventListener("click", function () {
   let count = parseInt(offsetY.value);
   count -= 1;
   offsetY.value = String(count);
   updateOutput(offsetY, offsetYOutput);
+  localStorage.setItem("offsetY", offsetY.value);
 });
 offsetYAdd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
@@ -1290,6 +1296,7 @@ offsetYAdd.addEventListener("keydown", (event) => {
     count += 1;
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
+    localStorage.setItem("offsetY", offsetY.value);
     offsetYSubtract.blur();
   }
 });
@@ -1299,6 +1306,7 @@ offsetYSubtract.addEventListener("keydown", (event) => {
     count -= 1;
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
+    localStorage.setItem("offsetY", offsetY.value);
     offsetYSubtract.blur();
   }
 });
@@ -1308,6 +1316,7 @@ fontSizeAdd.addEventListener("click", function () {
   fontInput.value = String(count);
   updateOutput(fontInput, fontOutput);
   changeFontSize(ctx, fontInput);
+  localStorage.setItem("fontSize", fontInput.value);
 });
 fontSizeSubtract.addEventListener("click", function () {
   let count = parseInt(fontInput.value);
@@ -1315,6 +1324,7 @@ fontSizeSubtract.addEventListener("click", function () {
   fontInput.value = String(count);
   updateOutput(fontInput, fontOutput);
   changeFontSize(ctx, fontInput);
+  localStorage.setItem("fontSize", fontInput.value);
 });
 fontSizeAdd.addEventListener("keydown", (event) => {
   if (event.key === "Enter" || event.key === " ") {
@@ -1323,6 +1333,7 @@ fontSizeAdd.addEventListener("keydown", (event) => {
     fontInput.value = String(count);
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
+    localStorage.setItem("fontSize", fontInput.value);
   }
 });
 fontSizeSubtract.addEventListener("keydown", (event) => {
@@ -1332,6 +1343,7 @@ fontSizeSubtract.addEventListener("keydown", (event) => {
     fontInput.value = String(count);
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
+    localStorage.setItem("fontSize", fontInput.value);
   }
 });
 columnAdd.addEventListener("click", function (event) {
@@ -1340,6 +1352,7 @@ columnAdd.addEventListener("click", function (event) {
   count += 1;
   columnNumber.value = String(count);
   updateOutput(columnNumber, columnNumberOutput);
+  localStorage.setItem("column", columnNumber.value);
 });
 columnSubtract.addEventListener("click", function (event) {
   // event.stopPropagation();
@@ -1347,6 +1360,7 @@ columnSubtract.addEventListener("click", function (event) {
   count -= 1;
   columnNumber.value = String(count);
   updateOutput(columnNumber, columnNumberOutput);
+  localStorage.setItem("column", columnNumber.value);
 });
 columnAdd.addEventListener("keydown", (event) => {
   // event.stopPropagation();
@@ -1355,6 +1369,7 @@ columnAdd.addEventListener("keydown", (event) => {
     count += 1;
     columnNumber.value = String(count);
     updateOutput(columnNumber, columnNumberOutput);
+    localStorage.setItem("column", columnNumber.value);
   }
 });
 columnSubtract.addEventListener("keydown", (event) => {
@@ -1364,6 +1379,7 @@ columnSubtract.addEventListener("keydown", (event) => {
     count -= 1;
     columnNumber.value = String(count);
     updateOutput(columnNumber, columnNumberOutput);
+    localStorage.setItem("column", columnNumber.value);
   }
 });
 

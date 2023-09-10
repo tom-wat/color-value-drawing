@@ -68,7 +68,6 @@ input[type='range']::-moz-range-thumb{
   border:0px;
 }
 output{
-  /* padding-inline: 1rem; */
   width: 2ch;
   text-align: right;
   margin-inline-end: 1ch;
@@ -152,7 +151,6 @@ output{
   gap: 2rem;
 }
 .note{
-  /* grid-area: note; */
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
@@ -172,7 +170,6 @@ output{
   fill: var(--icon);
   margin-inline-end: 8px;
   transform: translateY(2px);
-  /* display: none; */
 }
 .object-icon svg{
   fill: var(--primary-white);
@@ -191,7 +188,6 @@ output{
   width: 95%;
   height: 100%;
   margin-inline: auto;
-  /* height: 100%; */
   font-size: var(--font-size-medium);
   padding-inline-start: 2.5rem;
   padding-inline-end: 1.5rem;
@@ -201,15 +197,8 @@ output{
   color: var(--primary-white);
   line-height: 2;
   text-align: left;
-  /* border-top: 1px solid var(--secondary-black);
-  border-bottom: 1px solid　var(--secondary-black); */
-
-  /* transition: 0.1s; */
 }
-/* .button:focus{
-  background-color: var(--primary-white);
-  color: var(--secondary-black);
-} */
+
 .button:focus-visible{
   background-color: var(--primary-white);
   color: var(--secondary-black);
@@ -220,10 +209,6 @@ output{
 .button:focus-visible label{
   color: var(--secondary-black);
 }
-/* .button:active{
-  background-color: var(--secondary-white);
-  color: var(--secondary-black);
-} */
 .menu{
   min-width: 420px;
   max-height: 700px;
@@ -231,9 +216,7 @@ output{
   padding-block-start: 1.5rem;
   padding-block-end: 3rem;
   border-radius: 1rem;
-  /* transition: 0.2s; */
   background-color: var(--primary-black);
-  /* border: 1px solid#000; */
   bottom:3rem;
   left:3rem;
   height: calc(90vh - 1rem);
@@ -243,7 +226,6 @@ output{
 }
 .menu-content{
   display: grid;
-  /* gap: 0.5rem; */
   height: 100%;
   overflow: auto;
 }
@@ -305,10 +287,6 @@ span.inline-button{
   outline: none;
 }
 
-/* span.inline-button:focus{
-  background-color: var(--primary-white);
-  color: var(--secondary-black);
-} */
 span.inline-button:focus-visible{
   background-color: var(--tertiary-white);
   color: var(--secondary-black);
@@ -318,22 +296,9 @@ span.inline-button:active{
   color: var(--secondary-black);
 }
 input[type="radio"]:checked + label{
-  /* background-color: var(--tertiary-white);
-  color: var(--secondary-black); */
   display: block;
 }
 
-/* .tooltip {
-  position: absolute;
-  display: none;
-  font-size: 12px;
-  padding: 4px;
-  color: var(--secondary-black);
-  background-color: var(--secondary-white);
-  border-radius: 4px;
-  font-weight: var(--font-weight-medium);
-  z-index: 1;
-} */
 .flex{
   display: flex;
 }
@@ -414,12 +379,7 @@ input[type="radio"]:checked + label{
 .menu.close .open-button{
   display: block;  
 }
-/* .container {
-  padding-block:2rem;
-} */
-
 .image-container{
-  /* padding: 1rem 0; */
   height: auto;
 }
 
@@ -450,7 +410,6 @@ input[type="radio"]:checked + label{
   padding-block: calc(1rem / 2);
   width: 95%;
   height: auto;
-  /* position: absolute; */
 }
 
 
@@ -496,9 +455,7 @@ input[type="radio"]:checked + label{
     background-color: var(--tertiary-white);
     color: var(--secondary-black);
   }
-  /* label:hover{
-    box-shadow:0 0 0 1px var(--tertiary-white) inset;
-  } */
+
   .description button:hover{
     background-color: var(--primary-white);
     color: var(--primary-black);
@@ -525,7 +482,6 @@ input[type="radio"]:checked + label{
   #board .flex{
     flex-direction: column;
     align-items: start;
-    /* gap: 1rem; */
   }
   #board svg{
     width: 240px;
