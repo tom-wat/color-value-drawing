@@ -1,10 +1,12 @@
 const board = document.getElementById("board");
-const note = document.querySelector(".note");
+const pc = document.getElementsByClassName("pc");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
 const dataType = document.getElementById("data-type");
+const colorInfoElement = document.getElementById("colorInfo");
+const colorMode = document.getElementById("color-mode");
 const webp = document.getElementById("webp");
 const png = document.getElementById("png");
 const clear = document.getElementById("clear-btn");
@@ -44,6 +46,7 @@ const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
+const pointer = document.getElementById("pointer");
 
 const isMobile = navigator.userAgent.match(
   /(iPhone|iPod|iPad|Android|BlackBerry)/
@@ -53,12 +56,16 @@ const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
 const positionXRadioNodeList = drawingPositionX.positionX;
 const positionYRadioNodeList = drawingPositionY.positionY;
+const pointerRadioNodeList = pointer.pointer;
 
 const undoStatesLimitNumber = 50;
 let rgb;
+let hex;
+let hsl;
 let hsb;
 let lab;
 let colorCode;
+let isInitialValue = true;
 let image;
 let undoStates = [];
 let redoStates = [];
@@ -78,15 +85,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // fontInput.value = String(12);
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
-    note.style.display = "none";
+    Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
 });
 
-function updateOutput(inputField, outputField) {
-  const inputValue = inputField.value; // 入力値を取得
-
-  outputField.textContent = inputValue; // 出力要素に処理後の値を表示
-}
 const openFile = (event) => {
   const file = event.target.files[0];
   if (!file) {
@@ -146,6 +148,23 @@ function adjustedDrawImage() {
   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
+function rgbToHex(r, g, b) {
+  // Ensure the input values are within the valid range (0-255)
+  r = Math.min(255, Math.max(0, r));
+  g = Math.min(255, Math.max(0, g));
+  b = Math.min(255, Math.max(0, b));
+
+  // Convert each RGB component to hexadecimal and concatenate them
+  const hexR = r.toString(16).padStart(2, "0");
+  const hexG = g.toString(16).padStart(2, "0");
+  const hexB = b.toString(16).padStart(2, "0");
+
+  // Combine the hexadecimal values to form the final color
+  const hexColor = `#${hexR}${hexG}${hexB}`;
+
+  return hexColor;
+}
+
 function rgbToHsl(r, g, b) {
   r = r / 255;
   g = g / 255;
@@ -181,6 +200,50 @@ function rgbToHsl(r, g, b) {
   l = Math.round(l * 100);
 
   return { h, s, l };
+}
+
+function rgbToHsb(r, g, b) {
+  // Normalize RGB values to be in the range [0, 1]
+  r = r / 255;
+  g = g / 255;
+  b = b / 255;
+
+  let hsbMax = Math.max(r, g, b);
+  let hsbMin = Math.min(r, g, b);
+  let hsbH,
+    hsbS,
+    hsbB = hsbMax;
+
+  let delta = hsbMax - hsbMin;
+
+  // Calculate Hue
+  if (hsbMax === hsbMin) {
+    hsbH = 0; // Achromatic (gray)
+  } else {
+    if (hsbMax === r) {
+      hsbH = ((g - b) / delta) % 6;
+    } else if (hsbMax === g) {
+      hsbH = (b - r) / delta + 2;
+    } else {
+      hsbH = (r - g) / delta + 4;
+    }
+    hsbH = Math.round(hsbH * 60);
+    if (hsbH < 0) {
+      hsbH += 360;
+    }
+  }
+
+  // Calculate Saturation
+  if (hsbMax === 0) {
+    hsbS = 0;
+  } else {
+    hsbS = Math.round((delta / hsbMax) * 100);
+  }
+
+  // Calculate Brightness
+  hsbB = Math.round(hsbB * 100);
+
+  return { hsbH, hsbS, hsbB };
 }
 
 function rgbToLab(r, g, b) {
@@ -249,6 +312,723 @@ function rgbToLab(r, g, b) {
   return { labL, labA, labB };
 }
 
+function changeColorMode(colorModeValue) {
+  switch (colorModeValue) {
+    case "rgb":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `R:-- G:-- B:--`;
+        break;
+      }
+      colorCode = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+      colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
+      break;
+    case "hex":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `#------`;
+        break;
+      }
+      colorCode = hex;
+      colorInfoElement.textContent = hex;
+      break;
+    case "hsl":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:-- L:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
+      break;
+    case "hsb":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:-- B:--`;
+        break;
+      }
+      colorCode = `h:${hsb.hsbH} s:${hsb.hsbS} b:${hsb.hsbB}`;
+      colorInfoElement.textContent = `H:${hsb.hsbH} S:${hsb.hsbS} B:${hsb.hsbB}`;
+      break;
+    default:
+      if (isInitialValue) {
+        colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
+        break;
+      }
+      colorCode = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+      colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+  }
+}
+
+function updateOutput(inputField, outputField) {
+  const inputValue = inputField.value; // 入力値を取得
+
+  outputField.textContent = inputValue; // 出力要素に処理後の値を表示
+}
+
+function getCurrentImageState() {
+  currentStates = ctx.getImageData(0, 0, image.width, image.height);
+  undoStates.unshift(currentStates);
+}
+
+// function to undo
+function undo() {
+  if (undoStates.length <= 1) return;
+  let firstUndoStates = undoStates.shift();
+  redoStates.unshift(firstUndoStates);
+  // redraw canvas
+  ctx.putImageData(undoStates[0], 0, 0);
+}
+
+// function to redo
+function redo() {
+  // check if there's a next state in the array
+  if (redoStates.length === 0) return;
+  let firstRedoStates = redoStates.shift();
+  undoStates.unshift(firstRedoStates);
+  // redraw canvas
+  ctx.putImageData(undoStates[0], 0, 0);
+}
+
+function clearCanvas() {
+  if (!initialState) return;
+  if (initialState === undoStates[0]) return;
+  undoStates.unshift(initialState);
+  redoStates = [];
+  ctx.putImageData(initialState, 0, 0);
+}
+
+async function copyToClipboard() {
+  if (isInitialValue) {
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(colorCode);
+  } catch (err) {
+    console.error("Failed to copy color values.", err);
+  }
+}
+
+function drawRoundedRectangle(
+  ctx,
+  x,
+  y,
+  width,
+  height,
+  cornerRadius,
+  isStroke
+) {
+  ctx.beginPath();
+  ctx.moveTo(x + cornerRadius, y);
+  ctx.lineTo(x + width - cornerRadius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
+  ctx.lineTo(x + width, y + height - cornerRadius);
+  ctx.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - cornerRadius,
+    y + height
+  );
+  ctx.lineTo(x + cornerRadius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
+  ctx.lineTo(x, y + cornerRadius);
+  ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
+  ctx.closePath();
+  if (isStroke) {
+    ctx.stroke();
+  } else {
+    ctx.fill();
+  }
+}
+
+function drawMultilineText(
+  context,
+  colorText,
+  pointX,
+  pointY,
+  lineHeight,
+  textPositionX,
+  textPositionY,
+  fontSize,
+  offsetX,
+  offsetY,
+  columnNumber
+) {
+  const colorElements = colorText.split(" ");
+  const padding = 4 + (fontSize * 2) / 15;
+  const margin = 4 + (fontSize * 2) / 15;
+  const magicNumber = 1;
+  let drawingPositionX = 0;
+  let drawingPositionY = 0;
+  let xOffset = 0;
+  let yOffset = 0;
+  let maxWidth = 0;
+
+  for (let i = 0; i < colorElements.length; i++) {
+    const row = colorElements.slice(i * columnNumber, (i + 1) * columnNumber);
+    let rowWidth = row.reduce(
+      (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
+      0
+    );
+    rowWidth -= margin;
+    maxWidth = Math.max(maxWidth, rowWidth);
+    if ((i + 2) * columnNumber > colorElements.length) {
+      break;
+    }
+  }
+
+  for (let i = 0; i < colorElements.length; i++) {
+    const colorElement = colorElements[i];
+    const lineWidth = context.measureText(colorElement).width;
+    const offsetXValue = [0, 1, 2, 3, 4];
+    const offsetYValue = [0, 0.5, 1, 1.5, 2];
+    const textSpaceWidth = lineWidth + padding * 2;
+    const textSpaceHeight = lineHeight + padding;
+    const offSetXWidth = fontSize * columnNumber;
+    let xOffsetAdjustment = fontSize / 3 + fontSize / 2;
+    let yOffsetAdjustment = fontSize / 2;
+    let colorSet;
+
+    if (document.forms.pointer[1].checked) {
+      xOffsetAdjustment = 0;
+      yOffsetAdjustment = 0;
+    }
+
+    switch (colorMode.elements.colorMode.value) {
+      case "rgb":
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        break;
+      case "hex":
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        break;
+      case "hsl":
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        break;
+      case "hsb":
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        break;
+      default:
+        colorSet = [
+          [hsl.h, hsl.h, hsl.h, 0],
+          [100, hsl.s, hsl.s, 0],
+          [50, 50, hsl.l, lab.labL],
+        ];
+        context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
+    }
+
+    if (textPositionX === "left") {
+      xOffset =
+        -xOffsetAdjustment -
+        maxWidth -
+        offSetXWidth * offsetXValue[offsetX] -
+        magicNumber;
+    } else {
+      xOffset = xOffsetAdjustment + offSetXWidth * offsetXValue[offsetX];
+    }
+    if (textPositionY === "top") {
+      yOffset =
+        -yOffsetAdjustment -
+        (textSpaceHeight + margin) *
+          Math.ceil(colorElements.length / columnNumber) -
+        (textSpaceHeight + margin) *
+          Math.ceil(colorElements.length / columnNumber) *
+          offsetYValue[offsetY];
+    } else {
+      yOffset =
+        yOffsetAdjustment +
+        (textSpaceHeight + margin) *
+          Math.ceil(colorElements.length / columnNumber) *
+          offsetYValue[offsetY];
+    }
+
+    context.textBaseline = "top";
+
+    drawRoundedRectangle(
+      context,
+      pointX + drawingPositionX + xOffset,
+      pointY + drawingPositionY + yOffset,
+      textSpaceWidth,
+      textSpaceHeight,
+      padding,
+      false
+    );
+
+    switch (colorMode.elements.colorMode.value) {
+      case "rgb":
+        if (hsl.l >= 60) {
+          context.fillStyle = `hsl( 0, 0%, 10%)`;
+        } else {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        break;
+      case "hex":
+        if (hsl.l >= 60) {
+          context.fillStyle = `hsl( 0, 0%, 10%)`;
+        } else {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        break;
+      case "hsl":
+        if (hsl.l >= 60) {
+          context.fillStyle = `hsl( 0, 0%, 10%)`;
+        } else {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        break;
+      case "hsb":
+        if (hsl.l >= 60) {
+          context.fillStyle = `hsl( 0, 0%, 10%)`;
+        } else {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        break;
+      default:
+        context.fillStyle = `hsl( 0, 0%, 10%)`;
+        if ((i === 0 && hsl.h < 20) || (i === 0 && hsl.h > 200)) {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        if (
+          (i === 1 && hsl.h < 45) ||
+          (i === 1 && hsl.h > 200) ||
+          (i === 1 && hsl.h > 45 && hsl.s < 60) ||
+          (i === 1 && hsl.h < 200 && hsl.s < 60)
+        ) {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        if (i === 2 && hsl.l <= 50) {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+        if (i === 3 && lab.labL < 60) {
+          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        }
+    }
+
+    context.fillText(
+      colorElement,
+      pointX + drawingPositionX + xOffset + padding,
+      pointY + drawingPositionY + yOffset + padding
+    );
+
+    if ((i + 1) % columnNumber === 0) {
+      drawingPositionY += textSpaceHeight + margin;
+      drawingPositionX = 0;
+    } else {
+      drawingPositionX += textSpaceWidth + margin;
+    }
+  }
+}
+
+// クリックしたら色データをキャンバスに描画
+canvas.addEventListener("click", function (e) {
+  const x = e.offsetX + clickPointAdjustment;
+  const y = e.offsetY + clickPointAdjustment;
+  const color = ctx.getImageData(x, y, 1, 1).data;
+  rgb = [color[0], color[1], color[2]];
+  hex = rgbToHex(color[0], color[1], color[2]);
+  hsl = rgbToHsl(color[0], color[1], color[2]);
+  hsb = rgbToHsb(color[0], color[1], color[2]);
+  lab = rgbToLab(color[0], color[1], color[2]);
+  colorInfoElement.style.setProperty(
+    "--background-color",
+    `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+  );
+  isInitialValue = false;
+  changeColorMode(colorMode.elements.colorMode.value);
+});
+
+canvas.addEventListener("click", function (event) {
+  const pointX = event.offsetX;
+  const pointY = event.offsetY;
+  const colorInfoElement = document.getElementById("colorInfo");
+  const colorText = `${colorInfoElement.textContent}`;
+  const fontSize = parseInt(fontInput.value);
+  const offsetXValue = parseInt(offsetX.value);
+  const offsetYValue = parseInt(offsetY.value);
+  const lineHeight = fontSize * 1.3;
+  const textPositionX = positionXRadioNodeList.value;
+  const textPositionY = positionYRadioNodeList.value;
+  const columnNumberValue = parseInt(columnNumber.value);
+  const cornerRadius = 2;
+  // クリックした場所のピクセルカラー情報を取得する
+  // const color = ctx.getImageData(x, y, 1, 1).data;
+
+  // 新しい描画を行う
+  drawMultilineText(
+    ctx,
+    colorText,
+    pointX,
+    pointY,
+    lineHeight,
+    textPositionX,
+    textPositionY,
+    fontSize,
+    offsetXValue,
+    offsetYValue,
+    columnNumberValue
+  );
+
+  // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+  ctx.fillStyle = `hsl( 0, 0%, 100%)`;
+  ctx.lineWidth = 0.5;
+  ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
+
+  if (pointerRadioNodeList.value === "on") {
+    if (lab.labL > 85) {
+      ctx.beginPath();
+      ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustment + 3);
+      ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustment + 3);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustment + 3);
+      ctx.lineTo(pointX + 7, pointY + clickPointAdjustment + 3);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pointX + clickPointAdjustment, pointY - 2.5);
+      ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2.5);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(pointX + clickPointAdjustment, pointY + 6.5);
+      ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6.5);
+      ctx.stroke();
+    }
+
+    // ctx.lineWidth = 2;
+    // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
+
+    // ctx.strokeRect(
+    //   pointX - fontSize / 2,
+    //   pointY - fontSize / 2,
+    //   fontSize - 2,
+    //   fontSize - 2
+    // );
+    // ctx.fillRect(pointX - 10.5, pointY - 2, 6, 3);
+    // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
+    // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
+    // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
+
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX - 12.5,
+    //   pointY + clickPointAdjustment,
+    //   10,
+    //   3,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + 1.5,
+    //   pointY + clickPointAdjustment,
+    //   10,
+    //   3,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + clickPointAdjustment,
+    //   pointY - 12,
+    //   3.5,
+    //   10,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + clickPointAdjustment,
+    //   pointY + 1,
+    //   3.5,
+    //   10,
+    //   cornerRadius,
+    //   false
+    // );
+
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX - 7,
+    //   pointY + clickPointAdjustment,
+    //   5,
+    //   3,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + 1.5,
+    //   pointY + clickPointAdjustment,
+    //   5.2,
+    //   3,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + clickPointAdjustment,
+    //   pointY - 7,
+    //   3.5,
+    //   5,
+    //   cornerRadius,
+    //   false
+    // );
+    // drawRoundedRectangle(
+    //   ctx,
+    //   pointX + clickPointAdjustment,
+    //   pointY + 1,
+    //   3.5,
+    //   5,
+    //   cornerRadius,
+    //   false
+    // );
+
+    ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
+    ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
+    ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
+    ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
+
+    // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
+    // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
+    // ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
+    // ctx.fillRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
+
+    // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
+    // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
+    // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
+    // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
+  }
+
+  // update current state
+  redoStates = [];
+  getCurrentImageState();
+  if (undoStates.length > undoStatesLimitNumber) {
+    undoStates.length = undoStatesLimitNumber;
+  }
+});
+
+/// keyboard shortcuts ///
+
+// Add event listeners to track the state of each key
+document.addEventListener("keydown", (event) => {
+  if (event.key === "r") {
+    if (keyMeta) return;
+
+    fileInput.click();
+  }
+  if (event.key === "w") {
+    fontInput.value = (parseInt(fontInput.value) + 1).toString();
+    updateOutput(fontInput, fontOutput);
+    changeFontSize(ctx, fontInput);
+    //   tooltip1.textContent = `font-size: ${fontInput.value}`;
+    //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+  }
+  if (event.key === "q") {
+    fontInput.value = (parseInt(fontInput.value) - 1).toString();
+    updateOutput(fontInput, fontOutput);
+    changeFontSize(ctx, fontInput);
+    // tooltip1.textContent = `font-size: ${fontInput.value}`;
+    // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
+  }
+  if (event.key === "h") {
+    offsetX.value = (parseInt(offsetX.value) + 1).toString();
+    updateOutput(offsetX, offsetXOutput);
+  }
+  if (event.key === "g") {
+    offsetX.value = (parseInt(offsetX.value) - 1).toString();
+    updateOutput(offsetX, offsetXOutput);
+  }
+  if (event.key === "y") {
+    offsetY.value = (parseInt(offsetY.value) + 1).toString();
+    updateOutput(offsetY, offsetYOutput);
+  }
+  if (event.key === "t") {
+    offsetY.value = (parseInt(offsetY.value) - 1).toString();
+    updateOutput(offsetY, offsetYOutput);
+  }
+  if (event.key === "a") {
+    if (keyMeta) return;
+    changeCheckedPositionX();
+  }
+  if (event.key === "s") {
+    if (keyMeta) return;
+    changeCheckedPositionY();
+  }
+  if (event.key === "p") {
+    if (keyMeta) return;
+
+    debouncedDownload();
+  }
+  if (event.key === "d") {
+    if (keyMeta) return;
+
+    changeCheckedScale();
+  }
+  if (event.key === "l") {
+    if (keyMeta) return;
+
+    changeCheckedFormat();
+  }
+  if (event.key === "e") {
+    if (keyMeta) return;
+
+    clearCanvas();
+  }
+  if (event.key === "x") {
+    if (keyMeta) return;
+
+    columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
+    updateOutput(columnNumber, columnNumberOutput);
+  }
+  if (event.key === "z") {
+    if (keyMeta) return;
+
+    columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
+    updateOutput(columnNumber, columnNumberOutput);
+  }
+  if (event.key === "Escape") {
+    navToggle();
+  }
+  if (event.key === "u") {
+    menu.classList.toggle("show");
+  }
+  if (event.key === "v") {
+    if (keyMeta) return;
+    changeCheckedColorMode();
+  }
+  if (event.key === "i") {
+    if (keyMeta) return;
+    changeCheckedPointer();
+  }
+});
+
+// Set up an object to track the current state of each key
+let keyShift = false;
+let keyControl = false;
+// let keyArrowUp = false;
+// let keyArrowLeft = false;
+// let keyArrowDown = false;
+// let keyArrowRight = false;
+let keyMeta = false;
+let keyZ = false;
+let keyX = false;
+let keyC = false;
+// let keyD = false;
+
+// Define your key press handler
+function handleKeyPress() {
+  // if (keyShift) {
+  //   if (keyArrowUp) {
+  //     fontInput.value = (parseInt(fontInput.value) + 1).toString();
+  //     fontInput.nextElementSibling.value = fontInput.value;
+  //     changeFontSize(ctx, fontInput);
+  //     keyArrowUp = false;
+  //   }
+  //   if (keyArrowLeft) {
+  //     colorInput.value = (parseInt(colorInput.value) - 10).toString();
+  //     colorInput.nextElementSibling.value = colorInput.value;
+  //     changeColor(ctx, colorInput, alphaInput);
+  //     keyArrowLeft = false;
+  //   }
+  //   if (keyArrowDown) {
+  //     fontInput.value = (parseInt(fontInput.value) - 1).toString();
+  //     fontInput.nextElementSibling.value = fontInput.value;
+  //     changeFontSize(ctx, fontInput);
+  //     keyArrowDown = false;
+  //   }
+  //   if (keyArrowRight) {
+  //     colorInput.value = (parseInt(colorInput.value) + 10).toString();
+  //     colorInput.nextElementSibling.value = colorInput.value;
+  //     changeColor(ctx, colorInput, alphaInput);
+  //     keyArrowRight = false;
+  //   }
+  // }
+  if (keyMeta && keyZ && !keyShift) {
+    undo();
+    keyZ = false;
+  }
+  if (keyMeta && keyShift && keyZ) {
+    redo();
+    keyZ = false;
+  }
+  if (keyMeta && keyC) {
+    copyToClipboard();
+    keyC = false;
+  }
+}
+
+// Add event listeners to track the state of each key
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Shift") {
+    keyShift = true;
+  }
+  // if (event.key === "Control") {
+  //   keyControl = true;
+  // }
+  // if (event.key === "ArrowUp") {
+  //   keyArrowUp = true;
+  // }
+  // if (event.key === "ArrowLeft") {
+  //   keyArrowLeft = true;
+  // }
+  // if (event.key === "ArrowDown") {
+  //   keyArrowDown = true;
+  // }
+  // if (event.key === "ArrowRight") {
+  //   keyArrowRight = true;
+  // }
+  if (event.key === "Meta") {
+    keyMeta = true;
+  }
+  if (event.key === "z") {
+    keyZ = true;
+  }
+  if (event.key === "x") {
+    keyX = true;
+  }
+  if (event.key === "c") {
+    keyC = true;
+  }
+  // if (event.key === "d") {
+  //   keyD = true;
+  // }
+  handleKeyPress();
+});
+
+document.addEventListener("keyup", (event) => {
+  if (event.key === "Shift") {
+    keyShift = false;
+  }
+  // if (event.key === "Control") {
+  //   keyControl = false;
+  // }
+  // if (event.key === "ArrowUp") {
+  //   keyArrowUp = false;
+  // }
+  // if (event.key === "ArrowLeft") {
+  //   keyArrowLeft = false;
+  // }
+  // if (event.key === "ArrowDown") {
+  //   keyArrowDown = false;
+  // }
+  // if (event.key === "ArrowRight") {
+  //   keyArrowRight = false;
+  // }
+  if (event.key === "Meta") {
+    keyMeta = false;
+  }
+  if (event.key === "z") {
+    keyZ = false;
+  }
+  // if (event.key === "x") {
+  //   keyX = false;
+  // }
+  if (event.key === "c") {
+    keyC = false;
+  }
+  // if (event.key === "d") {
+  //   keyD = false;
+  // }
+});
+
+/// Download ///
+
 function download() {
   if (!!initialState === false) {
     return;
@@ -296,6 +1076,35 @@ function debounce(func, delay, immediate) {
   };
 }
 
+/// UI function eventListener ///
+
+function changeFontSize(context, fontInput) {
+  const fontSize = parseInt(fontInput.value);
+
+  context.font = `500 ${fontSize}px 'Inter','Helvetica Neue', Arial, sans-serif `;
+}
+
+fontInput.addEventListener("input", function () {
+  changeFontSize(ctx, fontInput);
+});
+
+function changeCheckedColorMode() {
+  for (let i = 0; i < colorMode.length; i++) {
+    if (colorMode[i].checked) {
+      colorMode[i].checked = false;
+      if (i + 1 === colorMode.length) {
+        colorMode[0].checked = true;
+        changeColorMode(colorMode.elements.colorMode.value);
+        break;
+      } else {
+        colorMode[i + 1].checked = true;
+        changeColorMode(colorMode.elements.colorMode.value);
+        break;
+      }
+    }
+  }
+}
+
 function changeCheckedScale() {
   for (let i = 0; i < scaleRadioNodeList.length; i++) {
     if (scaleRadioNodeList[i].checked) {
@@ -339,6 +1148,7 @@ function changeCheckedPositionX() {
     }
   }
 }
+
 function changeCheckedPositionY() {
   for (let i = 0; i < positionYRadioNodeList.length; i++) {
     if (positionYRadioNodeList[i].checked) {
@@ -353,6 +1163,21 @@ function changeCheckedPositionY() {
     }
   }
 }
+function changeCheckedPointer() {
+  for (let i = 0; i < pointerRadioNodeList.length; i++) {
+    if (pointerRadioNodeList[i].checked) {
+      pointerRadioNodeList[i].checked = false;
+      if (i + 1 === pointerRadioNodeList.length) {
+        pointerRadioNodeList[0].checked = true;
+        break;
+      } else {
+        pointerRadioNodeList[i + 1].checked = true;
+        break;
+      }
+    }
+  }
+}
+
 fileButton.addEventListener("click", function () {
   if (!!isMobile) {
     navToggle();
@@ -486,616 +1311,6 @@ columnSubtract.addEventListener("keydown", (event) => {
   }
 });
 
-function changeFontSize(context, fontInput) {
-  const fontSize = parseInt(fontInput.value);
-
-  context.font = `500 ${fontSize}px 'Inter','Helvetica Neue', Arial, sans-serif `;
-}
-
-fontInput.addEventListener("input", function () {
-  changeFontSize(ctx, fontInput);
-});
-
-function drawRoundedRectangle(
-  ctx,
-  x,
-  y,
-  width,
-  height,
-  cornerRadius,
-  isStroke
-) {
-  ctx.beginPath();
-  ctx.moveTo(x + cornerRadius, y);
-  ctx.lineTo(x + width - cornerRadius, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + cornerRadius);
-  ctx.lineTo(x + width, y + height - cornerRadius);
-  ctx.quadraticCurveTo(
-    x + width,
-    y + height,
-    x + width - cornerRadius,
-    y + height
-  );
-  ctx.lineTo(x + cornerRadius, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - cornerRadius);
-  ctx.lineTo(x, y + cornerRadius);
-  ctx.quadraticCurveTo(x, y, x + cornerRadius, y);
-  ctx.closePath();
-  if (isStroke) {
-    ctx.stroke();
-  } else {
-    ctx.fill();
-  }
-}
-
-function drawMultilineText(
-  context,
-  colorText,
-  pointX,
-  pointY,
-  lineHeight,
-  textPositionX,
-  textPositionY,
-  fontSize,
-  offsetX,
-  offsetY,
-  columnNumber
-) {
-  const colorElements = colorText.split(" ");
-  const padding = 4 + (fontSize * 2) / 15;
-  const margin = 4 + (fontSize * 2) / 15;
-  const magicNumber = 1;
-  let drawingPositionX = 0;
-  let drawingPositionY = 0;
-  let xOffset = 0;
-  let yOffset = 0;
-  let maxWidth = 0;
-
-  for (let i = 0; i < colorElements.length; i++) {
-    const row = colorElements.slice(i * columnNumber, (i + 1) * columnNumber);
-    let rowWidth = row.reduce(
-      (acc, str) => acc + context.measureText(str).width + padding * 2 + margin,
-      0
-    );
-    rowWidth -= margin;
-    maxWidth = Math.max(maxWidth, rowWidth);
-    if ((i + 2) * columnNumber > colorElements.length) {
-      break;
-    }
-  }
-
-  for (let i = 0; i < colorElements.length; i++) {
-    const colorElement = colorElements[i];
-    const lineWidth = context.measureText(colorElement).width;
-    const offsetXValue = [0, 1, 2, 3, 4];
-    const offsetYValue = [0, 0.5, 1, 1.5, 2];
-    const textSpaceWidth = lineWidth + padding * 2;
-    const textSpaceHeight = lineHeight + padding;
-    const xOffsetAdjustment = fontSize / 3 + fontSize / 2;
-    const yOffsetAdjustment = fontSize / 2;
-    const offSetXWidth = fontSize * columnNumber;
-
-    let colorSet = [
-      [hsl.h, hsl.h, hsl.h, 0],
-      [100, hsl.s, hsl.s, 0],
-      [50, 50, hsl.l, lab.labL],
-    ];
-
-    if (textPositionX === "left") {
-      xOffset =
-        -xOffsetAdjustment -
-        maxWidth -
-        offSetXWidth * offsetXValue[offsetX] -
-        magicNumber;
-    } else {
-      xOffset = xOffsetAdjustment + offSetXWidth * offsetXValue[offsetX];
-    }
-    if (textPositionY === "top") {
-      yOffset =
-        -yOffsetAdjustment -
-        (textSpaceHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) -
-        (textSpaceHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) *
-          offsetYValue[offsetY];
-    } else {
-      yOffset =
-        yOffsetAdjustment +
-        (textSpaceHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) *
-          offsetYValue[offsetY];
-    }
-
-    context.textBaseline = "top";
-    context.fillStyle = `hsl( ${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%`;
-
-    drawRoundedRectangle(
-      context,
-      pointX + drawingPositionX + xOffset,
-      pointY + drawingPositionY + yOffset,
-      textSpaceWidth,
-      textSpaceHeight,
-      padding,
-      false
-    );
-
-    context.fillStyle = `hsl( 0, 0%, 10%)`;
-    if ((i === 0 && hsl.h < 20) || (i === 0 && hsl.h > 200)) {
-      context.fillStyle = `hsl( 0, 0%, 94%)`;
-    }
-    if (
-      (i === 1 && hsl.h < 45) ||
-      (i === 1 && hsl.h > 200) ||
-      (i === 1 && hsl.h > 45 && hsl.s < 60) ||
-      (i === 1 && hsl.h < 200 && hsl.s < 60)
-    ) {
-      context.fillStyle = `hsl( 0, 0%, 94%)`;
-    }
-    if (i === 2 && hsl.l <= 50) {
-      context.fillStyle = `hsl( 0, 0%, 94%)`;
-    }
-    if (i === 3 && lab.labL < 60) {
-      context.fillStyle = `hsl( 0, 0%, 94%)`;
-    }
-    context.fillText(
-      colorElement,
-      pointX + drawingPositionX + xOffset + padding,
-      pointY + drawingPositionY + yOffset + padding
-    );
-
-    if ((i + 1) % columnNumber === 0) {
-      drawingPositionY += textSpaceHeight + margin;
-      drawingPositionX = 0;
-    } else {
-      drawingPositionX += textSpaceWidth + margin;
-    }
-  }
-}
-
-// クリックしたら色データをキャンバスに描画
-canvas.addEventListener("click", function (e) {
-  const x = e.offsetX + clickPointAdjustment;
-  const y = e.offsetY + clickPointAdjustment;
-  const color = ctx.getImageData(x, y, 1, 1).data;
-  rgb = [color[0], color[1], color[2]];
-  hsl = rgbToHsl(color[0], color[1], color[2]);
-  lab = rgbToLab(color[0], color[1], color[2]);
-  const colorInfoElement = document.getElementById("colorInfo");
-  colorInfoElement.style.setProperty(
-    "--background-color",
-    `rgb(${color[0]}, ${color[1]}, ${color[2]})`
-  );
-  colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-  colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
-});
-
-canvas.addEventListener("click", function (event) {
-  const pointX = event.offsetX;
-  const pointY = event.offsetY;
-  const colorInfoElement = document.getElementById("colorInfo");
-  const colorText = `${colorInfoElement.textContent}`;
-  const fontSize = parseInt(fontInput.value);
-  const offsetXValue = parseInt(offsetX.value);
-  const offsetYValue = parseInt(offsetY.value);
-  const lineHeight = fontSize * 1.3;
-  const textPositionX = positionXRadioNodeList.value;
-  const textPositionY = positionYRadioNodeList.value;
-  const columnNumberValue = parseInt(columnNumber.value);
-  const cornerRadius = 2;
-  // クリックした場所のピクセルカラー情報を取得する
-  // const color = ctx.getImageData(x, y, 1, 1).data;
-
-  // 新しい描画を行う
-  drawMultilineText(
-    ctx,
-    colorText,
-    pointX,
-    pointY,
-    lineHeight,
-    textPositionX,
-    textPositionY,
-    fontSize,
-    offsetXValue,
-    offsetYValue,
-    columnNumberValue
-  );
-
-  // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-  ctx.fillStyle = `hsl( 0, 0%, 100%)`;
-  ctx.lineWidth = 0.5;
-  ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
-
-  if (lab.labL > 85) {
-    ctx.beginPath();
-    ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustment + 3);
-    ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustment + 3);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustment + 3);
-    ctx.lineTo(pointX + 7, pointY + clickPointAdjustment + 3);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustment, pointY - 2.5);
-    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2.5);
-    ctx.stroke();
-
-    ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustment, pointY + 6.5);
-    ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6.5);
-    ctx.stroke();
-  }
-
-  // ctx.lineWidth = 2;
-  // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-
-  // ctx.strokeRect(
-  //   pointX - fontSize / 2,
-  //   pointY - fontSize / 2,
-  //   fontSize - 2,
-  //   fontSize - 2
-  // );
-  // ctx.fillRect(pointX - 10.5, pointY - 2, 6, 3);
-  // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
-  // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
-  // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX - 12.5,
-  //   pointY + clickPointAdjustment,
-  //   10,
-  //   3,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + 1.5,
-  //   pointY + clickPointAdjustment,
-  //   10,
-  //   3,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + clickPointAdjustment,
-  //   pointY - 12,
-  //   3.5,
-  //   10,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + clickPointAdjustment,
-  //   pointY + 1,
-  //   3.5,
-  //   10,
-  //   cornerRadius,
-  //   false
-  // );
-
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX - 7,
-  //   pointY + clickPointAdjustment,
-  //   5,
-  //   3,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + 1.5,
-  //   pointY + clickPointAdjustment,
-  //   5.2,
-  //   3,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + clickPointAdjustment,
-  //   pointY - 7,
-  //   3.5,
-  //   5,
-  //   cornerRadius,
-  //   false
-  // );
-  // drawRoundedRectangle(
-  //   ctx,
-  //   pointX + clickPointAdjustment,
-  //   pointY + 1,
-  //   3.5,
-  //   5,
-  //   cornerRadius,
-  //   false
-  // );
-
-  ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
-  ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
-  ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
-  ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
-
-  // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
-  // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
-  // ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
-  // ctx.fillRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
-
-  // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
-  // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
-  // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
-  // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
-
-  // update current state
-  redoStates = [];
-  getCurrentImageState();
-  if (undoStates.length > undoStatesLimitNumber) {
-    undoStates.length = undoStatesLimitNumber;
-  }
-});
-
-function getCurrentImageState() {
-  currentStates = ctx.getImageData(0, 0, image.width, image.height);
-  undoStates.unshift(currentStates);
-}
-// function to undo
-function undo() {
-  if (undoStates.length <= 1) return;
-  let firstUndoStates = undoStates.shift();
-  redoStates.unshift(firstUndoStates);
-  // redraw canvas
-  ctx.putImageData(undoStates[0], 0, 0);
-}
-
-// function to redo
-function redo() {
-  // check if there's a next state in the array
-  if (redoStates.length === 0) return;
-  let firstRedoStates = redoStates.shift();
-  undoStates.unshift(firstRedoStates);
-  // redraw canvas
-  ctx.putImageData(undoStates[0], 0, 0);
-}
-
-function clearCanvas() {
-  if (!initialState) return;
-  if (initialState === undoStates[0]) return;
-  undoStates.unshift(initialState);
-  redoStates = [];
-  ctx.putImageData(initialState, 0, 0);
-}
-
-// keyboard shortcuts
-
-// Add event listeners to track the state of each key
-document.addEventListener("keydown", (event) => {
-  if (event.key === "r") {
-    if (keyMeta) return;
-
-    fileInput.click();
-  }
-  if (event.key === "w") {
-    fontInput.value = (parseInt(fontInput.value) + 1).toString();
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
-    //   tooltip1.textContent = `font-size: ${fontInput.value}`;
-    //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
-  }
-  if (event.key === "q") {
-    fontInput.value = (parseInt(fontInput.value) - 1).toString();
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
-    // tooltip1.textContent = `font-size: ${fontInput.value}`;
-    // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
-  }
-  if (event.key === "h") {
-    offsetX.value = (parseInt(offsetX.value) + 1).toString();
-    updateOutput(offsetX, offsetXOutput);
-  }
-  if (event.key === "g") {
-    offsetX.value = (parseInt(offsetX.value) - 1).toString();
-    updateOutput(offsetX, offsetXOutput);
-  }
-  if (event.key === "y") {
-    offsetY.value = (parseInt(offsetY.value) + 1).toString();
-    updateOutput(offsetY, offsetYOutput);
-  }
-  if (event.key === "t") {
-    offsetY.value = (parseInt(offsetY.value) - 1).toString();
-    updateOutput(offsetY, offsetYOutput);
-  }
-  if (event.key === "a") {
-    if (keyMeta) return;
-    changeCheckedPositionX();
-  }
-  if (event.key === "s") {
-    if (keyMeta) return;
-    changeCheckedPositionY();
-  }
-  if (event.key === "p") {
-    if (keyMeta) return;
-
-    debouncedDownload();
-  }
-  if (event.key === "d") {
-    if (keyMeta) return;
-
-    changeCheckedScale();
-  }
-  if (event.key === "l") {
-    if (keyMeta) return;
-
-    changeCheckedFormat();
-  }
-  if (event.key === "e") {
-    if (keyMeta) return;
-
-    clearCanvas();
-  }
-  if (event.key === "x") {
-    if (keyMeta) return;
-
-    columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
-    updateOutput(columnNumber, columnNumberOutput);
-  }
-  if (event.key === "z") {
-    if (keyMeta) return;
-
-    columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
-    updateOutput(columnNumber, columnNumberOutput);
-  }
-  if (event.key === "Escape") {
-    navToggle();
-  }
-  if (event.key === "v") {
-    menu.classList.toggle("show");
-  }
-});
-
-// Set up an object to track the current state of each key
-let keyShift = false;
-let keyControl = false;
-// let keyArrowUp = false;
-// let keyArrowLeft = false;
-// let keyArrowDown = false;
-// let keyArrowRight = false;
-let keyMeta = false;
-let keyZ = false;
-let keyX = false;
-let keyC = false;
-// let keyD = false;
-
-// Define your key press handler
-function handleKeyPress() {
-  // if (keyShift) {
-  //   if (keyArrowUp) {
-  //     fontInput.value = (parseInt(fontInput.value) + 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowUp = false;
-  //   }
-  //   if (keyArrowLeft) {
-  //     colorInput.value = (parseInt(colorInput.value) - 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowLeft = false;
-  //   }
-  //   if (keyArrowDown) {
-  //     fontInput.value = (parseInt(fontInput.value) - 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowDown = false;
-  //   }
-  //   if (keyArrowRight) {
-  //     colorInput.value = (parseInt(colorInput.value) + 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowRight = false;
-  //   }
-  // }
-  if (keyMeta && keyZ && !keyShift) {
-    undo();
-    keyZ = false;
-  }
-  if (keyMeta && keyShift && keyZ) {
-    redo();
-    keyZ = false;
-  }
-  if (keyMeta && keyC) {
-    copyToClipboard();
-    keyC = false;
-  }
-}
-
-// Add event listeners to track the state of each key
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Shift") {
-    keyShift = true;
-  }
-  // if (event.key === "Control") {
-  //   keyControl = true;
-  // }
-  // if (event.key === "ArrowUp") {
-  //   keyArrowUp = true;
-  // }
-  // if (event.key === "ArrowLeft") {
-  //   keyArrowLeft = true;
-  // }
-  // if (event.key === "ArrowDown") {
-  //   keyArrowDown = true;
-  // }
-  // if (event.key === "ArrowRight") {
-  //   keyArrowRight = true;
-  // }
-  if (event.key === "Meta") {
-    keyMeta = true;
-  }
-  if (event.key === "z") {
-    keyZ = true;
-  }
-  if (event.key === "x") {
-    keyX = true;
-  }
-  if (event.key === "c") {
-    keyC = true;
-  }
-  // if (event.key === "d") {
-  //   keyD = true;
-  // }
-  handleKeyPress();
-});
-
-document.addEventListener("keyup", (event) => {
-  if (event.key === "Shift") {
-    keyShift = false;
-  }
-  // if (event.key === "Control") {
-  //   keyControl = false;
-  // }
-  // if (event.key === "ArrowUp") {
-  //   keyArrowUp = false;
-  // }
-  // if (event.key === "ArrowLeft") {
-  //   keyArrowLeft = false;
-  // }
-  // if (event.key === "ArrowDown") {
-  //   keyArrowDown = false;
-  // }
-  // if (event.key === "ArrowRight") {
-  //   keyArrowRight = false;
-  // }
-  if (event.key === "Meta") {
-    keyMeta = false;
-  }
-  if (event.key === "z") {
-    keyZ = false;
-  }
-  // if (event.key === "x") {
-  //   keyX = false;
-  // }
-  if (event.key === "c") {
-    keyC = false;
-  }
-  // if (event.key === "d") {
-  //   keyD = false;
-  // }
-});
-
 function navToggle() {
   menu.classList.toggle("close");
-}
-
-async function copyToClipboard() {
-  if (!colorCode) {
-    return;
-  }
-  try {
-    await navigator.clipboard.writeText(colorCode);
-  } catch (err) {
-    console.error("テキストのコピーに失敗しました:", err);
-  }
 }
