@@ -17,6 +17,24 @@
   --font-size-small: 14px;
   --font-size-ss:12px;
 }
+
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'),
+       url('fonts/Inter-ExtraLight.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: local('Inter'),
+       url('fonts/Inter-Medium.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 500;
+}
+
+
 *,
 *::before,
 *::after {
