@@ -856,6 +856,7 @@ document.addEventListener("keydown", (event) => {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
+    localStorage.setItem("fontSize", fontInput.value);
     //   tooltip1.textContent = `font-size: ${fontInput.value}`;
     //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
@@ -863,24 +864,29 @@ document.addEventListener("keydown", (event) => {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
+    localStorage.setItem("fontSize", fontInput.value);
     // tooltip1.textContent = `font-size: ${fontInput.value}`;
     // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     updateOutput(offsetX, offsetXOutput);
+    localStorage.setItem("offsetX", offsetX.value);
   }
   if (event.key === "g") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     updateOutput(offsetX, offsetXOutput);
+    localStorage.setItem("offsetX", offsetX.value);
   }
   if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
     updateOutput(offsetY, offsetYOutput);
+    localStorage.setItem("offsetY", offsetY.value);
   }
   if (event.key === "t") {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     updateOutput(offsetY, offsetYOutput);
+    localStorage.setItem("offsetY", offsetY.value);
   }
   if (event.key === "a") {
     if (keyMeta) return;
@@ -915,12 +921,14 @@ document.addEventListener("keydown", (event) => {
 
     columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
     updateOutput(columnNumber, columnNumberOutput);
+    localStorage.setItem("column", columnNumber.value);
   }
   if (event.key === "z") {
     if (keyMeta) return;
 
     columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
     updateOutput(columnNumber, columnNumberOutput);
+    localStorage.setItem("column", columnNumber.value);
   }
   if (event.key === "Escape") {
     navToggle();
