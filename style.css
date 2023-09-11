@@ -119,7 +119,7 @@ output{
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   font-weight: var(--font-weight-light);
 }
 .description button{
