@@ -591,28 +591,28 @@ function drawMultilineText(
 
     switch (colorMode.elements.colorMode.value) {
       case "rgb":
-        if (hsl.l >= 60) {
+        if (lab.labL >= 60) {
           context.fillStyle = `hsl( 0, 0%, 10%)`;
         } else {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
         }
         break;
       case "hex":
-        if (hsl.l >= 60) {
+        if (lab.labL >= 60) {
           context.fillStyle = `hsl( 0, 0%, 10%)`;
         } else {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
         }
         break;
       case "hsl":
-        if (hsl.l >= 60) {
+        if (lab.labL >= 60) {
           context.fillStyle = `hsl( 0, 0%, 10%)`;
         } else {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
         }
         break;
       case "hsb":
-        if (hsl.l >= 60) {
+        if (lab.labL >= 60) {
           context.fillStyle = `hsl( 0, 0%, 10%)`;
         } else {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
