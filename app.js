@@ -354,6 +354,43 @@ function rgbToLab(r, g, b) {
   return { labL, labA, labB };
 }
 
+function hslToRgb(h, s, l) {
+  // H, S, L values are expected to be in the range [0, 1]
+  // Convert HSL to RGB
+  let toRgbH = h / 360;
+  let toRgbS = s / 100;
+  let toRgbL = l / 100;
+  let toRgbR, toRgbG, toRgbB;
+
+  if (toRgbS === 0) {
+    toRgbR = toRgbG = toRgbB = toRgbL; // achromatic
+  } else {
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+
+    const q =
+      toRgbL < 0.5 ? toRgbL * (1 + toRgbS) : toRgbL + toRgbS - toRgbL * toRgbS;
+    const p = 2 * toRgbL - q;
+
+    toRgbR = hue2rgb(p, q, toRgbH + 1 / 3);
+    toRgbG = hue2rgb(p, q, toRgbH);
+    toRgbB = hue2rgb(p, q, toRgbH - 1 / 3);
+  }
+
+  // Scale the RGB values to the range [0, 255] and round them
+  return [
+    Math.round(toRgbR * 255),
+    Math.round(toRgbG * 255),
+    Math.round(toRgbB * 255),
+  ];
+}
+
 function changeColorMode(colorModeValue) {
   switch (colorModeValue) {
     case "rgb":
@@ -529,18 +566,6 @@ function drawMultilineText(
     }
 
     switch (colorMode.elements.colorMode.value) {
-      case "rgb":
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-        break;
-      case "hex":
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-        break;
-      case "hsb":
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-        break;
-      case "hsl":
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-        break;
       case "hsl+l":
         colorSet = [
           [hsl.h, hsl.h, hsl.h, 0],
@@ -548,7 +573,9 @@ function drawMultilineText(
           [50, 50, hsl.l, lab.labL],
         ];
         context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
+        break;
       default:
+        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
         break;
     }
 
@@ -590,53 +617,35 @@ function drawMultilineText(
     );
 
     switch (colorMode.elements.colorMode.value) {
-      case "rgb":
-        if (lab.labL >= 60) {
-          context.fillStyle = `hsl( 0, 0%, 10%)`;
-        } else {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
+      case "hsl+l":
+        if (i === 0) {
+          const baseColorRgb = hslToRgb(hsl.h, 100, 50);
+          const contrastColor =
+            getGreyScaleColorWithHighestContrast(baseColorRgb);
+          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+          break;
         }
-        break;
-      case "hex":
-        if (lab.labL >= 60) {
-          context.fillStyle = `hsl( 0, 0%, 10%)`;
-        } else {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        if (i === 1) {
+          const baseColorRgb = hslToRgb(hsl.h, hsl.s, 50);
+          const contrastColor =
+            getGreyScaleColorWithHighestContrast(baseColorRgb);
+          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+          break;
         }
-        break;
-      case "hsl":
-        if (lab.labL >= 60) {
-          context.fillStyle = `hsl( 0, 0%, 10%)`;
-        } else {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        if (i === 2) {
+          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+          break;
         }
-        break;
-      case "hsb":
-        if (lab.labL >= 60) {
-          context.fillStyle = `hsl( 0, 0%, 10%)`;
-        } else {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
+        if (i === 3) {
+          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+          break;
         }
-        break;
       default:
-        context.fillStyle = `hsl( 0, 0%, 10%)`;
-        if ((i === 0 && hsl.h < 20) || (i === 0 && hsl.h > 200)) {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
-        }
-        if (
-          (i === 1 && hsl.h < 45) ||
-          (i === 1 && hsl.h > 200) ||
-          (i === 1 && hsl.h > 45 && hsl.s < 35) ||
-          (i === 1 && hsl.h < 200 && hsl.s < 35)
-        ) {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
-        }
-        if (i === 2 && lab.labL < 60) {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
-        }
-        if (i === 3 && lab.labL < 60) {
-          context.fillStyle = `hsl( 0, 0%, 94%)`;
-        }
+        const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+        context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+        break;
     }
 
     context.fillText(
@@ -1393,4 +1402,49 @@ columnSubtract.addEventListener("keydown", (event) => {
 
 function navToggle() {
   menu.classList.toggle("close");
+}
+
+/// find contrast color
+
+function getGreyScaleColorWithHighestContrast(backgroundRGBColor) {
+  // Define an array of greyScale colors in RGB format
+  const greyScaleColors = [
+    [27, 27, 27],
+    [240, 240, 240],
+  ];
+
+  let maxContrastColor = [];
+  let maxContrastRatio = 0;
+
+  // Calculate contrast ratio for each greyScale color
+  for (const greyScaleColor of greyScaleColors) {
+    const contrastRatio = calculateContrastRatio(
+      greyScaleColor,
+      backgroundRGBColor
+    );
+
+    // Update max contrast values if a higher contrast is found
+    if (contrastRatio > maxContrastRatio) {
+      maxContrastRatio = contrastRatio;
+      maxContrastColor = greyScaleColor;
+    }
+  }
+
+  return maxContrastColor;
+}
+
+// Function to calculate contrast ratio between two RGB colors
+function calculateContrastRatio(foregroundRGBColor, backgroundRGBColor) {
+  const getLuminance = (rgbColor) => {
+    const [r, g, b] = rgbColor.map((value) => value / 255);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  const foregroundLuminance = getLuminance(foregroundRGBColor);
+  const backgroundLuminance = getLuminance(backgroundRGBColor);
+
+  const brighter = Math.max(foregroundLuminance, backgroundLuminance);
+  const darker = Math.min(foregroundLuminance, backgroundLuminance);
+
+  return (brighter + 0.05) / (darker + 0.05);
 }
