@@ -626,12 +626,12 @@ function drawMultilineText(
         if (
           (i === 1 && hsl.h < 45) ||
           (i === 1 && hsl.h > 200) ||
-          (i === 1 && hsl.h > 45 && hsl.s < 60) ||
-          (i === 1 && hsl.h < 200 && hsl.s < 60)
+          (i === 1 && hsl.h > 45 && hsl.s < 35) ||
+          (i === 1 && hsl.h < 200 && hsl.s < 35)
         ) {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
         }
-        if (i === 2 && hsl.l <= 50) {
+        if (i === 2 && lab.labL < 60) {
           context.fillStyle = `hsl( 0, 0%, 94%)`;
         }
         if (i === 3 && lab.labL < 60) {
