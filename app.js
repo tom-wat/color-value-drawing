@@ -633,9 +633,7 @@ function drawMultilineText(
           break;
         }
         if (i === 2) {
-          const baseColorRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
-          const contrastColor =
-            getGreyScaleColorWithHighestContrast(baseColorRgb);
+          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
