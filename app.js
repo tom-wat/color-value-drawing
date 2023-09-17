@@ -633,7 +633,9 @@ function drawMultilineText(
           break;
         }
         if (i === 2) {
-          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+          const baseColorRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
+          const contrastColor =
+            getGreyScaleColorWithHighestContrast(baseColorRgb);
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
@@ -693,9 +695,6 @@ canvas.addEventListener("click", function (event) {
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
   const columnNumberValue = parseInt(columnNumber.value);
-  const cornerRadius = 2;
-  // クリックした場所のピクセルカラー情報を取得する
-  // const color = ctx.getImageData(x, y, 1, 1).data;
 
   // 新しい描画を行う
   drawMultilineText(
@@ -712,7 +711,6 @@ canvas.addEventListener("click", function (event) {
     columnNumberValue
   );
 
-  // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
   ctx.fillStyle = `hsl( 0, 0%, 100%)`;
   ctx.lineWidth = 0.5;
   ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
@@ -740,108 +738,10 @@ canvas.addEventListener("click", function (event) {
       ctx.stroke();
     }
 
-    // ctx.lineWidth = 2;
-    // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-
-    // ctx.strokeRect(
-    //   pointX - fontSize / 2,
-    //   pointY - fontSize / 2,
-    //   fontSize - 2,
-    //   fontSize - 2
-    // );
-    // ctx.fillRect(pointX - 10.5, pointY - 2, 6, 3);
-    // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
-    // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
-    // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX - 12.5,
-    //   pointY + clickPointAdjustment,
-    //   10,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + 1.5,
-    //   pointY + clickPointAdjustment,
-    //   10,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY - 12,
-    //   3.5,
-    //   10,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY + 1,
-    //   3.5,
-    //   10,
-    //   cornerRadius,
-    //   false
-    // );
-
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX - 7,
-    //   pointY + clickPointAdjustment,
-    //   5,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + 1.5,
-    //   pointY + clickPointAdjustment,
-    //   5.2,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY - 7,
-    //   3.5,
-    //   5,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY + 1,
-    //   3.5,
-    //   5,
-    //   cornerRadius,
-    //   false
-    // );
-
     ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
     ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
     ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
     ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
-
-    // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
-    // ctx.fillRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
-
-    // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
-    // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
-    // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
-    // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
   }
 
   // update current state
@@ -866,16 +766,12 @@ document.addEventListener("keydown", (event) => {
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     localStorage.setItem("fontSize", fontInput.value);
-    //   tooltip1.textContent = `font-size: ${fontInput.value}`;
-    //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "q") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     localStorage.setItem("fontSize", fontInput.value);
-    // tooltip1.textContent = `font-size: ${fontInput.value}`;
-    // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
@@ -970,32 +866,6 @@ let keyC = false;
 
 // Define your key press handler
 function handleKeyPress() {
-  // if (keyShift) {
-  //   if (keyArrowUp) {
-  //     fontInput.value = (parseInt(fontInput.value) + 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowUp = false;
-  //   }
-  //   if (keyArrowLeft) {
-  //     colorInput.value = (parseInt(colorInput.value) - 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowLeft = false;
-  //   }
-  //   if (keyArrowDown) {
-  //     fontInput.value = (parseInt(fontInput.value) - 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowDown = false;
-  //   }
-  //   if (keyArrowRight) {
-  //     colorInput.value = (parseInt(colorInput.value) + 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowRight = false;
-  //   }
-  // }
   if (keyMeta && keyZ && !keyShift) {
     undo();
     keyZ = false;
@@ -1422,14 +1292,12 @@ function getGreyScaleColorWithHighestContrast(backgroundRGBColor) {
       greyScaleColor,
       backgroundRGBColor
     );
-
     // Update max contrast values if a higher contrast is found
     if (contrastRatio > maxContrastRatio) {
       maxContrastRatio = contrastRatio;
       maxContrastColor = greyScaleColor;
     }
   }
-
   return maxContrastColor;
 }
 
