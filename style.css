@@ -411,6 +411,7 @@ input[type="radio"]:checked + label{
   position: relative;
   color: var(--tertiary-white);
   padding-inline-end: 1rem;
+  text-align: right;
 }
 #colorInfo::before {
   content: "";
