@@ -68,6 +68,8 @@ let xyz;
 let xyzD50;
 let lab;
 let lch;
+let oklab;
+let oklch;
 let colorCode;
 let isInitialValue = true;
 let image;
@@ -344,71 +346,7 @@ function bradfordTransformationD65toD50(xyzD65) {
   return [xD50, yD50, zD50];
 }
 
-// function rgbToLab(r, g, b) {
-//   // Convert RGB to XYZ using the D65 illuminant
-//   let sr = r / 255;
-//   let sg = g / 255;
-//   let sb = b / 255;
-
-//   sr = sr > 0.04045 ? Math.pow((sr + 0.055) / 1.055, 2.4) : sr / 12.92;
-//   sg = sg > 0.04045 ? Math.pow((sg + 0.055) / 1.055, 2.4) : sg / 12.92;
-//   sb = sb > 0.04045 ? Math.pow((sb + 0.055) / 1.055, 2.4) : sb / 12.92;
-
-//   sr *= 100;
-//   sg *= 100;
-//   sb *= 100;
-
-//   const x = sr * 0.4124564 + sg * 0.3575761 + sb * 0.1804375;
-//   const y = sr * 0.2126729 + sg * 0.7151522 + sb * 0.072175;
-//   const z = sr * 0.0193339 + sg * 0.119192 + sb * 0.9503041;
-
-//   // Normalize XYZ to the reference white point D65
-//   let xN = x / 95.047;
-//   let yN = y / 100.0;
-//   let zN = z / 108.883;
-
-//   xN = xN > 0.008856 ? Math.pow(xN, 1 / 3) : xN * 903.3 + 16 / 116;
-//   yN = yN > 0.008856 ? Math.pow(yN, 1 / 3) : yN * 903.3 + 16 / 116;
-//   zN = zN > 0.008856 ? Math.pow(zN, 1 / 3) : zN * 903.3 + 16 / 116;
-
-//   const labL = Math.round(Math.max(0, 116 * yN - 16));
-//   const labA = Math.round((xN - yN) * 500);
-//   const labB = Math.round((yN - zN) * 200);
-
-//   return { labL, labA, labB };
-// }
 function xyzToLab(x, y, z) {
-  // // Convert RGB to XYZ
-  // r /= 255;
-  // g /= 255;
-  // b /= 255;
-
-  // if (r > 0.04045) {
-  //   r = Math.pow((r + 0.055) / 1.055, 2.4);
-  // } else {
-  //   r = r / 12.92;
-  // }
-
-  // if (g > 0.04045) {
-  //   g = Math.pow((g + 0.055) / 1.055, 2.4);
-  // } else {
-  //   g = g / 12.92;
-  // }
-
-  // if (b > 0.04045) {
-  //   b = Math.pow((b + 0.055) / 1.055, 2.4);
-  // } else {
-  //   b = b / 12.92;
-  // }
-
-  // r *= 100;
-  // g *= 100;
-  // b *= 100;
-
-  // const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
-  // const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
-  // const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
-
   // Convert XYZ to CIELAB
   const labX = x * 100;
   const labY = y * 100;
@@ -448,6 +386,56 @@ function xyzToLab(x, y, z) {
   return { labL, labA, labB };
 }
 
+function rgb2oklab(r, g, b) {
+  // Normalize the RGB values
+  let rLinear = r / 255;
+  let gLinear = g / 255;
+  let bLinear = b / 255;
+
+  // Apply gamma correction to the RGB values
+  rLinear =
+    rLinear <= 0.04045
+      ? rLinear / 12.92
+      : Math.pow((rLinear + 0.055) / 1.055, 2.4);
+  gLinear =
+    gLinear <= 0.04045
+      ? gLinear / 12.92
+      : Math.pow((gLinear + 0.055) / 1.055, 2.4);
+  bLinear =
+    bLinear <= 0.04045
+      ? bLinear / 12.92
+      : Math.pow((bLinear + 0.055) / 1.055, 2.4);
+
+  const l =
+    0.4122214708 * rLinear + 0.5363325363 * gLinear + 0.0514459929 * bLinear;
+  const m =
+    0.2119034982 * rLinear + 0.6806995451 * gLinear + 0.1073969566 * bLinear;
+  const s =
+    0.0883024619 * rLinear + 0.2817188376 * gLinear + 0.6299787005 * bLinear;
+
+  const l_ = Math.cbrt(l);
+  const m_ = Math.cbrt(m);
+  const s_ = Math.cbrt(s);
+
+  let oklabL = 0.2104542553 * l_ + 0.793617785 * m_ - 0.0040720468 * s_;
+  let oklabA = 1.9779984951 * l_ - 2.428592205 * m_ + 0.4505937099 * s_;
+  let oklabB = 0.0259040371 * l_ + 0.7827717662 * m_ - 0.808675766 * s_;
+
+  oklabL *= 100;
+  let oklabLRounded = Math.round(oklabL);
+  let oklabARounded = Math.round(oklabA * 100) / 100;
+  let oklabBRounded = Math.round(oklabB * 100) / 100;
+
+  return {
+    oklabL,
+    oklabA,
+    oklabB,
+    oklabLRounded,
+    oklabARounded,
+    oklabBRounded,
+  };
+}
+
 function labToLch(L, a, b) {
   // Calculate the chroma (C)
   let chroma = Math.sqrt(a * a + b * b);
@@ -457,7 +445,7 @@ function labToLch(L, a, b) {
 
   // Ensure the hue is in the range [0, 360]
   if (hue < 0) {
-    hue = ((hue % 360) + 360) % 360;
+    hue += 360;
   }
 
   // Calculate the lightness (L), and round it to 2 decimal places
@@ -470,6 +458,21 @@ function labToLch(L, a, b) {
   hue = Math.round(hue);
 
   return { lchL: L, lchC: chroma, lchH: hue };
+}
+
+function oklab2okLch(L, a, b) {
+  let luminance = Math.round(L);
+  let chroma = Math.sqrt(a * a + b * b);
+  chroma = Math.round(chroma * 1000) / 1000;
+  let hue = Math.atan2(b, a) * (180 / Math.PI);
+
+  if (hue < 0) {
+    hue += 360;
+  }
+
+  hue = Math.round(hue);
+
+  return { oklchL: luminance, oklchC: chroma, oklchH: hue };
 }
 
 function hslToRgb(h, s, l) {
@@ -558,6 +561,22 @@ function changeColorMode(colorModeValue) {
       }
       colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
       colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
+      break;
+    case "oklab":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `l:-- a:-- b:--`;
+        break;
+      }
+      colorCode = `oklab(${oklab.oklabLRounded}% ${oklab.oklabARounded} ${oklab.oklabBRounded})`;
+      colorInfoElement.textContent = `l:${oklab.oklabLRounded} a:${oklab.oklabARounded} b:${oklab.oklabBRounded}`;
+      break;
+    case "oklch":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `l:-- c:-- h:--`;
+        break;
+      }
+      colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
+      colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
       break;
     case "hsl+l":
       if (isInitialValue) {
@@ -810,10 +829,13 @@ canvas.addEventListener("click", function (e) {
   xyzD50 = bradfordTransformationD65toD50(xyz);
   lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
   lch = labToLch(lab.labL, lab.labA, lab.labB);
-  console.log("xyz:", xyz);
-  console.log("xyzD50:", xyzD50);
-  console.log("lab:", lab);
-  console.log("lch:", lch);
+  oklab = rgb2oklab(color[0], color[1], color[2]);
+  oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+  // console.log("xyzD50:", xyzD50);
+  // console.log("lab:", lab);
+  // console.log("lch:", lch);
+  console.log("oklab:", oklab);
+  console.log("oklch:", oklch);
   colorInfoElement.style.setProperty(
     "--background-color",
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
