@@ -162,13 +162,15 @@
           </div>
           <div class="notes">
             <div class="note">
-              <p>Touch or click the Value button to change the color model.</p>
+              <p>Touch or click the Value button to change the color space.</p>
               <ul class="list">
                 <li>RGB</li>
                 <li>HEX</li>
                 <li>HSB</li>
                 <li>HSL</li>
-                <li>HSL + Lightness from Lab color.</li>
+                <li>Lab</li>
+                <li>LCH</li>
+                <li>HSL + L from Lab color.</li>
               </ul>
               <!-- <p>hsl + Lightness from Lab color.</p> -->
             </div>
@@ -414,6 +416,20 @@
                   id="color-mode-hsl"
                   name="colorMode"
                   value="hsl"
+                  tabindex="-1"
+                />
+                <input
+                  type="radio"
+                  id="color-mode-lab"
+                  name="colorMode"
+                  value="lab"
+                  tabindex="-1"
+                />
+                <input
+                  type="radio"
+                  id="color-mode-lch"
+                  name="colorMode"
+                  value="lch"
                   tabindex="-1"
                 />
                 <input

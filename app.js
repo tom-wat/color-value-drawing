@@ -64,6 +64,8 @@ let rgb;
 let hex;
 let hsl;
 let hsb;
+let xyz;
+let xyzD50;
 let lab;
 let colorCode;
 let isInitialValue = true;
@@ -288,46 +290,137 @@ function rgbToHsb(r, g, b) {
   return { hsbH, hsbS, hsbB };
 }
 
-function rgbToLab(r, g, b) {
-  // Convert RGB to XYZ
-  r /= 255;
-  g /= 255;
-  b /= 255;
+// Function to convert RGB to XYZ (D65)
+function rgbToXyzD65(r, g, b) {
+  // Normalize the RGB values
+  const rLinear = r / 255;
+  const gLinear = g / 255;
+  const bLinear = b / 255;
 
-  if (r > 0.04045) {
-    r = Math.pow((r + 0.055) / 1.055, 2.4);
-  } else {
-    r = r / 12.92;
-  }
+  // Apply gamma correction to the RGB values
+  const rGamma =
+    rLinear <= 0.04045
+      ? rLinear / 12.92
+      : Math.pow((rLinear + 0.055) / 1.055, 2.4);
+  const gGamma =
+    gLinear <= 0.04045
+      ? gLinear / 12.92
+      : Math.pow((gLinear + 0.055) / 1.055, 2.4);
+  const bGamma =
+    bLinear <= 0.04045
+      ? bLinear / 12.92
+      : Math.pow((bLinear + 0.055) / 1.055, 2.4);
 
-  if (g > 0.04045) {
-    g = Math.pow((g + 0.055) / 1.055, 2.4);
-  } else {
-    g = g / 12.92;
-  }
+  // Convert RGB to XYZ (D65)
+  const x = rGamma * 0.4124564 + gGamma * 0.3575761 + bGamma * 0.1804375;
+  const y = rGamma * 0.2126729 + gGamma * 0.7151522 + bGamma * 0.072175;
+  const z = rGamma * 0.0193339 + gGamma * 0.119192 + bGamma * 0.9503041;
 
-  if (b > 0.04045) {
-    b = Math.pow((b + 0.055) / 1.055, 2.4);
-  } else {
-    b = b / 12.92;
-  }
+  return [x, y, z];
+}
 
-  r *= 100;
-  g *= 100;
-  b *= 100;
+// Function to perform Bradford transformation from D65 to D50
+function bradfordTransformationD65toD50(xyzD65) {
+  const bradfordMatrix = [
+    [1.0478112, 0.0228866, -0.050127],
+    [0.0295424, 0.9904844, -0.0170491],
+    [-0.0092345, 0.0150436, 0.7521316],
+  ];
 
-  const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
-  const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
-  const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
+  const xD50 =
+    bradfordMatrix[0][0] * xyzD65[0] +
+    bradfordMatrix[0][1] * xyzD65[1] +
+    bradfordMatrix[0][2] * xyzD65[2];
+  const yD50 =
+    bradfordMatrix[1][0] * xyzD65[0] +
+    bradfordMatrix[1][1] * xyzD65[1] +
+    bradfordMatrix[1][2] * xyzD65[2];
+  const zD50 =
+    bradfordMatrix[2][0] * xyzD65[0] +
+    bradfordMatrix[2][1] * xyzD65[1] +
+    bradfordMatrix[2][2] * xyzD65[2];
+
+  return [xD50, yD50, zD50];
+}
+
+// function rgbToLab(r, g, b) {
+//   // Convert RGB to XYZ using the D65 illuminant
+//   let sr = r / 255;
+//   let sg = g / 255;
+//   let sb = b / 255;
+
+//   sr = sr > 0.04045 ? Math.pow((sr + 0.055) / 1.055, 2.4) : sr / 12.92;
+//   sg = sg > 0.04045 ? Math.pow((sg + 0.055) / 1.055, 2.4) : sg / 12.92;
+//   sb = sb > 0.04045 ? Math.pow((sb + 0.055) / 1.055, 2.4) : sb / 12.92;
+
+//   sr *= 100;
+//   sg *= 100;
+//   sb *= 100;
+
+//   const x = sr * 0.4124564 + sg * 0.3575761 + sb * 0.1804375;
+//   const y = sr * 0.2126729 + sg * 0.7151522 + sb * 0.072175;
+//   const z = sr * 0.0193339 + sg * 0.119192 + sb * 0.9503041;
+
+//   // Normalize XYZ to the reference white point D65
+//   let xN = x / 95.047;
+//   let yN = y / 100.0;
+//   let zN = z / 108.883;
+
+//   xN = xN > 0.008856 ? Math.pow(xN, 1 / 3) : xN * 903.3 + 16 / 116;
+//   yN = yN > 0.008856 ? Math.pow(yN, 1 / 3) : yN * 903.3 + 16 / 116;
+//   zN = zN > 0.008856 ? Math.pow(zN, 1 / 3) : zN * 903.3 + 16 / 116;
+
+//   const labL = Math.round(Math.max(0, 116 * yN - 16));
+//   const labA = Math.round((xN - yN) * 500);
+//   const labB = Math.round((yN - zN) * 200);
+
+//   return { labL, labA, labB };
+// }
+function xyzToLab(x, y, z) {
+  // // Convert RGB to XYZ
+  // r /= 255;
+  // g /= 255;
+  // b /= 255;
+
+  // if (r > 0.04045) {
+  //   r = Math.pow((r + 0.055) / 1.055, 2.4);
+  // } else {
+  //   r = r / 12.92;
+  // }
+
+  // if (g > 0.04045) {
+  //   g = Math.pow((g + 0.055) / 1.055, 2.4);
+  // } else {
+  //   g = g / 12.92;
+  // }
+
+  // if (b > 0.04045) {
+  //   b = Math.pow((b + 0.055) / 1.055, 2.4);
+  // } else {
+  //   b = b / 12.92;
+  // }
+
+  // r *= 100;
+  // g *= 100;
+  // b *= 100;
+
+  // const x = r * 0.4124564 + g * 0.3575761 + b * 0.1804375;
+  // const y = r * 0.2126729 + g * 0.7151522 + b * 0.072175;
+  // const z = r * 0.0193339 + g * 0.119192 + b * 0.9503041;
 
   // Convert XYZ to CIELAB
-  const refX = 95.047;
-  const refY = 100.0;
-  const refZ = 108.883;
+  const labX = x * 100;
+  const labY = y * 100;
+  const labZ = z * 100;
 
-  let xRatio = x / refX;
-  let yRatio = y / refY;
-  let zRatio = z / refZ;
+  // D50
+  const refX = 96.422;
+  const refY = 100.0;
+  const refZ = 82.521;
+
+  let xRatio = labX / refX;
+  let yRatio = labY / refY;
+  let zRatio = labZ / refZ;
 
   if (xRatio > 0.008856) {
     xRatio = Math.pow(xRatio, 1 / 3);
@@ -352,6 +445,30 @@ function rgbToLab(r, g, b) {
   const labB = Math.round(200 * (yRatio - zRatio));
 
   return { labL, labA, labB };
+}
+
+function labToLch(L, a, b) {
+  // Calculate the chroma (C)
+  let chroma = Math.sqrt(a * a + b * b);
+
+  // Calculate the hue (H) in degrees
+  let hue = Math.atan2(b, a) * (180 / Math.PI);
+
+  // Ensure the hue is in the range [0, 360]
+  if (hue < 0) {
+    hue = ((hue % 360) + 360) % 360;
+  }
+
+  // Calculate the lightness (L), and round it to 2 decimal places
+  L = Math.round(L);
+
+  // Calculate the chroma (C), and round it to 2 decimal places
+  chroma = Math.round(chroma);
+
+  // Calculate the hue (H), and round it to 2 decimal places
+  hue = Math.round(hue);
+
+  return { lchL: L, lchC: chroma, lchH: hue };
 }
 
 function hslToRgb(h, s, l) {
@@ -398,7 +515,7 @@ function changeColorMode(colorModeValue) {
         colorInfoElement.textContent = `R:-- G:-- B:--`;
         break;
       }
-      colorCode = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+      colorCode = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
       colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
       break;
     case "hex":
@@ -422,8 +539,24 @@ function changeColorMode(colorModeValue) {
         colorInfoElement.textContent = `H:-- S:-- L:--`;
         break;
       }
-      colorCode = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
       colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
+      break;
+    case "lab":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:-- a:-- b:--`;
+        break;
+      }
+      colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
+      colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
+      break;
+    case "lch":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:-- C:-- H:--`;
+        break;
+      }
+      colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
+      colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
       break;
     case "hsl+l":
       if (isInitialValue) {
@@ -672,7 +805,14 @@ canvas.addEventListener("click", function (e) {
   hex = rgbToHex(color[0], color[1], color[2]);
   hsl = rgbToHsl(color[0], color[1], color[2]);
   hsb = rgbToHsb(color[0], color[1], color[2]);
-  lab = rgbToLab(color[0], color[1], color[2]);
+  xyz = rgbToXyzD65(color[0], color[1], color[2]);
+  xyzD50 = bradfordTransformationD65toD50(xyz);
+  lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
+  lch = labToLch(lab.labL, lab.labA, lab.labB);
+  console.log("xyz:", xyz);
+  console.log("xyzD50:", xyzD50);
+  console.log("lab:", lab);
+  console.log("lch:", lch);
   colorInfoElement.style.setProperty(
     "--background-color",
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
@@ -693,9 +833,6 @@ canvas.addEventListener("click", function (event) {
   const textPositionX = positionXRadioNodeList.value;
   const textPositionY = positionYRadioNodeList.value;
   const columnNumberValue = parseInt(columnNumber.value);
-  const cornerRadius = 2;
-  // クリックした場所のピクセルカラー情報を取得する
-  // const color = ctx.getImageData(x, y, 1, 1).data;
 
   // 新しい描画を行う
   drawMultilineText(
@@ -712,7 +849,6 @@ canvas.addEventListener("click", function (event) {
     columnNumberValue
   );
 
-  // ctx.fillStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
   ctx.fillStyle = `hsl( 0, 0%, 100%)`;
   ctx.lineWidth = 0.5;
   ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
@@ -740,108 +876,10 @@ canvas.addEventListener("click", function (event) {
       ctx.stroke();
     }
 
-    // ctx.lineWidth = 2;
-    // ctx.strokeStyle = `hsl( 0, 0%, ${colorInput.value}%, ${alphaInput.value}%)`;
-
-    // ctx.strokeRect(
-    //   pointX - fontSize / 2,
-    //   pointY - fontSize / 2,
-    //   fontSize - 2,
-    //   fontSize - 2
-    // );
-    // ctx.fillRect(pointX - 10.5, pointY - 2, 6, 3);
-    // ctx.fillRect(pointX + 4.5, pointY - 2, 6, 3);
-    // ctx.fillRect(pointX - 1.5, pointY - 10.5, 3.5, 6);
-    // ctx.fillRect(pointX - 1.5, pointY + 3.5, 3.5, 6);
-
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX - 12.5,
-    //   pointY + clickPointAdjustment,
-    //   10,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + 1.5,
-    //   pointY + clickPointAdjustment,
-    //   10,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY - 12,
-    //   3.5,
-    //   10,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY + 1,
-    //   3.5,
-    //   10,
-    //   cornerRadius,
-    //   false
-    // );
-
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX - 7,
-    //   pointY + clickPointAdjustment,
-    //   5,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + 1.5,
-    //   pointY + clickPointAdjustment,
-    //   5.2,
-    //   3,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY - 7,
-    //   3.5,
-    //   5,
-    //   cornerRadius,
-    //   false
-    // );
-    // drawRoundedRectangle(
-    //   ctx,
-    //   pointX + clickPointAdjustment,
-    //   pointY + 1,
-    //   3.5,
-    //   5,
-    //   cornerRadius,
-    //   false
-    // );
-
     ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
     ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
     ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
     ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
-
-    // ctx.fillRect(pointX - 12.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.fillRect(pointX + 3.5, pointY + clickPointAdjustment, 8, 3);
-    // ctx.fillRect(pointX + clickPointAdjustment, pointY - 12, 3.5, 8);
-    // ctx.fillRect(pointX + clickPointAdjustment, pointY + 3, 3.5, 8);
-
-    // ctx.fillRect(pointX - 12.5, pointY - 2, 8, 1.5);
-    // ctx.fillRect(pointX + 3.5, pointY - 2, 8, 1.5);
-    // ctx.fillRect(pointX - 1.5, pointY - 12.5, 2, 8);
-    // ctx.fillRect(pointX - 1.5, pointY + 2.5, 2, 8);
   }
 
   // update current state
@@ -866,16 +904,12 @@ document.addEventListener("keydown", (event) => {
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     localStorage.setItem("fontSize", fontInput.value);
-    //   tooltip1.textContent = `font-size: ${fontInput.value}`;
-    //   tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "q") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput);
     localStorage.setItem("fontSize", fontInput.value);
-    // tooltip1.textContent = `font-size: ${fontInput.value}`;
-    // tooltip1.style.width = `${tooltip1.textContent.length * 7}px`;
   }
   if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
@@ -970,32 +1004,6 @@ let keyC = false;
 
 // Define your key press handler
 function handleKeyPress() {
-  // if (keyShift) {
-  //   if (keyArrowUp) {
-  //     fontInput.value = (parseInt(fontInput.value) + 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowUp = false;
-  //   }
-  //   if (keyArrowLeft) {
-  //     colorInput.value = (parseInt(colorInput.value) - 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowLeft = false;
-  //   }
-  //   if (keyArrowDown) {
-  //     fontInput.value = (parseInt(fontInput.value) - 1).toString();
-  //     fontInput.nextElementSibling.value = fontInput.value;
-  //     changeFontSize(ctx, fontInput);
-  //     keyArrowDown = false;
-  //   }
-  //   if (keyArrowRight) {
-  //     colorInput.value = (parseInt(colorInput.value) + 10).toString();
-  //     colorInput.nextElementSibling.value = colorInput.value;
-  //     changeColor(ctx, colorInput, alphaInput);
-  //     keyArrowRight = false;
-  //   }
-  // }
   if (keyMeta && keyZ && !keyShift) {
     undo();
     keyZ = false;
@@ -1422,14 +1430,12 @@ function getGreyScaleColorWithHighestContrast(backgroundRGBColor) {
       greyScaleColor,
       backgroundRGBColor
     );
-
     // Update max contrast values if a higher contrast is found
     if (contrastRatio > maxContrastRatio) {
       maxContrastRatio = contrastRatio;
       maxContrastColor = greyScaleColor;
     }
   }
-
   return maxContrastColor;
 }
 
