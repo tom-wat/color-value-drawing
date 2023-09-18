@@ -67,6 +67,7 @@ let hsb;
 let xyz;
 let xyzD50;
 let lab;
+let lch;
 let colorCode;
 let isInitialValue = true;
 let image;
