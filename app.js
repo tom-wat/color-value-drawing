@@ -831,11 +831,6 @@ canvas.addEventListener("click", function (e) {
   lch = labToLch(lab.labL, lab.labA, lab.labB);
   oklab = rgb2oklab(color[0], color[1], color[2]);
   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
-  // console.log("xyzD50:", xyzD50);
-  // console.log("lab:", lab);
-  // console.log("lch:", lch);
-  console.log("oklab:", oklab);
-  console.log("oklch:", oklch);
   colorInfoElement.style.setProperty(
     "--background-color",
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
