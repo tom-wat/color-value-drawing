@@ -393,6 +393,8 @@ input[type="radio"]:checked + label{
 }
 .close-button{
   font-size: var(--font-size-ss);
+  margin-inline: auto;
+  transform: translateX(-1rem);
 }
 .menu.close .open-button{
   display: block;  
@@ -545,8 +547,8 @@ input[type="radio"]:checked + label{
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
-  #close-button span{
-    transform: translateY(0px);
+  .close-button{
+    transform: translateX(-12px);
   }
   
   .open-button{
