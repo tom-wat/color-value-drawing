@@ -394,7 +394,7 @@ input[type="radio"]:checked + label{
 .close-button{
   font-size: var(--font-size-ss);
   margin-inline: auto;
-  transform: translateX(-1rem);
+  transform: translateX(-8px);
 }
 .menu.close .open-button{
   display: block;  
