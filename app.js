@@ -63,7 +63,7 @@ const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
 let hsl;
-let hsb;
+let hsv;
 let xyz;
 let xyzD50;
 let lab;
@@ -249,48 +249,48 @@ function rgbToHsl(r, g, b) {
   return { h, s, l };
 }
 
-function rgbToHsb(r, g, b) {
+function rgbToHsv(r, g, b) {
   // Normalize RGB values to be in the range [0, 1]
   r = r / 255;
   g = g / 255;
   b = b / 255;
 
-  let hsbMax = Math.max(r, g, b);
-  let hsbMin = Math.min(r, g, b);
-  let hsbH,
-    hsbS,
-    hsbB = hsbMax;
+  let hsvMax = Math.max(r, g, b);
+  let hsvMin = Math.min(r, g, b);
+  let hsvH,
+    hsvS,
+    hsvB = hsvMax;
 
-  let delta = hsbMax - hsbMin;
+  let delta = hsvMax - hsvMin;
 
   // Calculate Hue
-  if (hsbMax === hsbMin) {
-    hsbH = 0; // Achromatic (gray)
+  if (hsvMax === hsvMin) {
+    hsvH = 0; // Achromatic (gray)
   } else {
-    if (hsbMax === r) {
-      hsbH = ((g - b) / delta) % 6;
-    } else if (hsbMax === g) {
-      hsbH = (b - r) / delta + 2;
+    if (hsvMax === r) {
+      hsvH = ((g - b) / delta) % 6;
+    } else if (hsvMax === g) {
+      hsvH = (b - r) / delta + 2;
     } else {
-      hsbH = (r - g) / delta + 4;
+      hsvH = (r - g) / delta + 4;
     }
-    hsbH = Math.round(hsbH * 60);
-    if (hsbH < 0) {
-      hsbH += 360;
+    hsvH = Math.round(hsvH * 60);
+    if (hsvH < 0) {
+      hsvH += 360;
     }
   }
 
   // Calculate Saturation
-  if (hsbMax === 0) {
-    hsbS = 0;
+  if (hsvMax === 0) {
+    hsvS = 0;
   } else {
-    hsbS = Math.round((delta / hsbMax) * 100);
+    hsvS = Math.round((delta / hsvMax) * 100);
   }
 
   // Calculate Brightness
-  hsbB = Math.round(hsbB * 100);
+  hsvB = Math.round(hsvB * 100);
 
-  return { hsbH, hsbS, hsbB };
+  return { hsvH, hsvS, hsvB };
 }
 
 // Function to convert RGB to XYZ (D65)
@@ -530,13 +530,13 @@ function changeColorMode(colorModeValue) {
       colorCode = hex;
       colorInfoElement.textContent = hex;
       break;
-    case "hsb":
+    case "hsv":
       if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:-- B:--`;
+        colorInfoElement.textContent = `H:-- S:-- V:--`;
         break;
       }
-      colorCode = `h:${hsb.hsbH} s:${hsb.hsbS} b:${hsb.hsbB}`;
-      colorInfoElement.textContent = `H:${hsb.hsbH} S:${hsb.hsbS} B:${hsb.hsbB}`;
+      colorCode = `h:${hsv.hsvH} s:${hsv.hsvS} v:${hsv.hsvB}`;
+      colorInfoElement.textContent = `H:${hsv.hsvH} S:${hsv.hsvS} V:${hsv.hsvB}`;
       break;
     case "hsl":
       if (isInitialValue) {
@@ -824,7 +824,7 @@ canvas.addEventListener("click", function (e) {
   rgb = [color[0], color[1], color[2]];
   hex = rgbToHex(color[0], color[1], color[2]);
   hsl = rgbToHsl(color[0], color[1], color[2]);
-  hsb = rgbToHsb(color[0], color[1], color[2]);
+  hsv = rgbToHsv(color[0], color[1], color[2]);
   xyz = rgbToXyzD65(color[0], color[1], color[2]);
   xyzD50 = bradfordTransformationD65toD50(xyz);
   lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
