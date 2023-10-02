@@ -48,9 +48,7 @@ const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
 
-const isMobile = navigator.userAgent.match(
-  /(iPhone|iPod|iPad|Android|BlackBerry)/
-);
+const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 // const isWindows = /Windows/.test(navigator.userAgent);
 const dataTypeRadioNodeList = dataType.type;
 const scaleRadioNodeList = scale.scale;
@@ -127,10 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
   // if (isWindows) {
   //   // Windowsの場合の処理
   // }
-  if (isMobile) {
+  if (!!isMobile) {
     // fontInput.value = String(12);
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
+    // updateOutput(fontInput, fontOutput);
+    // changeFontSize(ctx, fontInput);
     Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
   setStyles();

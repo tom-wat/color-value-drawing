@@ -516,6 +516,11 @@ input[type="radio"]:checked + label{
     padding-inline: 2rem;
     border-radius: 1.5rem;
     margin-block-start: 0px;
+    place-self: end;
+  }
+  .notes{
+    gap: 1rem;
+    place-self: end;
   }
   #board .description button:active{
     background-color: var(--primary-white);
