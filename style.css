@@ -99,6 +99,7 @@ output{
   "title notes";
   gap: 2rem;
   place-items: start;
+  margin-inline: auto;
 }
 #board{
   padding-block: 3rem;
