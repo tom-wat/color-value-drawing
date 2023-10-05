@@ -351,9 +351,9 @@ function xyzToLab(x, y, z) {
   const labZ = z * 100;
 
   // D50
-  const refX = 96.422;
+  const refX = 96.4212;
   const refY = 100.0;
-  const refZ = 82.521;
+  const refZ = 82.5188;
 
   let xRatio = labX / refX;
   let yRatio = labY / refY;
