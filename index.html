@@ -205,7 +205,7 @@
           <li>
             <button
               id="file-button"
-              class="button flex-center active-button"
+              class="button flex-center"
               onclick="fileInput.click()"
               data-tabindex
             >
@@ -249,11 +249,7 @@
             </button>
           </li>
           <li>
-            <button
-              id="download-btn"
-              class="button flex-center active-button"
-              data-tabindex
-            >
+            <button id="download-btn" class="button flex-center" data-tabindex>
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -361,7 +357,7 @@
           <li>
             <button
               id="copy-button"
-              class="button flex-center active-button"
+              class="button flex-center"
               onclick="copyToClipboard()"
               data-tabindex
             >
@@ -383,7 +379,7 @@
           <li>
             <button
               id="undo-btn"
-              class="button flex-center active-button"
+              class="button flex-center"
               class="flex"
               onclick="undo()"
               data-tabindex
@@ -406,7 +402,7 @@
           <li>
             <button
               id="redo-btn"
-              class="button flex-center active-button"
+              class="button flex-center"
               onclick="redo()"
               data-tabindex
             >
@@ -428,7 +424,7 @@
           <li>
             <button
               id="clear-btn"
-              class="button flex-center active-button"
+              class="button flex-center"
               onclick="clearCanvas()"
               data-tabindex
             >
@@ -518,7 +514,7 @@
               <div class="flex-center height-100">
                 <span
                   id="offset-x-subtract"
-                  class="flex-center inline-button active-button align-self-stretch"
+                  class="flex-center inline-button align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -530,7 +526,7 @@
                 >
                 <span
                   id="offset-x-add"
-                  class="flex-center inline-button active-button align-self-stretch"
+                  class="flex-center inline-button align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -565,7 +561,7 @@
               <div class="flex-center height-100">
                 <span
                   id="offset-y-subtract"
-                  class="flex-center align-self-stretch inline-button active-button"
+                  class="flex-center align-self-stretch inline-button"
                   data-tabindex
                   >-</span
                 >
@@ -577,7 +573,7 @@
                 >
                 <span
                   id="offset-y-add"
-                  class="flex-center inline-button active-button align-self-stretch"
+                  class="flex-center inline-button align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -612,7 +608,7 @@
               <div class="flex-center height-100">
                 <span
                   id="font-size-subtract"
-                  class="inline-button active-button flex-center align-self-stretch"
+                  class="inline-button flex-center align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -624,7 +620,7 @@
                 >
                 <span
                   id="font-size-add"
-                  class="inline-button active-button flex-center align-self-stretch"
+                  class="inline-button flex-center align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -659,7 +655,7 @@
               <div class="flex-center height-100">
                 <span
                   id="column-subtract"
-                  class="inline-button active-button flex-center align-self-stretch"
+                  class="inline-button flex-center align-self-stretch"
                   data-tabindex
                   >-</span
                 >
@@ -671,7 +667,7 @@
                 >
                 <span
                   id="column-add"
-                  class="inline-button active-button flex-center align-self-stretch"
+                  class="inline-button flex-center align-self-stretch"
                   data-tabindex
                   >+</span
                 >
@@ -681,7 +677,7 @@
           </li>
           <li>
             <button
-              class="button flex-center active-button"
+              class="button flex-center"
               data-tabindex
               onclick="changeCheckedPointer()"
             >
@@ -700,15 +696,16 @@
               <span class="row-1">Pointer</span>
 
               <form class="flex height-100">
-                <input
-                  type="checkbox"
-                  id="pointer"
-                  name="pointer"
-                  class="toggle-button-input"
-                  disabled
-                  checked
-                />
-                <label class="toggle-button"></label>
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="pointer"
+                    name="pointer"
+                    class="toggle-button-input"
+                    disabled
+                    checked
+                  />
+                </label>
               </form>
               <span class="shortcut">I</span>
             </button>
@@ -717,7 +714,7 @@
         <input type="file" id="file-input" />
         <button
           id="close-button"
-          class="button flex-center active-button"
+          class="button flex-center"
           onclick="navToggle()"
           data-tabindex
         >
