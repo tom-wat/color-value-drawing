@@ -1124,7 +1124,7 @@ function download() {
   }
   // Canvasのイメージデータを取得する
   let imageData;
-  if (format.selectedOptions.value === "png") {
+  if (format.selectedOptions[0].value === "png") {
     imageData = canvas.toDataURL("image/png");
   } else {
     imageData = canvas.toDataURL("image/webP", 0.8);
