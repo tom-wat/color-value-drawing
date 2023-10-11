@@ -4,9 +4,9 @@
   --tertiary-white: hsl(0, 0%, 70%);
   --icon: hsl(240, 0%, 50%);
   --primary-black: hsl(240, 15%, 10%);
-  --secondary-black: hsl(0, 0%, 20%);
+  --secondary-black: hsl(240, 5%, 20%);
   --tertiary-black: hsl(240, 10%, 15%);
-  --quaternary-black: hsl(240, 10%, 5%);
+  --quaternary-black: hsl(240, 5%, 25%);
   --grey-1:hsl(0, 0%, 50%);
   --grey-2:hsl(0, 0%, 25%);
   --grey-3:hsl(0, 0%, 45%);
@@ -72,7 +72,7 @@ label {
 }
 select {
   font-size: var(--font-size-medium);
-  background-color: var(--secondary-black);
+  background-color: var(--primary-black);
   color: var(--tertiary-white);
   padding: 2px 4px;
   margin-inline-end: 1rem;
@@ -81,11 +81,7 @@ select {
   border-radius: 4px;
 }
 select:focus-visible{
-  background-color: var(--primary-white);
-  color: var(--secondary-black);
-}
-input[type='radio'] {
-  appearance: none;
+  background-color: var(--secondary-black);
 }
 input[type='range']{
   appearance: none;
@@ -155,10 +151,6 @@ output{
 .description button:focus-visible{
   background-color: var(--primary-white);
   color: var(--secondary-black);
-}
-#board .description button:active{
-  background-color: var(--primary-black);
-  color: var(--primary-white);
 }
 .description ol{
 	counter-reset: list;
@@ -239,15 +231,9 @@ output{
 }
 
 .button:focus-visible{
-  background-color: var(--primary-white);
-  color: var(--secondary-black);
+  background-color: var(--secondary-black);
 }
-.button:focus-visible svg{
-  fill: var(--secondary-black);
-}
-.button:focus-visible label{
-  color: var(--secondary-black);
-}
+
 .menu{
   min-width: 420px;
   max-height: 700px;
@@ -279,18 +265,6 @@ output{
 }
 .menu.close #close-button{
   display: none;
-}
-.menu-content .active-button:active{
-  background-color: var(--secondary-white);
-  color: var(--primary-black);
-}
-.menu-content .active-button:active svg{
-
-  fill: var(--primary-black);
-}
-.menu-content .active-button:active label{
-
-  color: var(--primary-black);
 }
 .button-type-b{
   cursor: auto;
@@ -325,22 +299,12 @@ label:focus-visible{
   line-height: 1.5;
   padding-inline: 1rem;
   border-radius: 8px;
-}
-span.inline-button{
   outline: none;
   cursor: pointer;
 }
 
-span.inline-button:focus-visible{
-  background-color: var(--tertiary-white);
-  color: var(--secondary-black);
-}
-span.inline-button:active{
-  background-color: var(--secondary-white);
-  color: var(--secondary-black);
-}
-input[type="radio"]:checked + label{
-  display: block;
+.inline-button:focus-visible{
+  background-color: var(--secondary-black);
 }
 
 .flex{
@@ -353,15 +317,10 @@ input[type="radio"]:checked + label{
 .margin-left{
   margin-left: 1.5rem;
 }
-/* .margin-block-end-0{
-  margin-block-end: calc(1rem / 2);
-} */
+
 .margin-block-end-1{
   margin-block-end: 1rem;
 }
-/* .height-100{
-  height: 100%;
-} */
 
 .row-1{
   margin-right: auto;
@@ -400,7 +359,6 @@ input[type="radio"]:checked + label{
   height: 64px;
   font-size: var(--font-size-ss);
   border-radius: 1rem;
-  /* padding: 8px; */
   background-color: var(--primary-black);
   color: var(--primary-white);
   display: none;
@@ -477,14 +435,14 @@ input[type="radio"]:checked + label{
   width: var(--toggle-size);
   height: calc(var(--toggle-size) * 3 / 4);
   border-radius: calc(var(--toggle-size) * 3 / 4);
-  background-color: var(--tertiary-white);
+  background-color: var(--grey-1);
   cursor: pointer;
   transition: background-color .4s;
   margin-inline-end: 1rem;
   transform: translateY(1px);
 }
 
-.toggle-button-input:checked~.toggle-button {
+.toggle-button:has(:checked) {
   background-color: var(--toggle-color-dark);
 }
 
@@ -496,12 +454,12 @@ input[type="radio"]:checked + label{
   height: var(--toggle-size);
   border-radius: 50%;
   box-shadow: 0 0 5px rgb(0 0 0 / 20%);
-  background-color: var(--secondary-white);
+  background-color: var(--tertiary-white);
   content: '';
   transition: left .4s;
 }
 
-.toggle-button-input:checked~.toggle-button::after {
+.toggle-button:has(:checked)::after {
   left: var(--toggle-size);
   background-color: var(--toggle-color);
 }
@@ -512,36 +470,37 @@ input[type="radio"]:checked + label{
 
 @media (width > 800px){
   .button:hover{
-    background-color: var(--primary-white);
-    color: var(--secondary-black);
-  }
-  .button:hover svg{
-    fill: var(--secondary-black);
-  }
-  .button:focus-visible svg{
-    fill: var(--secondary-black);
+    background-color: var(--secondary-black);
   }
   .button-type-b:hover{
     background-color: var(--primary-black);
     color: var(--primary-white);
   }
-  .button-type-b:hover svg{
-    fill: var(--icon);
+  .description button:hover{
+    background-color: var(--primary-white);
+    color: var(--primary-black);
   }
-  span.inline-button:hover{
-    background-color: var(--tertiary-white);
-    color: var(--secondary-black);
+  .inline-button:hover{
+    background-color: var(--secondary-black);
   }
   .open-button:hover{
     box-shadow:0 0 0 1px var(--primary-white) inset;
   }
   select:hover{
-    background-color: var(--primary-white);
-    color: var(--secondary-black);
+    background-color: var(--secondary-black);
   }
-  .description button:hover{
-    background-color: var(--primary-white);
-    color: var(--primary-black);
+  .description button:active{
+    background-color: var(--primary-black);
+    color: var(--primary-white);
+  }
+  .button:active{
+    background-color: var(--quaternary-black);
+  }
+  .button-type-b:active{
+    background-color: var(--primary-black);
+  }
+  .inline-button:active{
+    background-color: var(--quaternary-black);
   }
 }
 @media (width < 800px) {
@@ -581,10 +540,6 @@ input[type="radio"]:checked + label{
     margin-block-start: 0px;
     place-self: end;
   }
-  #board .description button:active{
-    background-color: var(--primary-white);
-    color: var(--secondary-black);
-  }
   #board .note .flex{
     flex-direction: row;
   }
@@ -600,24 +555,9 @@ input[type="radio"]:checked + label{
     max-width: 450px;
     min-width: 280px;
   }
-  .menu-content .button:focus-visible{
-    background-color: var(--primary-white);
-    color: var(--secondary-black);
-  }
-  .menu-content .active-button:active label{
-    color: var(--secondary-black);
-  }
-  .menu-content .active-button:active #colorInfo{
-    color: var(--secondary-black);
-  }
-  .menu-content .active-button:active{
-    background-color: var(--primary-white);
-    color: var(--secondary-black);
-  }
   .close-button{
     transform: translateX(-12px);
   }
-  
   .open-button{
     position: fixed;
     bottom: 1rem;
@@ -640,5 +580,18 @@ input[type="radio"]:checked + label{
   }
   .align-self-stretch{
     align-self: stretch;
+  }
+  .description button:active{
+    background-color: var(--primary-white);
+    color: var(--secondary-black);
+  }
+  .button:active{
+    background-color: var(--quaternary-black);
+  }
+  .button-type-b:active{
+    background-color: var(--primary-black);
+  }
+  span.inline-button:active{
+    background-color: var(--quaternary-black);
   }
 }
