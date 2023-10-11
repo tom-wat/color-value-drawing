@@ -243,7 +243,7 @@
                 <option value="half">1/2</option>
                 <option value="quarter">1/4</option>
                 <option value="window">Window</option>
-                <option value="full">Full</option>
+                <option value="full" selected>Full</option>
               </select>
               <span class="shortcut">D</span>
             </button>
@@ -287,7 +287,7 @@
               </span>
               <span class="row-1">Format</span>
               <select name="format" id="format" data-tabindex>
-                <option value="png">PNG</option>
+                <option value="png" selected>PNG</option>
                 <option value="webp">WebP</option>
               </select>
               <span class="shortcut">L</span>
@@ -464,7 +464,7 @@
               <span class="row-1">Position-X</span>
               <select name="position-x" id="position-x" data-tabindex>
                 <option value="left">Left</option>
-                <option value="right">Right</option>
+                <option value="right" selected>Right</option>
               </select>
               <span class="shortcut">A</span>
             </button>
@@ -486,7 +486,7 @@
               <span class="row-1">Position-Y</span>
               <select name="position-y" id="position-y" data-tabindex>
                 <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
+                <option value="bottom" selected>Bottom</option>
               </select>
               <span class="shortcut">S</span>
             </button>
@@ -700,9 +700,15 @@
               <span class="row-1">Pointer</span>
 
               <form class="flex height-100">
-                <label class="toggle-button">
-                  <input type="checkbox" id="pointer" name="pointer" disabled />
-                </label>
+                <input
+                  type="checkbox"
+                  id="pointer"
+                  name="pointer"
+                  class="toggle-button-input"
+                  disabled
+                  checked
+                />
+                <label class="toggle-button"></label>
               </form>
               <span class="shortcut">I</span>
             </button>

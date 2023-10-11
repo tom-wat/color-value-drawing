@@ -68,6 +68,7 @@ label {
   font-family: inherit;
   outline: none;
   border: none;
+  -webkit-tap-highlight-color: transparent;
 }
 select {
   font-size: var(--font-size-medium);
@@ -487,7 +488,7 @@ input[type="radio"]:checked + label{
   transform: translateY(1px);
 }
 
-.toggle-button:has(:checked) {
+.toggle-button-input:checked~.toggle-button {
   background-color: var(--toggle-color-dark);
 }
 
@@ -504,12 +505,12 @@ input[type="radio"]:checked + label{
   transition: left .4s;
 }
 
-.toggle-button:has(:checked)::after {
+.toggle-button-input:checked~.toggle-button::after {
   left: var(--toggle-size);
   background-color: var(--toggle-color);
 }
 
-.toggle-button input {
+.toggle-button-input {
   display: none;
 }
 
