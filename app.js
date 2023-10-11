@@ -1208,8 +1208,13 @@ fileButton.addEventListener("click", function () {
     navToggle();
   }
 });
-scale.addEventListener("change", function () {
+scale.addEventListener("change", function (event) {
   localStorage.setItem(`${scale.name}`, scale.selectedOptions[0].value);
+  scale.blur();
+});
+format.addEventListener("change", function (event) {
+  localStorage.setItem(`${format.name}`, format.selectedOptions[0].value);
+  format.blur();
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpace(colorSpace.selectedOptions[0].value);
@@ -1217,6 +1222,7 @@ colorSpace.addEventListener("change", function () {
     `${colorSpace.name}`,
     colorSpace.selectedOptions[0].value
   );
+  colorSpace.blur();
 });
 clear.addEventListener("click", function () {
   if (!!isMobile) {
@@ -1225,9 +1231,11 @@ clear.addEventListener("click", function () {
 });
 positionX.addEventListener("change", function () {
   localStorage.setItem(`${positionX.name}`, positionX.selectedOptions[0].value);
+  positionX.blur();
 });
 positionY.addEventListener("change", function () {
   localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
+  positionY.blur();
 });
 offsetXAdd.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
