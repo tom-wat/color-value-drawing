@@ -15,7 +15,10 @@
   --font-size-large: 20px;
   --font-size-medium: 16px;
   --font-size-small: 14px;
-  --font-size-ss:12px;
+  --font-size-ss: 12px;
+  --toggle-size: 16px;
+  --toggle-color: hsl(211, 50%, 70%);
+  --toggle-color-dark: hsl(211, 30%, 50%);
 }
 
 @font-face {
@@ -65,6 +68,20 @@ label {
   font-family: inherit;
   outline: none;
   border: none;
+}
+select {
+  font-size: var(--font-size-medium);
+  background-color: var(--secondary-black);
+  color: var(--tertiary-white);
+  padding: 2px 4px;
+  margin-inline-end: 1rem;
+  cursor: pointer;
+  text-align: end;
+  border-radius: 4px;
+}
+select:focus-visible{
+  background-color: var(--tertiary-white);
+  color: var(--secondary-black);
 }
 input[type='radio'] {
   appearance: none;
@@ -217,6 +234,7 @@ output{
   color: var(--primary-white);
   line-height: 2;
   text-align: left;
+  cursor: pointer;
 }
 
 .button:focus-visible{
@@ -239,7 +257,7 @@ output{
   background-color: var(--primary-black);
   bottom:3rem;
   left:3rem;
-  height: calc(90vh - 1rem);
+  height: calc(93vh - 1rem);
 }
 .menu.show .shortcut{
   display: block;
@@ -273,14 +291,18 @@ output{
 
   color: var(--primary-black);
 }
-
+.button-type-b{
+  cursor: auto;
+}
 .button-type-b:focus-visible{
   background-color: var(--primary-black);
   color: var(--primary-white);
 }
+.button:focus-visible svg{
+  fill: var(--icon);
+}
 .button label{
   color: var(--tertiary-white);
-  display: none;
 }
 
 .button output{
@@ -305,6 +327,7 @@ label:focus-visible{
 }
 span.inline-button{
   outline: none;
+  cursor: pointer;
 }
 
 span.inline-button:focus-visible{
@@ -326,13 +349,23 @@ input[type="radio"]:checked + label{
   display: flex;
   align-items: center;
 }
+.margin-left{
+  margin-left: 1.5rem;
+}
+/* .margin-block-end-0{
+  margin-block-end: calc(1rem / 2);
+} */
+.margin-block-end-1{
+  margin-block-end: 1rem;
+}
+/* .height-100{
+  height: 100%;
+} */
 
 .row-1{
   margin-right: auto;
 }
-.margin-left{
-  margin-left: 1.5rem;
-}
+
 .shortcut{
   background-color: var(--primary-black);
   color: var(--tertiary-white);
@@ -350,18 +383,6 @@ input[type="radio"]:checked + label{
   display: block;
 }
 
-.margin-left{
-  margin-left: 1.5rem;
-}
-/* .margin-block-end-0{
-  margin-block-end: calc(1rem / 2);
-} */
-.margin-block-end-1{
-  margin-block-end: 1rem;
-}
-/* .height-100{
-  height: 100%;
-} */
 #file-input {
   display: none;
 }
@@ -407,6 +428,7 @@ input[type="radio"]:checked + label{
 
 #canvas {
   vertical-align: bottom;
+  margin-inline: auto;
   display: none;
 }
 
@@ -416,6 +438,7 @@ input[type="radio"]:checked + label{
   color: var(--tertiary-white);
   padding-inline-end: 1rem;
   text-align: right;
+  max-width: 22ch;
 }
 #colorInfo::before {
   content: "";
@@ -425,9 +448,7 @@ input[type="radio"]:checked + label{
   background-color: var(--background-color);
   transform: translate(-50%, 15%);
 }
-.button:focus-visible #colorInfo {
-  color: var(--secondary-black);
-}
+
 
 #close-button{
   padding-block: calc(1rem / 2);
@@ -453,6 +474,45 @@ input[type="radio"]:checked + label{
   border-radius: 3px;
 }
 
+.toggle-button {
+  display: inline-block;
+  position: relative;
+  width: var(--toggle-size);
+  height: calc(var(--toggle-size) * 3 / 4);
+  border-radius: calc(var(--toggle-size) * 3 / 4);
+  background-color: var(--tertiary-white);
+  cursor: pointer;
+  transition: background-color .4s;
+  margin-inline-end: 1rem;
+  transform: translateY(1px);
+}
+
+.toggle-button:has(:checked) {
+  background-color: var(--toggle-color-dark);
+}
+
+.toggle-button::after {
+  position: absolute;
+  top: -1.5px;
+  left: 0;
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+  background-color: var(--secondary-white);
+  content: '';
+  transition: left .4s;
+}
+
+.toggle-button:has(:checked)::after {
+  left: var(--toggle-size);
+  background-color: var(--toggle-color);
+}
+
+.toggle-button input {
+  display: none;
+}
+
 @media (width > 800px){
   .button:hover{
     background-color: var(--primary-white);
@@ -464,8 +524,8 @@ input[type="radio"]:checked + label{
   .button:hover label{
     color: var(--secondary-black);
   }
-  .button:hover #colorInfo{
-    color: var(--secondary-black);
+  .button:focus-visible svg{
+    fill: var(--secondary-black);
   }
   .button-type-b:hover{
     background-color: var(--primary-black);
@@ -494,6 +554,9 @@ input[type="radio"]:checked + label{
     gap: 1rem;
     grid-template-columns: 100%;
   }
+  .notes{
+    gap: 1rem;
+  }
   .note{
     border-radius: 1rem;
     padding-inline: 2rem;
@@ -516,10 +579,6 @@ input[type="radio"]:checked + label{
     padding-inline: 2rem;
     border-radius: 1.5rem;
     margin-block-start: 0px;
-    place-self: end;
-  }
-  .notes{
-    gap: 1rem;
     place-self: end;
   }
   #board .description button:active{

@@ -4,9 +4,9 @@ const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
-const dataType = document.getElementById("data-type");
+const format = document.getElementById("format");
 const colorInfoElement = document.getElementById("colorInfo");
-const colorMode = document.getElementById("color-mode");
+const colorSpace = document.getElementById("color-space");
 const webp = document.getElementById("webp");
 const png = document.getElementById("png");
 const clear = document.getElementById("clear-btn");
@@ -22,16 +22,8 @@ const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
 const menu = document.getElementById("menu");
 const closeButton = document.getElementById("close-button");
-const drawingPositionX = document.getElementById("data-drawing-position-x");
-const drawingPositionXLeft = document.getElementById("drawing-position-x-left");
-const drawingPositionXRight = document.getElementById(
-  "drawing-position-x-right"
-);
-const drawingPositionY = document.getElementById("data-drawing-position-y");
-const drawingPositionYTop = document.getElementById("drawing-position-y-top");
-const drawingPositionYBottom = document.getElementById(
-  "drawing-position-y-bottom"
-);
+const positionX = document.getElementById("position-x");
+const positionY = document.getElementById("position-y");
 const offsetX = document.getElementById("offset-x");
 const offsetXOutput = document.getElementById("offset-x-output");
 const offsetXAdd = document.getElementById("offset-x-add");
@@ -47,15 +39,9 @@ const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
-
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 // const isWindows = /Windows/.test(navigator.userAgent);
-const dataTypeRadioNodeList = dataType.type;
-const scaleRadioNodeList = scale.scale;
-const colorModeNodeList = colorMode.elements.colorMode;
-const positionXRadioNodeList = drawingPositionX.positionX;
-const positionYRadioNodeList = drawingPositionY.positionY;
-const pointerRadioNodeList = pointer.pointer;
+// const pointerRadioNodeList = pointer.pointer;
 
 const undoStatesLimitNumber = 50;
 let rgb;
@@ -79,39 +65,43 @@ let currentStates;
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
   const settingFormat = localStorage.getItem("format");
-  const settingColorMode = localStorage.getItem("colorMode");
-  const settingPositionX = localStorage.getItem("positionX");
-  const settingPositionY = localStorage.getItem("positionY");
+  const settingColorSpace = localStorage.getItem("color-space");
+  const settingPositionX = localStorage.getItem("position-x");
+  const settingPositionY = localStorage.getItem("position-y");
   const settingOffsetX = localStorage.getItem("offsetX");
   const settingOffsetY = localStorage.getItem("offsetY");
   const settingFontSize = localStorage.getItem("fontSize");
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
 
-  setStringValue(scaleRadioNodeList, settingScale);
-  setStringValue(dataTypeRadioNodeList, settingFormat);
-  setStringValue(colorModeNodeList, settingColorMode);
-  changeColorMode(settingColorMode);
-  setStringValue(positionXRadioNodeList, settingPositionX);
-  setStringValue(positionYRadioNodeList, settingPositionY);
-  setStringValue(pointerRadioNodeList, settingPointer);
+  setValueToSelected(scale, settingScale);
+  setValueToSelected(format, settingFormat);
+  setValueToSelected(colorSpace, settingColorSpace);
+  changeColorSpace(settingColorSpace);
+  setValueToSelected(positionX, settingPositionX);
+  setValueToSelected(positionY, settingPositionY);
   setValue(offsetX, settingOffsetX, offsetXOutput);
   setValue(offsetY, settingOffsetY, offsetYOutput);
   setValue(fontInput, settingFontSize, fontOutput);
   changeFontSize(ctx, fontInput);
   setValue(columnNumber, settingColumn, columnNumberOutput);
+  setValueToChecked(pointer, settingPointer);
 }
 function setValue(element, value, output) {
   if (!value) return;
   element.value = value;
   updateOutput(element, output);
 }
-function setStringValue(nodeList, stringValue) {
-  if (!stringValue) return;
-  for (let i = 0; i < nodeList.length; i++) {
-    nodeList[i].checked = false;
-    if (nodeList[i].value === stringValue) {
-      nodeList[i].checked = true;
+function setValueToChecked(element, value) {
+  if (!value) return;
+  element.checked = value;
+}
+function setValueToSelected(element, value) {
+  if (!value) return;
+  for (const option of element.options) {
+    if (option.value === value) {
+      option.selected = true;
+      return;
     }
   }
 }
@@ -147,7 +137,7 @@ const openFile = (event) => {
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
-      switch (scaleRadioNodeList.value) {
+      switch (scale.selectedOptions[0].value) {
         case "full":
           dividedDrawImage(1);
           break;
@@ -510,8 +500,8 @@ function hslToRgb(h, s, l) {
   ];
 }
 
-function changeColorMode(colorModeValue) {
-  switch (colorModeValue) {
+function changeColorSpace(ColorSpaceValue) {
+  switch (ColorSpaceValue) {
     case "rgb":
       if (isInitialValue) {
         colorInfoElement.textContent = `R:-- G:-- B:--`;
@@ -551,6 +541,10 @@ function changeColorMode(colorModeValue) {
       }
       colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
       colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
+      colorInfoElement.style.setProperty(
+        "--background-color",
+        `lab(${lab.labL}% ${lab.labA} ${lab.labB})`
+      );
       break;
     case "lch":
       if (isInitialValue) {
@@ -581,8 +575,21 @@ function changeColorMode(colorModeValue) {
         colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
         break;
       }
-      colorCode = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
       colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+      break;
+    case "l":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:--`;
+        break;
+      }
+      colorCode = `lab(${lab.labL}% 0 0)`;
+      colorInfoElement.textContent = `L:${lab.labL}`;
+      colorInfoElement.style.setProperty(
+        "--background-color",
+        `lab(${lab.labL}% 0 0)`
+      );
+      break;
     default:
       break;
   }
@@ -711,12 +718,12 @@ function drawMultilineText(
     let yOffsetAdjustment = fontSize / 2;
     let colorSet;
 
-    if (document.forms.pointer[1].checked) {
+    if (pointer.checked === false) {
       xOffsetAdjustment = 0;
       yOffsetAdjustment = 0;
     }
 
-    switch (colorMode.elements.colorMode.value) {
+    switch (colorSpace.selectedOptions[0].value) {
       case "hsl+l":
         colorSet = [
           [hsl.h, hsl.h, hsl.h, 0],
@@ -724,6 +731,9 @@ function drawMultilineText(
           [50, 50, hsl.l, lab.labL],
         ];
         context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
+        break;
+      case "l":
+        context.fillStyle = `lab(${lab.labL}% 0 0)`;
         break;
       default:
         context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
@@ -767,7 +777,7 @@ function drawMultilineText(
       false
     );
 
-    switch (colorMode.elements.colorMode.value) {
+    switch (colorSpace.selectedOptions[0].value) {
       case "hsl+l":
         if (i === 0) {
           const baseColorRgb = hslToRgb(hsl.h, 100, 50);
@@ -834,7 +844,7 @@ canvas.addEventListener("click", function (e) {
     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
   );
   isInitialValue = false;
-  changeColorMode(colorMode.elements.colorMode.value);
+  changeColorSpace(colorSpace.selectedOptions[0].value);
 });
 
 canvas.addEventListener("click", function (event) {
@@ -846,8 +856,8 @@ canvas.addEventListener("click", function (event) {
   const offsetXValue = parseInt(offsetX.value);
   const offsetYValue = parseInt(offsetY.value);
   const lineHeight = fontSize * 1.3;
-  const textPositionX = positionXRadioNodeList.value;
-  const textPositionY = positionYRadioNodeList.value;
+  const textPositionX = positionX.selectedOptions[0].value;
+  const textPositionY = positionY.selectedOptions[0].value;
   const columnNumberValue = parseInt(columnNumber.value);
 
   // 新しい描画を行う
@@ -869,7 +879,7 @@ canvas.addEventListener("click", function (event) {
   ctx.lineWidth = 0.5;
   ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
 
-  if (pointerRadioNodeList.value === "on") {
+  if (pointer.checked === true) {
     if (lab.labL > 85) {
       ctx.beginPath();
       ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustment + 3);
@@ -949,11 +959,11 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "a") {
     if (keyMeta) return;
-    changeCheckedPositionX();
+    changeSelectedElement(positionX);
   }
   if (event.key === "s") {
     if (keyMeta) return;
-    changeCheckedPositionY();
+    changeSelectedElement(positionY);
   }
   if (event.key === "p") {
     if (keyMeta) return;
@@ -962,13 +972,11 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "d") {
     if (keyMeta) return;
-
-    changeCheckedScale();
+    changeSelectedElement(scale);
   }
   if (event.key === "l") {
     if (keyMeta) return;
-
-    changeCheckedFormat();
+    changeSelectedElement(format);
   }
   if (event.key === "e") {
     if (keyMeta) return;
@@ -997,7 +1005,7 @@ document.addEventListener("keydown", (event) => {
   }
   if (event.key === "v") {
     if (keyMeta) return;
-    changeCheckedColorMode();
+    changeSelectedElement(colorSpace);
   }
   if (event.key === "i") {
     if (keyMeta) return;
@@ -1116,7 +1124,7 @@ function download() {
   }
   // Canvasのイメージデータを取得する
   let imageData;
-  if (png.checked) {
+  if (format.selectedOptions.value === "png") {
     imageData = canvas.toDataURL("image/png");
   } else {
     imageData = canvas.toDataURL("image/webP", 0.8);
@@ -1125,7 +1133,7 @@ function download() {
   // ダウンロード用のリンクを作成する
   const downloadLink = document.createElement("a");
   downloadLink.href = imageData;
-  if (png.checked) {
+  if (format.selectedOptions[0].value === "png") {
     downloadLink.download = "image.png";
   } else {
     downloadLink.download = "image.webp";
@@ -1173,106 +1181,26 @@ function updateOutput(inputField, outputField) {
   outputField.textContent = inputValue; // 出力要素に処理後の値を表示
 }
 
-function changeCheckedColorMode() {
-  for (let i = 0; i < colorMode.length; i++) {
-    if (colorMode[i].checked) {
-      colorMode[i].checked = false;
-      if (i + 1 === colorMode.length) {
-        colorMode[0].checked = true;
-        changeColorMode(colorModeNodeList.value);
-        localStorage.setItem("colorMode", colorMode[0].value);
-        break;
-      } else {
-        colorMode[i + 1].checked = true;
-        changeColorMode(colorModeNodeList.value);
-        localStorage.setItem("colorMode", colorMode[i + 1].value);
-        break;
-      }
+function changeSelectedElement(element) {
+  const selectedIndex = element.selectedIndex;
+  if (selectedIndex + 1 === element.options.length) {
+    element.options[0].selected = true;
+    if (element === colorSpace) {
+      changeColorSpace(element.selectedOptions[0].value);
     }
+    localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
+  } else {
+    element.options[selectedIndex + 1].selected = true;
+    if (element === colorSpace) {
+      changeColorSpace(element.selectedOptions[0].value);
+    }
+    localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
   }
 }
 
-function changeCheckedScale() {
-  for (let i = 0; i < scaleRadioNodeList.length; i++) {
-    if (scaleRadioNodeList[i].checked) {
-      scaleRadioNodeList[i].checked = false;
-      if (i + 1 === scaleRadioNodeList.length) {
-        scaleRadioNodeList[0].checked = true;
-        localStorage.setItem("scale", scaleRadioNodeList[0].value);
-        break;
-      } else {
-        scaleRadioNodeList[i + 1].checked = true;
-        localStorage.setItem("scale", scaleRadioNodeList[i + 1].value);
-        break;
-      }
-    }
-  }
-}
-function changeCheckedFormat() {
-  for (let i = 0; i < dataTypeRadioNodeList.length; i++) {
-    if (dataTypeRadioNodeList[i].checked) {
-      dataTypeRadioNodeList[i].checked = false;
-      if (i + 1 === dataTypeRadioNodeList.length) {
-        dataTypeRadioNodeList[0].checked = true;
-        localStorage.setItem("format", dataTypeRadioNodeList[0].value);
-        break;
-      } else {
-        dataTypeRadioNodeList[i + 1].checked = true;
-        localStorage.setItem("format", dataTypeRadioNodeList[i + 1].value);
-        break;
-      }
-    }
-  }
-}
-
-function changeCheckedPositionX() {
-  for (let i = 0; i < positionXRadioNodeList.length; i++) {
-    if (positionXRadioNodeList[i].checked) {
-      positionXRadioNodeList[i].checked = false;
-      if (i + 1 === positionXRadioNodeList.length) {
-        positionXRadioNodeList[0].checked = true;
-        localStorage.setItem("positionX", positionXRadioNodeList[0].value);
-        break;
-      } else {
-        positionXRadioNodeList[i + 1].checked = true;
-        localStorage.setItem("positionX", positionXRadioNodeList[i + 1].value);
-        break;
-      }
-    }
-  }
-}
-
-function changeCheckedPositionY() {
-  for (let i = 0; i < positionYRadioNodeList.length; i++) {
-    if (positionYRadioNodeList[i].checked) {
-      positionYRadioNodeList[i].checked = false;
-      if (i + 1 === positionYRadioNodeList.length) {
-        positionYRadioNodeList[0].checked = true;
-        localStorage.setItem("positionY", positionYRadioNodeList[0].value);
-        break;
-      } else {
-        positionYRadioNodeList[i + 1].checked = true;
-        localStorage.setItem("positionY", positionYRadioNodeList[i + 1].value);
-        break;
-      }
-    }
-  }
-}
 function changeCheckedPointer() {
-  for (let i = 0; i < pointerRadioNodeList.length; i++) {
-    if (pointerRadioNodeList[i].checked) {
-      pointerRadioNodeList[i].checked = false;
-      if (i + 1 === pointerRadioNodeList.length) {
-        pointerRadioNodeList[0].checked = true;
-        localStorage.setItem("pointer", pointerRadioNodeList[0].value);
-        break;
-      } else {
-        pointerRadioNodeList[i + 1].checked = true;
-        localStorage.setItem("pointer", pointerRadioNodeList[i + 1].value);
-        break;
-      }
-    }
-  }
+  pointer.checked = !pointer.checked;
+  localStorage.setItem(`pointer`, pointer.checked);
 }
 
 fileButton.addEventListener("click", function () {
@@ -1280,10 +1208,26 @@ fileButton.addEventListener("click", function () {
     navToggle();
   }
 });
+scale.addEventListener("change", function () {
+  localStorage.setItem(`${scale.name}`, scale.selectedOptions[0].value);
+});
+colorSpace.addEventListener("change", function () {
+  changeColorSpace(colorSpace.selectedOptions[0].value);
+  localStorage.setItem(
+    `${colorSpace.name}`,
+    colorSpace.selectedOptions[0].value
+  );
+});
 clear.addEventListener("click", function () {
   if (!!isMobile) {
     navToggle();
   }
+});
+positionX.addEventListener("change", function () {
+  localStorage.setItem(`${positionX.name}`, positionX.selectedOptions[0].value);
+});
+positionY.addEventListener("change", function () {
+  localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
 });
 offsetXAdd.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
