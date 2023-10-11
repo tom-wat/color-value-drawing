@@ -81,7 +81,7 @@ select {
   border-radius: 4px;
 }
 select:focus-visible{
-  background-color: var(--tertiary-white);
+  background-color: var(--primary-white);
   color: var(--secondary-black);
 }
 input[type='radio'] {
@@ -409,17 +409,21 @@ input[type="radio"]:checked + label{
   bottom: 3rem;
   left: 3rem;
 }
-.open-button:focus{
+.open-button:focus-visible{
   box-shadow:0 0 0 1px var(--primary-white) inset;
 }
-.open-button:hover{
-  box-shadow:0 0 0 1px var(--primary-white) inset;
+
+#close-button{
+  padding-block: calc(1rem / 2);
+  width: 95%;
+  height: auto;
 }
-.close-button{
+.close-arrow{
   font-size: var(--font-size-ss);
   margin-inline: auto;
   transform: translateX(-8px);
 }
+
 .menu.close .open-button{
   display: block;  
 }
@@ -449,14 +453,6 @@ input[type="radio"]:checked + label{
   background-color: var(--background-color);
   transform: translate(-50%, 15%);
 }
-
-
-#close-button{
-  padding-block: calc(1rem / 2);
-  width: 95%;
-  height: auto;
-}
-
 
 .menu-content::-webkit-scrollbar-track {
   border-radius: 3px;
@@ -522,9 +518,6 @@ input[type="radio"]:checked + label{
   .button:hover svg{
     fill: var(--secondary-black);
   }
-  .button:hover label{
-    color: var(--secondary-black);
-  }
   .button:focus-visible svg{
     fill: var(--secondary-black);
   }
@@ -539,7 +532,13 @@ input[type="radio"]:checked + label{
     background-color: var(--tertiary-white);
     color: var(--secondary-black);
   }
-
+  .open-button:hover{
+    box-shadow:0 0 0 1px var(--primary-white) inset;
+  }
+  select:hover{
+    background-color: var(--primary-white);
+    color: var(--secondary-black);
+  }
   .description button:hover{
     background-color: var(--primary-white);
     color: var(--primary-black);
