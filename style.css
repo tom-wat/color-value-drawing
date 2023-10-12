@@ -219,8 +219,8 @@ output{
   height: 100%;
   margin-inline: auto;
   font-size: var(--font-size-medium);
-  padding-inline-start: 2.5rem;
-  padding-inline-end: 1.5rem;
+  padding-inline-start: 2rem;
+  padding-inline-end: 1rem;
   border-radius: 8px;
   font-weight: var(--font-weight-medium);
   background-color: var(--primary-black);
@@ -235,7 +235,7 @@ output{
 }
 
 .menu{
-  min-width: 420px;
+  min-width: 370px;
   max-height: 700px;
   position: fixed;
   padding-block-start: 1.5rem;
@@ -574,12 +574,8 @@ label:focus-visible{
   .object{
     padding-inline-start: 1.5rem;
   }
-
   .margin-left{
     margin-left: 0;
-  }
-  .align-self-stretch{
-    align-self: stretch;
   }
   .description button:active{
     background-color: var(--primary-white);

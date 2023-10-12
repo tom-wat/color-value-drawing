@@ -41,7 +41,6 @@ const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 // const isWindows = /Windows/.test(navigator.userAgent);
-// const pointerRadioNodeList = pointer.pointer;
 
 const undoStatesLimitNumber = 50;
 let rgb;
