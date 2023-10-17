@@ -484,7 +484,8 @@ label:focus-visible{
     background-color: var(--secondary-black);
   }
   .open-button:hover{
-    box-shadow:0 0 0 1px var(--primary-white) inset;
+    outline: 1px solid var(--primary-white);
+    outline-offset: -4px;
   }
   select:hover{
     background-color: var(--secondary-black);
@@ -538,7 +539,6 @@ label:focus-visible{
     padding-inline: 2rem;
     border-radius: 1.5rem;
     margin-block-start: 0px;
-    place-self: end;
   }
   #board .note .flex{
     flex-direction: row;
@@ -552,7 +552,7 @@ label:focus-visible{
     bottom: 1rem;
     left: 1rem;
     width: calc(100% - 2rem);
-    max-width: 450px;
+    max-width: 370px;
     min-width: 280px;
   }
   .close-button{
