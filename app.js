@@ -21,6 +21,7 @@ const columnAdd = document.getElementById("column-add");
 const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
 const menu = document.getElementById("menu");
+const openButton = document.getElementById("open-button");
 const closeButton = document.getElementById("close-button");
 const positionX = document.getElementById("position-x");
 const positionY = document.getElementById("position-y");
@@ -1377,6 +1378,7 @@ columnSubtract.addEventListener("keydown", (event) => {
 
 function navToggle() {
   menu.classList.toggle("close");
+  openButton.classList.toggle("close");
 }
 
 /// find contrast color
