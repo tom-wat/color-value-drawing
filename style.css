@@ -361,15 +361,20 @@ label:focus-visible{
   border-radius: 1rem;
   background-color: var(--primary-black);
   color: var(--primary-white);
-  display: none;
   cursor: pointer;
   position: fixed;
   bottom: 3rem;
   left: 3rem;
 }
-.open-button:focus-visible{
-  box-shadow:0 0 0 1px var(--primary-white) inset;
+.open-button.close{
+  display: none;
 }
+
+.open-button:focus-visible{
+  outline: 1px solid var(--primary-white);
+  outline-offset: -4px;
+}
+
 
 #close-button{
   padding-block: calc(1rem / 2);
@@ -382,9 +387,6 @@ label:focus-visible{
   transform: translateX(-8px);
 }
 
-.menu.close .open-button{
-  display: block;  
-}
 .image-container{
   height: auto;
 }
