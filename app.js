@@ -824,8 +824,41 @@ function drawMultilineText(
   }
 }
 
-// クリックしたら色データをキャンバスに描画
-canvas.addEventListener("click", function (e) {
+// canvas.addEventListener("mousemove", function (e) {
+//   const x = e.offsetX + clickPointAdjustment;
+//   const y = e.offsetY + clickPointAdjustment;
+//   const color = ctx.getImageData(x, y, 1, 1).data;
+//   rgb = [color[0], color[1], color[2]];
+//   hex = rgbToHex(color[0], color[1], color[2]);
+//   hsl = rgbToHsl(color[0], color[1], color[2]);
+//   hsv = rgbToHsv(color[0], color[1], color[2]);
+//   xyz = rgbToXyzD65(color[0], color[1], color[2]);
+//   xyzD50 = bradfordTransformationD65toD50(xyz);
+//   lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
+//   lch = labToLch(lab.labL, lab.labA, lab.labB);
+//   oklab = rgb2oklab(color[0], color[1], color[2]);
+//   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+//   colorInfoElement.style.setProperty(
+//     "--background-color",
+//     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
+//   );
+//   isInitialValue = false;
+//   changeColorSpace(colorSpace.selectedOptions[0].value);
+// });
+function throttle(fn, wait) {
+  let lastTime = 0;
+
+  return function (...args) {
+    const now = Date.now();
+
+    if (now - lastTime >= wait) {
+      lastTime = now;
+      return fn.apply(this, args);
+    }
+  };
+}
+
+const throttledCallback = throttle(function (e) {
   const x = e.offsetX + clickPointAdjustment;
   const y = e.offsetY + clickPointAdjustment;
   const color = ctx.getImageData(x, y, 1, 1).data;
@@ -845,7 +878,9 @@ canvas.addEventListener("click", function (e) {
   );
   isInitialValue = false;
   changeColorSpace(colorSpace.selectedOptions[0].value);
-});
+}, 50);
+
+canvas.addEventListener("mousemove", throttledCallback);
 
 canvas.addEventListener("click", function (event) {
   const pointX = event.offsetX;
@@ -1210,11 +1245,11 @@ fileButton.addEventListener("click", function () {
 });
 scale.addEventListener("change", function (event) {
   localStorage.setItem(`${scale.name}`, scale.selectedOptions[0].value);
-  scale.blur();
+  // scale.blur();
 });
 format.addEventListener("change", function (event) {
   localStorage.setItem(`${format.name}`, format.selectedOptions[0].value);
-  format.blur();
+  // format.blur();
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpace(colorSpace.selectedOptions[0].value);
@@ -1222,7 +1257,7 @@ colorSpace.addEventListener("change", function () {
     `${colorSpace.name}`,
     colorSpace.selectedOptions[0].value
   );
-  colorSpace.blur();
+  // colorSpace.blur();
 });
 clear.addEventListener("click", function () {
   if (!!isMobile) {
@@ -1231,11 +1266,11 @@ clear.addEventListener("click", function () {
 });
 positionX.addEventListener("change", function () {
   localStorage.setItem(`${positionX.name}`, positionX.selectedOptions[0].value);
-  positionX.blur();
+  // positionX.blur();
 });
 positionY.addEventListener("change", function () {
   localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
-  positionY.blur();
+  // positionY.blur();
 });
 offsetXAdd.addEventListener("click", function () {
   let count = parseInt(offsetX.value);
@@ -1290,7 +1325,7 @@ offsetYAdd.addEventListener("keydown", (event) => {
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
     localStorage.setItem("offsetY", offsetY.value);
-    offsetYSubtract.blur();
+    // offsetYSubtract.blur();
   }
 });
 offsetYSubtract.addEventListener("keydown", (event) => {
@@ -1300,7 +1335,7 @@ offsetYSubtract.addEventListener("keydown", (event) => {
     offsetY.value = String(count);
     updateOutput(offsetY, offsetYOutput);
     localStorage.setItem("offsetY", offsetY.value);
-    offsetYSubtract.blur();
+    // offsetYSubtract.blur();
   }
 });
 fontSizeAdd.addEventListener("click", function () {
