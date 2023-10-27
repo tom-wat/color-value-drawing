@@ -858,7 +858,7 @@ function throttle(fn, wait) {
   };
 }
 
-const throttledCallback = throttle(function (e) {
+function getColor(e) {
   const x = e.offsetX + clickPointAdjustment;
   const y = e.offsetY + clickPointAdjustment;
   const color = ctx.getImageData(x, y, 1, 1).data;
@@ -878,11 +878,14 @@ const throttledCallback = throttle(function (e) {
   );
   isInitialValue = false;
   changeColorSpace(colorSpace.selectedOptions[0].value);
-}, 50);
+}
+
+const throttledCallback = throttle(getColor, 50);
 
 canvas.addEventListener("mousemove", throttledCallback);
 
 canvas.addEventListener("click", function (event) {
+  getColor(event);
   const pointX = event.offsetX;
   const pointY = event.offsetY;
   const colorInfoElement = document.getElementById("colorInfo");
