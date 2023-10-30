@@ -1,4 +1,5 @@
 const board = document.getElementById("board");
+const tooltip = document.getElementById("tooltip");
 const pc = document.getElementsByClassName("pc");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
@@ -42,7 +43,6 @@ const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 // const isWindows = /Windows/.test(navigator.userAgent);
-
 const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
@@ -54,8 +54,19 @@ let lab;
 let lch;
 let oklab;
 let oklch;
+let rgb2;
+let hex2;
+let hsl2;
+let hsv2;
+let xyz2;
+let xyzD502;
+let lab2;
+let lch2;
+let oklab2;
+let oklch2;
 let colorCode;
 let isInitialValue = true;
+let isInitialValue2 = true;
 let image;
 let undoStates = [];
 let redoStates = [];
@@ -77,7 +88,8 @@ function setStyles() {
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
   setValueToSelected(colorSpace, settingColorSpace);
-  changeColorSpace(settingColorSpace);
+  changeColorSpaceForMenu(settingColorSpace);
+  changeColorSpaceForTooltip(settingColorSpace);
   setValueToSelected(positionX, settingPositionX);
   setValueToSelected(positionY, settingPositionY);
   setValue(offsetX, settingOffsetX, offsetXOutput);
@@ -500,101 +512,6 @@ function hslToRgb(h, s, l) {
   ];
 }
 
-function changeColorSpace(ColorSpaceValue) {
-  switch (ColorSpaceValue) {
-    case "rgb":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `R:-- G:-- B:--`;
-        break;
-      }
-      colorCode = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
-      colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
-      break;
-    case "hex":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `#------`;
-        break;
-      }
-      colorCode = hex;
-      colorInfoElement.textContent = hex;
-      break;
-    case "hsv":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:-- V:--`;
-        break;
-      }
-      colorCode = `h:${hsv.hsvH} s:${hsv.hsvS} v:${hsv.hsvB}`;
-      colorInfoElement.textContent = `H:${hsv.hsvH} S:${hsv.hsvS} V:${hsv.hsvB}`;
-      break;
-    case "hsl":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:-- L:--`;
-        break;
-      }
-      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
-      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
-      break;
-    case "lab":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `L:-- a:-- b:--`;
-        break;
-      }
-      colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
-      colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
-      colorInfoElement.style.setProperty(
-        "--background-color",
-        `lab(${lab.labL}% ${lab.labA} ${lab.labB})`
-      );
-      break;
-    case "lch":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `L:-- C:-- H:--`;
-        break;
-      }
-      colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
-      colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
-      break;
-    case "oklab":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `l:-- a:-- b:--`;
-        break;
-      }
-      colorCode = `oklab(${oklab.oklabLRounded}% ${oklab.oklabARounded} ${oklab.oklabBRounded})`;
-      colorInfoElement.textContent = `l:${oklab.oklabLRounded} a:${oklab.oklabARounded} b:${oklab.oklabBRounded}`;
-      break;
-    case "oklch":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `l:-- c:-- h:--`;
-        break;
-      }
-      colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
-      colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
-      break;
-    case "hsl+l":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
-        break;
-      }
-      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
-      colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
-      break;
-    case "l":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `L:--`;
-        break;
-      }
-      colorCode = `lab(${lab.labL}% 0 0)`;
-      colorInfoElement.textContent = `L:${lab.labL}`;
-      colorInfoElement.style.setProperty(
-        "--background-color",
-        `lab(${lab.labL}% 0 0)`
-      );
-      break;
-    default:
-      break;
-  }
-}
-
 function getCurrentImageState() {
   currentStates = ctx.getImageData(0, 0, image.width, image.height);
   undoStates.unshift(currentStates);
@@ -824,43 +741,206 @@ function drawMultilineText(
   }
 }
 
-// canvas.addEventListener("mousemove", function (e) {
-//   const x = e.offsetX + clickPointAdjustment;
-//   const y = e.offsetY + clickPointAdjustment;
-//   const color = ctx.getImageData(x, y, 1, 1).data;
-//   rgb = [color[0], color[1], color[2]];
-//   hex = rgbToHex(color[0], color[1], color[2]);
-//   hsl = rgbToHsl(color[0], color[1], color[2]);
-//   hsv = rgbToHsv(color[0], color[1], color[2]);
-//   xyz = rgbToXyzD65(color[0], color[1], color[2]);
-//   xyzD50 = bradfordTransformationD65toD50(xyz);
-//   lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
-//   lch = labToLch(lab.labL, lab.labA, lab.labB);
-//   oklab = rgb2oklab(color[0], color[1], color[2]);
-//   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
-//   colorInfoElement.style.setProperty(
-//     "--background-color",
-//     `rgb(${color[0]}, ${color[1]}, ${color[2]})`
-//   );
-//   isInitialValue = false;
-//   changeColorSpace(colorSpace.selectedOptions[0].value);
-// });
-function throttle(fn, wait) {
-  let lastTime = 0;
+function showTooltip(event) {
+  // ページのスクロール量を取得
+  const scrollTop =
+    document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollLeft =
+    document.documentElement.scrollLeft || document.body.scrollLeft;
 
-  return function (...args) {
-    const now = Date.now();
+  // マウスポインタの位置を取得
+  const x = event.clientX + scrollLeft;
+  const y = event.clientY + scrollTop;
 
-    if (now - lastTime >= wait) {
-      lastTime = now;
-      return fn.apply(this, args);
-    }
-  };
+  // ツールチップを表示する位置を設定
+  tooltip.style.left = x + 0 + "px";
+  tooltip.style.top = y + 25 + "px";
+
+  // ツールチップを表示する
+  tooltip.style.display = "block";
 }
 
-function getColor(e) {
-  const x = e.offsetX + clickPointAdjustment;
-  const y = e.offsetY + clickPointAdjustment;
+function changeColorSpaceForTooltip(ColorSpaceValue) {
+  switch (ColorSpaceValue) {
+    case "rgb":
+      if (isInitialValue2) {
+        tooltip.textContent = `R:-- G:-- B:--`;
+        break;
+      }
+      tooltip.textContent = `R:${rgb2[0]} G:${rgb2[1]} B:${rgb2[2]}`;
+      break;
+    case "hex":
+      if (isInitialValue2) {
+        tooltip.textContent = `#------`;
+        break;
+      }
+      2;
+      tooltip.textContent = hex2;
+      break;
+    case "hsv":
+      if (isInitialValue2) {
+        tooltip.textContent = `H:-- S:-- V:--`;
+        break;
+      }
+      tooltip.textContent = `H:${hsv2.hsvH} S:${hsv2.hsvS} V:${hsv2.hsvB}`;
+      break;
+    case "hsl":
+      if (isInitialValue2) {
+        tooltip.textContent = `H:-- S:-- L:--`;
+        break;
+      }
+      tooltip.textContent = `H:${hsl2.h} S:${hsl2.s} L:${hsl2.l}`;
+      break;
+    case "lab":
+      if (isInitialValue2) {
+        tooltip.textContent = `L:-- a:-- b:--`;
+        break;
+      }
+      tooltip.textContent = `L:${lab2.labL} a:${lab2.labA} b:${lab2.labB}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `lab(${lab2.labL}% ${lab2.labA} ${lab2.labB})`
+      );
+      break;
+    case "lch":
+      if (isInitialValue2) {
+        tooltip.textContent = `L:-- C:-- H:--`;
+        break;
+      }
+      tooltip.textContent = `L:${lch2.lchL} C:${lch2.lchC} H:${lch2.lchH}`;
+      break;
+    case "oklab":
+      if (isInitialValue2) {
+        tooltip.textContent = `l:-- a:-- b:--`;
+        break;
+      }
+      tooltip.textContent = `l:${oklab2.oklabLRounded} a:${oklab2.oklabARounded} b:${oklab2.oklabBRounded}`;
+      break;
+    case "oklch":
+      if (isInitialValue2) {
+        tooltip.textContent = `l:-- c:-- h:--`;
+        break;
+      }
+      tooltip.textContent = `l:${oklch2.oklchL} c:${oklch2.oklchC} h:${oklch2.oklchH}`;
+      break;
+    case "hsl+l":
+      if (isInitialValue2) {
+        tooltip.textContent = `h:-- s:-- l:-- L:--`;
+        break;
+      }
+      tooltip.textContent = `h:${hsl2.h} s:${hsl2.s} l:${hsl2.l} L:${lab2.labL}`;
+      break;
+    case "l":
+      if (isInitialValue2) {
+        tooltip.textContent = `L:--`;
+        break;
+      }
+      tooltip.textContent = `L:${lab2.labL}`;
+      tooltip.style.setProperty("--background-color", `lab(${lab2.labL}% 0 0)`);
+      break;
+    default:
+      break;
+  }
+}
+
+function changeColorSpaceForMenu(ColorSpaceValue) {
+  switch (ColorSpaceValue) {
+    case "rgb":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `R:-- G:-- B:--`;
+        break;
+      }
+      colorCode = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+      colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
+      break;
+    case "hex":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `#------`;
+        break;
+      }
+      colorCode = hex;
+      colorInfoElement.textContent = hex;
+      break;
+    case "hsv":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:-- V:--`;
+        break;
+      }
+      colorCode = `h:${hsv.hsvH} s:${hsv.hsvS} v:${hsv.hsvB}`;
+      colorInfoElement.textContent = `H:${hsv.hsvH} S:${hsv.hsvS} V:${hsv.hsvB}`;
+      break;
+    case "hsl":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:-- L:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
+      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
+      break;
+    case "lab":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:-- a:-- b:--`;
+        break;
+      }
+      colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
+      colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
+      colorInfoElement.style.setProperty(
+        "--background-color",
+        `lab(${lab.labL}% ${lab.labA} ${lab.labB})`
+      );
+      break;
+    case "lch":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:-- C:-- H:--`;
+        break;
+      }
+      colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
+      colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
+      break;
+    case "oklab":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `l:-- a:-- b:--`;
+        break;
+      }
+      colorCode = `oklab(${oklab.oklabLRounded}% ${oklab.oklabARounded} ${oklab.oklabBRounded})`;
+      colorInfoElement.textContent = `l:${oklab.oklabLRounded} a:${oklab.oklabARounded} b:${oklab.oklabBRounded}`;
+      break;
+    case "oklch":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `l:-- c:-- h:--`;
+        break;
+      }
+      colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
+      colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
+      break;
+    case "hsl+l":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
+      colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+      break;
+    case "l":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:--`;
+        break;
+      }
+      colorCode = `lab(${lab.labL}% 0 0)`;
+      colorInfoElement.textContent = `L:${lab.labL}`;
+      colorInfoElement.style.setProperty(
+        "--background-color",
+        `lab(${lab.labL}% 0 0)`
+      );
+      break;
+    default:
+      break;
+  }
+}
+
+function getColor(event) {
+  const x = event.offsetX + clickPointAdjustment;
+  const y = event.offsetY + clickPointAdjustment;
   const color = ctx.getImageData(x, y, 1, 1).data;
   rgb = [color[0], color[1], color[2]];
   hex = rgbToHex(color[0], color[1], color[2]);
@@ -872,23 +952,74 @@ function getColor(e) {
   lch = labToLch(lab.labL, lab.labA, lab.labB);
   oklab = rgb2oklab(color[0], color[1], color[2]);
   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
-  colorInfoElement.style.setProperty(
-    "--background-color",
-    `rgb(${color[0]}, ${color[1]}, ${color[2]})`
-  );
-  isInitialValue = false;
-  changeColorSpace(colorSpace.selectedOptions[0].value);
 }
 
-const throttledCallback = throttle(getColor, 50);
+function getColorForTooltip(event) {
+  const x = event.offsetX + clickPointAdjustment;
+  const y = event.offsetY + clickPointAdjustment;
+  const color = ctx.getImageData(x, y, 1, 1).data;
+  rgb2 = [color[0], color[1], color[2]];
+  hex2 = rgbToHex(color[0], color[1], color[2]);
+  hsl2 = rgbToHsl(color[0], color[1], color[2]);
+  hsv2 = rgbToHsv(color[0], color[1], color[2]);
+  xyz2 = rgbToXyzD65(color[0], color[1], color[2]);
+  xyzD502 = bradfordTransformationD65toD50(xyz2);
+  lab2 = xyzToLab(xyzD502[0], xyzD502[1], xyzD502[2]);
+  lch2 = labToLch(lab2.labL, lab2.labA, lab2.labB);
+  oklab2 = rgb2oklab(color[0], color[1], color[2]);
+  oklch2 = oklab2okLch(oklab2.oklabL, oklab2.oklabA, oklab2.oklabB);
+}
 
-canvas.addEventListener("mousemove", throttledCallback);
+function throttle(fn, wait) {
+  let lastTime = 0;
+
+  return function (event, ...args) {
+    const now = Date.now();
+
+    if (now - lastTime >= wait) {
+      lastTime = now;
+      return fn.apply(this, [event, ...args]);
+    }
+  };
+}
+const throttledGetColor = throttle(function (event) {
+  getColorForTooltip(event);
+  tooltip.style.setProperty(
+    "--background-color",
+    `rgb(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]})`
+  );
+  const contrastColor = getGreyScaleColorWithHighestContrast(rgb2);
+  tooltip.style.setProperty(
+    "--color",
+    `rgb(${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`
+  );
+  isInitialValue2 = false;
+  changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
+}, 50);
+
+function setTooltipView() {
+  const contrastColor = getGreyScaleColorWithHighestContrast(rgb2);
+  tooltip.style.setProperty(
+    "--color",
+    `rgb(${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`
+  );
+}
+
+if (!isMobile) {
+  canvas.addEventListener("mousemove", throttledGetColor);
+  document.addEventListener("mousemove", showTooltip);
+}
 
 canvas.addEventListener("click", function (event) {
-  getColor(event);
+  getColor(event, [colorInfoElement]);
+  colorInfoElement.style.setProperty(
+    "--background-color",
+    `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+  );
+  isInitialValue = false;
+  changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
   const pointX = event.offsetX;
   const pointY = event.offsetY;
-  const colorInfoElement = document.getElementById("colorInfo");
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
@@ -1224,13 +1355,15 @@ function changeSelectedElement(element) {
   if (selectedIndex + 1 === element.options.length) {
     element.options[0].selected = true;
     if (element === colorSpace) {
-      changeColorSpace(element.selectedOptions[0].value);
+      changeColorSpaceForMenu(element.selectedOptions[0].value);
+      changeColorSpaceForTooltip(element.selectedOptions[0].value);
     }
     localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
   } else {
     element.options[selectedIndex + 1].selected = true;
     if (element === colorSpace) {
-      changeColorSpace(element.selectedOptions[0].value);
+      changeColorSpaceForMenu(element.selectedOptions[0].value);
+      changeColorSpaceForTooltip(element.selectedOptions[0].value);
     }
     localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
   }
@@ -1255,7 +1388,8 @@ format.addEventListener("change", function (event) {
   // format.blur();
 });
 colorSpace.addEventListener("change", function () {
-  changeColorSpace(colorSpace.selectedOptions[0].value);
+  changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
+  changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   localStorage.setItem(
     `${colorSpace.name}`,
     colorSpace.selectedOptions[0].value

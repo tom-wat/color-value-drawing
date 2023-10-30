@@ -104,6 +104,22 @@ output{
   text-align: right;
   margin-inline-end: 1ch;
 }
+.tooltip {
+  --color: var(--primary-white);
+  --background-color: var(--primary-black);
+  position: absolute;
+  display: none;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: var(--font-weight-medium);
+  padding: 4px 6px;
+  color: var(--color);
+  background-color: var(--background-color);
+  border-radius: 4px;
+  z-index: 10;
+  /* border: 1px solid #ccc; */
+  /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); */
+}
 .grid{
   max-width: 980px;
   display: grid;
