@@ -133,6 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // changeFontSize(ctx, fontInput);
     Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
+  changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
 });
 
