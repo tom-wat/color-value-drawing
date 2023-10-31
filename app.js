@@ -983,8 +983,8 @@ function throttle(fn, wait) {
     }
   };
 }
-const throttledGetColor = throttle(function (event) {
-  getColorForTooltip(event);
+
+function setTooltipView() {
   tooltip.style.setProperty(
     "--background-color",
     `rgb(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]})`
@@ -994,17 +994,14 @@ const throttledGetColor = throttle(function (event) {
     "--color",
     `rgb(${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`
   );
+}
+
+const throttledGetColor = throttle(function (event) {
+  getColorForTooltip(event);
+  setTooltipView();
   isInitialValue2 = false;
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
-
-function setTooltipView() {
-  const contrastColor = getGreyScaleColorWithHighestContrast(rgb2);
-  tooltip.style.setProperty(
-    "--color",
-    `rgb(${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`
-  );
-}
 
 if (!isMobile) {
   canvas.addEventListener("mousemove", throttledGetColor);
