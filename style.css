@@ -117,8 +117,6 @@ output{
   background-color: var(--background-color);
   border-radius: 4px;
   z-index: 10;
-  /* border: 1px solid #ccc; */
-  /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); */
 }
 .grid{
   max-width: 980px;
