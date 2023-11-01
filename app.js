@@ -72,6 +72,8 @@ let undoStates = [];
 let redoStates = [];
 let initialState;
 let currentStates;
+let pointerX = 0;
+let pointerY = 0;
 
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
@@ -742,6 +744,61 @@ function drawMultilineText(
   }
 }
 
+function positionTooltip(x, y) {
+  // ツールチップを表示する位置を設定
+  tooltip.style.left = x + 0 + "px";
+  tooltip.style.top = y + 25 + "px";
+  if (positionX.selectedOptions[0].value === "left") {
+    // Get the computed styles for the element
+    const computedStyles = window.getComputedStyle(tooltip);
+    // Get the computed width
+    let computedWidth = computedStyles.width;
+    if (computedWidth === "auto") {
+      switch (colorSpace.selectedOptions[0].value) {
+        case "rgb":
+          computedWidth = "86.4688";
+          break;
+        case "hex":
+          computedWidth = "52.9922";
+          break;
+        case "hsv":
+          computedWidth = "86.1719";
+          break;
+        case "hsl":
+          computedWidth = "85.2891";
+          break;
+        case "lab":
+          computedWidth = "83";
+          break;
+        case "lch":
+          computedWidth = "86.3906";
+          break;
+        case "oklab":
+          computedWidth = "79.2188";
+          break;
+        case "oklch":
+          computedWidth = "78.9141";
+          break;
+        case "hsl+l":
+          computedWidth = "102.992";
+          break;
+        case "l":
+          computedWidth = "33.2812";
+          break;
+        default:
+          break;
+      }
+    }
+    // console.log(computedWidth);
+    const computedWidthInNumber = parseFloat(computedWidth);
+
+    tooltip.style.left = x - computedWidthInNumber + "px";
+  }
+  if (positionY.selectedOptions[0].value === "top") {
+    tooltip.style.top = y - 33 + "px";
+  }
+}
+
 function showTooltip(event) {
   // ページのスクロール量を取得
   const scrollTop =
@@ -752,10 +809,11 @@ function showTooltip(event) {
   // マウスポインタの位置を取得
   const x = event.clientX + scrollLeft;
   const y = event.clientY + scrollTop;
+  pointerX = x;
+  pointerY = y;
 
-  // ツールチップを表示する位置を設定
-  tooltip.style.left = x + 0 + "px";
-  tooltip.style.top = y + 25 + "px";
+  // ツールチップの位置を設定
+  positionTooltip(x, y);
 
   // ツールチップを表示する
   tooltip.style.display = "block";
@@ -1127,10 +1185,12 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "a") {
     if (keyMeta) return;
     changeSelectedElement(positionX);
+    positionTooltip(pointerX, pointerY);
   }
   if (event.key === "s") {
     if (keyMeta) return;
     changeSelectedElement(positionY);
+    positionTooltip(pointerX, pointerY);
   }
   if (event.key === "p") {
     if (keyMeta) return;
@@ -1173,6 +1233,7 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "v") {
     if (keyMeta) return;
     changeSelectedElement(colorSpace);
+    positionTooltip(pointerX, pointerY);
   }
   if (event.key === "i") {
     if (keyMeta) return;
@@ -1392,6 +1453,7 @@ colorSpace.addEventListener("change", function () {
     `${colorSpace.name}`,
     colorSpace.selectedOptions[0].value
   );
+  positionTooltip(pointerX, pointerY);
   // colorSpace.blur();
 });
 clear.addEventListener("click", function () {
@@ -1401,10 +1463,12 @@ clear.addEventListener("click", function () {
 });
 positionX.addEventListener("change", function () {
   localStorage.setItem(`${positionX.name}`, positionX.selectedOptions[0].value);
+  positionTooltip(pointerX, pointerY);
   // positionX.blur();
 });
 positionY.addEventListener("change", function () {
   localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
+  positionTooltip(pointerX, pointerY);
   // positionY.blur();
 });
 offsetXAdd.addEventListener("click", function () {
