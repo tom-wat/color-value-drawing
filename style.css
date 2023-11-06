@@ -597,7 +597,7 @@ label:focus-visible{
   }
 }
 
-@media (width < 800px) {
+@media (width < 800px) and (hover: hover) and (pointer: fine) {
 
   .grid{
     grid-template-areas:
