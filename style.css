@@ -262,15 +262,6 @@ output{
   height: calc(93vh - 1rem);
   z-index: 10;
 }
-.menu:hover .menu-content{
-  overflow: auto;
-}
-.menu:hover .menu-content .button{
-  padding-inline-end: calc(1rem - var(--scroll-bar));
-}
-.menu.show .shortcut{
-  display: block;
-}
 .menu-content{
   display: grid;
   height: 100%;
@@ -474,7 +465,7 @@ label:focus-visible{
   display: none;
 }
 
-@media (width > 800px){
+@media (hover: hover) and (pointer: fine){
   .button:hover{
     background-color: var(--secondary-black);
   }
@@ -496,6 +487,12 @@ label:focus-visible{
   select:hover{
     background-color: var(--secondary-black);
   }
+  .menu:hover .menu-content{
+    overflow: auto;
+  }
+  .menu:hover .menu-content .button{
+    padding-inline-end: calc(1rem - var(--scroll-bar));
+  }
   .description button:active{
     background-color: var(--primary-black);
     color: var(--primary-white);
@@ -510,6 +507,96 @@ label:focus-visible{
     background-color: var(--quaternary-black);
   }
 }
+@media (hover: none) and (any-pointer: coarse) {
+
+  .grid{
+    grid-template-areas:
+    "title"
+    "description"
+    "notes";
+    gap: 1rem;
+    grid-template-columns: 100%;
+  }
+  .notes{
+    gap: 1rem;
+  }
+  .note{
+    border-radius: 1rem;
+    padding-inline: 2rem;
+  }
+  #board{
+    padding-block: 1rem;
+    padding-inline: 1rem;
+  }
+  #board .flex{
+    flex-direction: column;
+    align-items: start;
+  }
+  #board svg{
+    width: 240px;
+    height: 240px;
+    min-width: 240px;
+  }
+  .description{
+    padding: 1.5rem;
+    padding-inline: 2rem;
+    border-radius: 1.5rem;
+    margin-block-start: 0px;
+  }
+  #board .note .flex{
+    flex-direction: row;
+  }
+  #fileInput {
+    width: 100%;
+  }
+  .menu{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    max-width: 370px;
+    min-width: 280px;
+  }
+  .menu-content{
+    overflow: auto;
+  }
+  .close-button{
+    transform: translateX(-12px);
+  }
+  .open-button{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+  }
+  input{
+    max-width: 30%;
+  }
+  .button{
+    min-width: 280px;
+    padding-inline-start: 1.5rem;
+    padding-inline-end: 0;
+  }
+  .object{
+    padding-inline-start: 1.5rem;
+  }
+  .margin-left{
+    margin-left: 0;
+  }
+  .description button:active{
+    background-color: var(--primary-white);
+    color: var(--secondary-black);
+  }
+  .button:active{
+    background-color: var(--quaternary-black);
+  }
+  .button-type-b:active{
+    background-color: var(--primary-black);
+  }
+  span.inline-button:active{
+    background-color: var(--quaternary-black);
+  }
+}
+
 @media (width < 800px) {
 
   .grid{
@@ -552,7 +639,6 @@ label:focus-visible{
   #fileInput {
     width: 100%;
   }
-
   .menu{
     position: fixed;
     bottom: 1rem;
@@ -561,8 +647,8 @@ label:focus-visible{
     max-width: 370px;
     min-width: 280px;
   }
-  .menu-content{
-    overflow: auto;
+  .menu:hover .menu-content .button{
+    padding-inline-end: calc(0.5rem - var(--scroll-bar));
   }
   .close-button{
     transform: translateX(-12px);
@@ -578,7 +664,7 @@ label:focus-visible{
   .button{
     min-width: 280px;
     padding-inline-start: 1.5rem;
-    padding-inline-end: 0;
+    padding-inline-end: 0.5rem;
   }
   .object{
     padding-inline-start: 1.5rem;
