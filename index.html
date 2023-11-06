@@ -169,17 +169,14 @@
                 <li>HEX</li>
                 <li>HSV</li>
                 <li>HSL</li>
-                <li>HSL + L from Lab color.</li>
-                <li>L from Lab color.</li>
+                <li>HSL + Lightness from Lab color.</li>
+                <li>Lightness from Lab color.</li>
                 <li>Lab</li>
                 <li>LCH</li>
                 <li>Oklab</li>
                 <li>Oklch</li>
               </ul>
               <!-- <p>hsl + Lightness from Lab color.</p> -->
-            </div>
-            <div class="note pc">
-              <p>Show/Hide shortcuts on the menu with the U key.</p>
             </div>
           </div>
         </div>
@@ -203,7 +200,7 @@
               Image FIle
             </div>
           </li>
-          <li>
+          <li title="Shortcut: R">
             <button
               id="file-button"
               class="button flex-center"
@@ -222,10 +219,10 @@
                   />
                 </svg>
               </span>
-              <span class="row-1">Read</span><span class="shortcut">R</span>
+              <span class="row-1">Read</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: D">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -246,10 +243,9 @@
                 <option value="window">Window</option>
                 <option value="full" selected>Full</option>
               </select>
-              <span class="shortcut">D</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: P">
             <button id="download-btn" class="button flex-center" data-tabindex>
               <span class="icon">
                 <svg
@@ -264,11 +260,9 @@
                 </svg>
               </span>
               <span class="row-1">Download</span>
-
-              <span class="shortcut">P</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: F">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon"
                 ><svg
@@ -287,7 +281,27 @@
                 <option value="png" selected>PNG</option>
                 <option value="webp">WebP</option>
               </select>
-              <span class="shortcut">L</span>
+            </button>
+          </li>
+          <li title="Shortcut: G">
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 512 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M256 0a256 256 0 1 0 0 512A256 256 0 1 0 256 0zM376.9 294.6L269.8 394.5c-3.8 3.5-8.7 5.5-13.8 5.5s-10.1-2-13.8-5.5L135.1 294.6c-4.5-4.2-7.1-10.1-7.1-16.3c0-12.3 10-22.3 22.3-22.3l57.7 0 0-96c0-17.7 14.3-32 32-32l32 0c17.7 0 32 14.3 32 32l0 96 57.7 0c12.3 0 22.3 10 22.3 22.3c0 6.2-2.6 12.1-7.1 16.3z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Filter</span>
+              <select name="filter" id="filter" data-tabindex>
+                <option value="off" selected>OFF</option>
+                <option value="greyscale">GreyScale</option>
+              </select>
             </button>
           </li>
           <li>
@@ -307,7 +321,7 @@
               <span>Color</span>
             </div>
           </li>
-          <li>
+          <li title="Shortcut: V">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -334,7 +348,6 @@
                 <option value="oklab">Oklab</option>
                 <option value="oklch">Oklch</option>
               </select>
-              <span class="shortcut">V</span>
             </button>
           </li>
           <li>
@@ -355,7 +368,7 @@
               <span id="colorInfo">R:-- G:-- B:--</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: ⌘C">
             <button
               id="copy-button"
               class="button flex-center"
@@ -374,10 +387,10 @@
                   />
                 </svg>
               </span>
-              <span class="row-1">Copy</span><span class="shortcut">⌘C</span>
+              <span class="row-1">Copy</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: ⌘Z">
             <button
               id="undo-btn"
               class="button flex-center"
@@ -397,10 +410,10 @@
                   />
                 </svg>
               </span>
-              <span class="row-1">Undo</span><span class="shortcut">⌘Z</span>
+              <span class="row-1">Undo</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: ⇧⌘Z">
             <button
               id="redo-btn"
               class="button flex-center"
@@ -419,10 +432,10 @@
                   />
                 </svg>
               </span>
-              <span class="row-1">Redo</span><span class="shortcut">⇧⌘Z</span>
+              <span class="row-1">Redo</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: E">
             <button
               id="clear-btn"
               class="button flex-center"
@@ -441,10 +454,44 @@
                   />
                 </svg>
               </span>
-              <span class="row-1">Clear</span><span class="shortcut">E</span>
+              <span class="row-1">Clear</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: T">
+            <button
+              class="button flex-center"
+              data-tabindex
+              onclick="changeCheckedPointer()"
+            >
+              <span class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 448 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Pointer</span>
+
+              <form class="flex">
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="pointer"
+                    name="pointer"
+                    class="toggle-button-input"
+                    disabled
+                    checked
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li title="Shortcut: A">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -463,10 +510,9 @@
                 <option value="left">Left</option>
                 <option value="right" selected>Right</option>
               </select>
-              <span class="shortcut">A</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: S">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -485,104 +531,9 @@
                 <option value="top">Top</option>
                 <option value="bottom" selected>Bottom</option>
               </select>
-              <span class="shortcut">S</span>
             </button>
           </li>
-          <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 512 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M406.6 374.6l96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224l-293.5 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288l293.5 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Offset-X</span>
-              <input
-                type="range"
-                id="offset-x"
-                min="0"
-                max="4"
-                value="0"
-                oninput="updateOutput(offsetX, offsetXOutput)"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="offset-x-subtract"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="offset-x-output"
-                  name="offset-x-output"
-                  for="offset-x"
-                  >0</output
-                >
-                <span
-                  id="offset-x-add"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-              <span class="shortcut">G H</span>
-            </button>
-          </li>
-          <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 320 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M182.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L128 109.3V402.7L86.6 361.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 402.7V109.3l41.4 41.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-96-96z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Offset-Y</span>
-              <input
-                type="range"
-                id="offset-y"
-                min="0"
-                max="4"
-                value="0"
-                oninput="updateOutput(offsetY, offsetYOutput)"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="offset-y-subtract"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="offset-y-output"
-                  name="offset-y-output"
-                  for="offset-y"
-                  >0</output
-                >
-                <span
-                  id="offset-y-add"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-              <span class="shortcut">T Y</span>
-            </button>
-          </li>
-          <li>
+          <li title="Shortcut: -Q +W">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -626,10 +577,9 @@
                   >+</span
                 >
               </div>
-              <span class="shortcut">Q W</span>
             </button>
           </li>
-          <li>
+          <li title="Shortcut: -Z +X">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon"
                 ><svg
@@ -673,42 +623,98 @@
                   >+</span
                 >
               </div>
-              <span class="shortcut">Z X</span>
             </button>
           </li>
-          <li>
-            <button
-              class="button flex-center"
-              data-tabindex
-              onclick="changeCheckedPointer()"
-            >
+          <li title="Shortcut: -H +J">
+            <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="1em"
-                  viewBox="0 0 448 512"
+                  viewBox="0 0 512 512"
                 >
                   <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
                   <path
-                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                    d="M406.6 374.6l96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224l-293.5 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288l293.5 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"
                   />
                 </svg>
               </span>
-              <span class="row-1">Pointer</span>
-
-              <form class="flex">
-                <label class="toggle-button">
-                  <input
-                    type="checkbox"
-                    id="pointer"
-                    name="pointer"
-                    class="toggle-button-input"
-                    disabled
-                    checked
+              <span class="row-1">Offset-X</span>
+              <input
+                type="range"
+                id="offset-x"
+                min="0"
+                max="4"
+                value="0"
+                oninput="updateOutput(offsetX, offsetXOutput)"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="offset-x-subtract"
+                  class="flex-center inline-button"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="offset-x-output"
+                  name="offset-x-output"
+                  for="offset-x"
+                  >0</output
+                >
+                <span
+                  id="offset-x-add"
+                  class="flex-center inline-button"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
+            </button>
+          </li>
+          <li title="Shortcut: -Y +U">
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 320 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M182.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L128 109.3V402.7L86.6 361.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 402.7V109.3l41.4 41.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-96-96z"
                   />
-                </label>
-              </form>
-              <span class="shortcut">I</span>
+                </svg>
+              </span>
+              <span class="row-1">Offset-Y</span>
+              <input
+                type="range"
+                id="offset-y"
+                min="0"
+                max="4"
+                value="0"
+                oninput="updateOutput(offsetY, offsetYOutput)"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="offset-y-subtract"
+                  class="flex-center inline-button"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="offset-y-output"
+                  name="offset-y-output"
+                  for="offset-y"
+                  >0</output
+                >
+                <span
+                  id="offset-y-add"
+                  class="flex-center inline-button"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
             </button>
           </li>
         </div>
@@ -718,9 +724,9 @@
           class="button flex-center"
           onclick="navToggle()"
           data-tabindex
+          title="Shortcut: Esc"
         >
-          <span class="row-1 close-arrow">▼</span
-          ><span class="shortcut">Esc</span>
+          <span class="row-1 close-arrow">▼</span>
         </button>
       </ul>
       <button id="open-button" class="open-button" onclick="navToggle()">

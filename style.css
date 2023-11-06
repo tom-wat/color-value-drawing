@@ -19,6 +19,7 @@
   --toggle-size: 16px;
   --toggle-color: hsl(211, 50%, 70%);
   --toggle-color-dark: hsl(211, 30%, 50%);
+  --scroll-bar: 5px;
 }
 
 @font-face {
@@ -259,6 +260,13 @@ output{
   bottom:3rem;
   left:3rem;
   height: calc(93vh - 1rem);
+  z-index: 10;
+}
+.menu:hover .menu-content{
+  overflow: auto;
+}
+.menu:hover .menu-content .button{
+  padding-inline-end: calc(1rem - var(--scroll-bar));
 }
 .menu.show .shortcut{
   display: block;
@@ -266,7 +274,21 @@ output{
 .menu-content{
   display: grid;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
+}
+.menu-content::-webkit-scrollbar-track {
+  border-radius: var(--scroll-bar);
+  background-color: var(--primary-black);
+}
+.menu-content::-webkit-scrollbar-thumb {
+  border-radius: var(--scroll-bar);
+  background-color: var(--grey-3)
+}
+.menu-content::-webkit-scrollbar{
+  background-color: var(--primary-white);
+  width: var(--scroll-bar);
+  /* height: var(--scroll-bar); */
+  border-radius: var(--scroll-bar);
 }
 .menu.close{
   width: 0;
@@ -340,23 +362,6 @@ label:focus-visible{
   margin-right: auto;
 }
 
-.shortcut{
-  background-color: var(--primary-black);
-  color: var(--tertiary-white);
-  min-width: 64px;
-  text-align: center;
-  line-height: 1.4;
-  border-radius: 6px;
-  position: absolute;
-  left: calc(100% + 8px);
-  padding-inline: 0.8rem;
-  padding-block: 4px;
-  display: none;
-}
-.shortcut.show{
-  display: block;
-}
-
 #file-input {
   display: none;
 }
@@ -379,6 +384,7 @@ label:focus-visible{
   position: fixed;
   bottom: 3rem;
   left: 3rem;
+  z-index: 10;
 }
 .open-button.close{
   display: none;
@@ -428,22 +434,6 @@ label:focus-visible{
   transform: translate(-50%, 15%);
 }
 
-.menu-content::-webkit-scrollbar-track {
-  border-radius: 3px;
-  background-color: var(--primary-black);
-}
-
-.menu-content::-webkit-scrollbar-thumb {
-  border-radius: 3px;
-  background-color: var(--grey-2)
-}
-
-.menu-content::-webkit-scrollbar{
-  background-color: white;
-  width: 3px;
-  height: 3px;
-  border-radius: 3px;
-}
 
 .toggle-button {
   display: inline-block;
@@ -570,6 +560,9 @@ label:focus-visible{
     width: calc(100% - 2rem);
     max-width: 370px;
     min-width: 280px;
+  }
+  .menu-content{
+    overflow: auto;
   }
   .close-button{
     transform: translateX(-12px);
