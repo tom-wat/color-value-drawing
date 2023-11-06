@@ -1064,7 +1064,7 @@ const throttledGetColor = throttle(function (event) {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
 
-if (isMobile === false || isTablet === false) {
+if (!!isMobile === false && !!isTablet === false) {
   canvas.addEventListener("mousemove", throttledGetColor);
   document.addEventListener("mousemove", showTooltip);
 }
