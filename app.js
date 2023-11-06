@@ -43,6 +43,9 @@ const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
+const isTablet = navigator.userAgent.match(
+  /iPad|Android.*Tablet|Kindle|Playbook/
+);
 const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
@@ -1061,7 +1064,7 @@ const throttledGetColor = throttle(function (event) {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
 
-if (!isMobile) {
+if (isMobile === false || isTablet === false) {
   canvas.addEventListener("mousemove", throttledGetColor);
   document.addEventListener("mousemove", showTooltip);
 }
