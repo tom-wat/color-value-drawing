@@ -117,7 +117,7 @@ output{
   color: var(--color);
   background-color: var(--background-color);
   border-radius: 4px;
-  z-index: 10;
+  z-index: 20;
 }
 .grid{
   max-width: 980px;
