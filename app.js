@@ -6,6 +6,7 @@ const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
 const container = document.querySelector(".container");
 const format = document.getElementById("format");
+const filter = document.getElementById("filter");
 const colorInfoElement = document.getElementById("colorInfo");
 const colorSpace = document.getElementById("color-space");
 const webp = document.getElementById("webp");
@@ -42,7 +43,6 @@ const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
-// const isWindows = /Windows/.test(navigator.userAgent);
 const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
@@ -78,6 +78,7 @@ let pointerY = 0;
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
   const settingFormat = localStorage.getItem("format");
+  const settingFilter = localStorage.getItem("filter");
   const settingColorSpace = localStorage.getItem("color-space");
   const settingPositionX = localStorage.getItem("position-x");
   const settingPositionY = localStorage.getItem("position-y");
@@ -89,6 +90,7 @@ function setStyles() {
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
+  setValueToSelected(filter, settingFilter);
   setValueToSelected(colorSpace, settingColorSpace);
   changeColorSpaceForMenu(settingColorSpace);
   changeColorSpaceForTooltip(settingColorSpace);
@@ -126,9 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
-  // if (isWindows) {
-  //   // Windowsの場合の処理
-  // }
   if (!!isMobile) {
     // fontInput.value = String(12);
     // updateOutput(fontInput, fontOutput);
@@ -137,6 +136,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
+  filterCanvas();
 });
 
 const openFile = (event) => {
@@ -1162,22 +1162,22 @@ document.addEventListener("keydown", (event) => {
     changeFontSize(ctx, fontInput);
     localStorage.setItem("fontSize", fontInput.value);
   }
-  if (event.key === "h") {
+  if (event.key === "j") {
     offsetX.value = (parseInt(offsetX.value) + 1).toString();
     updateOutput(offsetX, offsetXOutput);
     localStorage.setItem("offsetX", offsetX.value);
   }
-  if (event.key === "g") {
+  if (event.key === "h") {
     offsetX.value = (parseInt(offsetX.value) - 1).toString();
     updateOutput(offsetX, offsetXOutput);
     localStorage.setItem("offsetX", offsetX.value);
   }
-  if (event.key === "y") {
+  if (event.key === "u") {
     offsetY.value = (parseInt(offsetY.value) + 1).toString();
     updateOutput(offsetY, offsetYOutput);
     localStorage.setItem("offsetY", offsetY.value);
   }
-  if (event.key === "t") {
+  if (event.key === "y") {
     offsetY.value = (parseInt(offsetY.value) - 1).toString();
     updateOutput(offsetY, offsetYOutput);
     localStorage.setItem("offsetY", offsetY.value);
@@ -1201,7 +1201,7 @@ document.addEventListener("keydown", (event) => {
     if (keyMeta) return;
     changeSelectedElement(scale);
   }
-  if (event.key === "l") {
+  if (event.key === "f") {
     if (keyMeta) return;
     changeSelectedElement(format);
   }
@@ -1227,17 +1227,19 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     navToggle();
   }
-  if (event.key === "u") {
-    menu.classList.toggle("show");
-  }
   if (event.key === "v") {
     if (keyMeta) return;
     changeSelectedElement(colorSpace);
     positionTooltip(pointerX, pointerY);
   }
-  if (event.key === "i") {
+  if (event.key === "t") {
     if (keyMeta) return;
     changeCheckedPointer();
+  }
+  if (event.key === "g") {
+    if (keyMeta) return;
+    changeSelectedElement(filter);
+    filterCanvas();
   }
 });
 
@@ -1445,6 +1447,10 @@ scale.addEventListener("change", function (event) {
 format.addEventListener("change", function (event) {
   localStorage.setItem(`${format.name}`, format.selectedOptions[0].value);
   // format.blur();
+});
+filter.addEventListener("change", function (event) {
+  localStorage.setItem(`${filter.name}`, filter.selectedOptions[0].value);
+  filterCanvas();
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
@@ -1656,4 +1662,13 @@ function calculateContrastRatio(foregroundRGBColor, backgroundRGBColor) {
   const darker = Math.min(foregroundLuminance, backgroundLuminance);
 
   return (brighter + 0.05) / (darker + 0.05);
+}
+
+function filterCanvas() {
+  if (filter.selectedOptions[0].value === "off") {
+    canvas.style.filter = "grayscale(0%)";
+  }
+  if (filter.selectedOptions[0].value === "greyscale") {
+    canvas.style.filter = "grayscale(100%)";
+  }
 }
