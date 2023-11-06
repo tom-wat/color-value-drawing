@@ -1182,22 +1182,22 @@ document.addEventListener("keydown", (event) => {
     updateOutput(offsetY, offsetYOutput);
     localStorage.setItem("offsetY", offsetY.value);
   }
-  if (event.key === "a") {
+  if (event.key === "x") {
     if (keyMeta) return;
     changeSelectedElement(positionX);
     positionTooltip(pointerX, pointerY);
   }
-  if (event.key === "s") {
+  if (event.key === "z") {
     if (keyMeta) return;
     changeSelectedElement(positionY);
     positionTooltip(pointerX, pointerY);
   }
-  if (event.key === "p") {
+  if (event.key === "d") {
     if (keyMeta) return;
 
     debouncedDownload();
   }
-  if (event.key === "d") {
+  if (event.key === "s") {
     if (keyMeta) return;
     changeSelectedElement(scale);
   }
@@ -1205,19 +1205,19 @@ document.addEventListener("keydown", (event) => {
     if (keyMeta) return;
     changeSelectedElement(format);
   }
-  if (event.key === "e") {
+  if (event.key === "c") {
     if (keyMeta) return;
 
     clearCanvas();
   }
-  if (event.key === "x") {
+  if (event.key === "m") {
     if (keyMeta) return;
 
     columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
     updateOutput(columnNumber, columnNumberOutput);
     localStorage.setItem("column", columnNumber.value);
   }
-  if (event.key === "z") {
+  if (event.key === "n") {
     if (keyMeta) return;
 
     columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
