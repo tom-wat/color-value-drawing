@@ -112,8 +112,12 @@ function setValue(element, value, output) {
   updateOutput(element, output);
 }
 function setValueToChecked(element, value) {
-  if (!value) return;
-  element.checked = value;
+  if (value === null) return;
+  if (value === "false") {
+    element.checked = false;
+    return;
+  }
+  element.checked = true;
 }
 function setValueToSelected(element, value) {
   if (!value) return;
