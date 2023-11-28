@@ -392,11 +392,11 @@ label:focus-visible{
   padding-block: calc(1rem / 2);
   width: 95%;
   height: auto;
+  padding-inline-end: 2rem;
 }
 .close-arrow{
   font-size: var(--font-size-ss);
   margin-inline: auto;
-  transform: translateX(-8px);
 }
 
 .image-container{
@@ -572,7 +572,6 @@ label:focus-visible{
   .button{
     min-width: 280px;
     padding-inline-start: 1.5rem;
-    padding-inline-end: 0;
   }
   .object{
     padding-inline-start: 1.5rem;
