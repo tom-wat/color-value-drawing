@@ -12,7 +12,7 @@
   --grey-3:hsl(0, 0%, 45%);
   --font-weight-medium: 500;
   --font-weight-light: 300;
-  --font-size-large: 20px;
+  --font-size-large: 18px;
   --font-size-medium: 16px;
   --font-size-small: 14px;
   --font-size-ss: 12px;
@@ -72,7 +72,7 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 select {
-  font-size: var(--font-size-medium);
+  font-size: var(--font-size-small);
   background-color: var(--primary-black);
   color: var(--tertiary-white);
   padding: 2px 4px;
@@ -233,9 +233,9 @@ output{
   width: 95%;
   height: 100%;
   margin-inline: auto;
-  font-size: var(--font-size-medium);
+  font-size: var(--font-size-small);
   padding-inline-start: 2rem;
-  padding-inline-end: 1rem;
+  padding-inline-end: 0.5rem;
   border-radius: 8px;
   font-weight: var(--font-weight-medium);
   background-color: var(--primary-black);
@@ -250,22 +250,23 @@ output{
 }
 
 .menu{
-  min-width: 370px;
+  min-width: 320px;
   max-height: 700px;
   position: fixed;
-  padding-block-start: 1.5rem;
+  padding-block-start: 1.2rem;
   padding-block-end: 3rem;
   border-radius: 1rem;
   background-color: var(--primary-black);
   bottom:3rem;
   left:3rem;
-  height: calc(93vh - 1rem);
+  height: calc(90vh - 1rem);
   z-index: 10;
 }
 .menu-content{
   display: grid;
   height: 100%;
   overflow: hidden;
+  scrollbar-gutter: stable;
 }
 .menu-content::-webkit-scrollbar-track {
   border-radius: var(--scroll-bar);
@@ -489,9 +490,6 @@ label:focus-visible{
   }
   .menu:hover .menu-content{
     overflow: auto;
-  }
-  .menu:hover .menu-content .button{
-    padding-inline-end: calc(1rem - var(--scroll-bar));
   }
   .description button:active{
     background-color: var(--primary-black);
