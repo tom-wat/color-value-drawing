@@ -571,7 +571,6 @@ label:focus-visible{
   }
   .button{
     min-width: 280px;
-    padding-inline-start: 1.5rem;
   }
   .object{
     padding-inline-start: 1.5rem;
@@ -648,12 +647,12 @@ label:focus-visible{
     max-width: 370px;
     min-width: 280px;
   }
-  .menu:hover .menu-content .button{
+  /* .menu:hover .menu-content .button{
     padding-inline-end: calc(0.5rem - var(--scroll-bar));
   }
   .close-button{
     transform: translateX(-12px);
-  }
+  } */
   .open-button{
     position: fixed;
     bottom: 1rem;
@@ -664,7 +663,6 @@ label:focus-visible{
   }
   .button{
     min-width: 280px;
-    padding-inline-start: 1.5rem;
     padding-inline-end: 0.5rem;
   }
   .object{
