@@ -602,7 +602,6 @@ function drawMultilineText(
   colorText,
   pointX,
   pointY,
-  lineHeight,
   textPositionX,
   textPositionY,
   fontSize,
@@ -611,8 +610,8 @@ function drawMultilineText(
   columnNumber
 ) {
   const colorElements = colorText.split(" ");
-  const padding = 4 + (fontSize * 2) / 15;
-  const margin = 4 + (fontSize * 2) / 15;
+  const padding = fontSize / 4;
+  const margin = fontSize / 3;
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
@@ -634,11 +633,11 @@ function drawMultilineText(
 
   for (let i = 0; i < colorElements.length; i++) {
     const colorElement = colorElements[i];
-    const lineWidth = context.measureText(colorElement).width;
+    const textWidth = context.measureText(colorElement).width;
     const offsetXValue = [0, 1, 2, 3, 4];
     const offsetYValue = [0, 0.5, 1, 1.5, 2];
-    const textSpaceWidth = lineWidth + padding * 2;
-    const textSpaceHeight = lineHeight + padding;
+    const cardWidth = textWidth + padding * 2;
+    const cardHeight = fontSize + padding * 2;
     const offSetXWidth = fontSize * columnNumber;
     let xOffsetAdjustment = fontSize / 3 + fontSize / 2;
     let yOffsetAdjustment = fontSize / 2;
@@ -677,34 +676,31 @@ function drawMultilineText(
     if (textPositionY === "top") {
       yOffset =
         -yOffsetAdjustment -
-        (textSpaceHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) +
+        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber) +
         margin -
-        (textSpaceHeight + margin) *
+        (cardHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     } else if (textPositionY === "middle") {
       yOffset =
-        (-(textSpaceHeight + margin) *
+        (-(cardHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) +
           margin) /
         2;
     } else {
       yOffset =
         yOffsetAdjustment +
-        (textSpaceHeight + margin) *
+        (cardHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
     }
-
-    context.textBaseline = "top";
 
     drawRoundedRectangle(
       context,
       pointX + drawingPositionX + xOffset,
       pointY + drawingPositionY + yOffset,
-      textSpaceWidth,
-      textSpaceHeight,
+      cardWidth,
+      cardHeight,
       padding,
       false
     );
@@ -744,14 +740,14 @@ function drawMultilineText(
     context.fillText(
       colorElement,
       pointX + drawingPositionX + xOffset + padding,
-      pointY + drawingPositionY + yOffset + padding
+      pointY + drawingPositionY + yOffset + fontSize + fontSize / 12
     );
 
     if ((i + 1) % columnNumber === 0) {
-      drawingPositionY += textSpaceHeight + margin;
+      drawingPositionY += cardHeight + margin;
       drawingPositionX = 0;
     } else {
-      drawingPositionX += textSpaceWidth + margin;
+      drawingPositionX += cardWidth + margin;
     }
   }
 }
@@ -1152,7 +1148,6 @@ canvas.addEventListener("click", function (event) {
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
   const offsetYValue = parseInt(offsetY.value);
-  const lineHeight = fontSize * 1.3;
   const textPositionX = positionX.selectedOptions[0].value;
   const textPositionY = positionY.selectedOptions[0].value;
   const columnNumberValue = parseInt(columnNumber.value);
@@ -1163,7 +1158,6 @@ canvas.addEventListener("click", function (event) {
     colorText,
     pointX,
     pointY,
-    lineHeight,
     textPositionX,
     textPositionY,
     fontSize,
