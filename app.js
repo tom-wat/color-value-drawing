@@ -613,7 +613,6 @@ function drawMultilineText(
   const colorElements = colorText.split(" ");
   const padding = 4 + (fontSize * 2) / 15;
   const margin = 4 + (fontSize * 2) / 15;
-  const magicNumber = 1;
   let drawingPositionX = 0;
   let drawingPositionY = 0;
   let xOffset = 0;
@@ -669,10 +668,9 @@ function drawMultilineText(
 
     if (textPositionX === "left") {
       xOffset =
-        -xOffsetAdjustment -
-        maxWidth -
-        offSetXWidth * offsetXValue[offsetX] -
-        magicNumber;
+        -xOffsetAdjustment - maxWidth - offSetXWidth * offsetXValue[offsetX];
+    } else if (textPositionX === "middle") {
+      xOffset = -maxWidth / 2;
     } else {
       xOffset = xOffsetAdjustment + offSetXWidth * offsetXValue[offsetX];
     }
@@ -680,10 +678,17 @@ function drawMultilineText(
       yOffset =
         -yOffsetAdjustment -
         (textSpaceHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) -
+          Math.ceil(colorElements.length / columnNumber) +
+        margin -
         (textSpaceHeight + margin) *
           Math.ceil(colorElements.length / columnNumber) *
           offsetYValue[offsetY];
+    } else if (textPositionY === "middle") {
+      yOffset =
+        (-(textSpaceHeight + margin) *
+          Math.ceil(colorElements.length / columnNumber) +
+          margin) /
+        2;
     } else {
       yOffset =
         yOffsetAdjustment +
@@ -800,9 +805,69 @@ function positionTooltip(x, y) {
     const computedWidthInNumber = parseFloat(computedWidth);
 
     tooltip.style.left = x - computedWidthInNumber + "px";
+    if (positionY.selectedOptions[0].value === "middle") {
+      tooltip.style.left = x - computedWidthInNumber - 10 + "px";
+    }
+  } else if (positionX.selectedOptions[0].value === "middle") {
+    // Get the computed styles for the element
+    const computedStyles = window.getComputedStyle(tooltip);
+    // Get the computed width
+    let computedWidth = computedStyles.width;
+    if (computedWidth === "auto") {
+      switch (colorSpace.selectedOptions[0].value) {
+        case "rgb":
+          computedWidth = "86.4688";
+          break;
+        case "hex":
+          computedWidth = "52.9922";
+          break;
+        case "hsv":
+          computedWidth = "86.1719";
+          break;
+        case "hsl":
+          computedWidth = "85.2891";
+          break;
+        case "lab":
+          computedWidth = "83";
+          break;
+        case "lch":
+          computedWidth = "86.3906";
+          break;
+        case "oklab":
+          computedWidth = "79.2188";
+          break;
+        case "oklch":
+          computedWidth = "78.9141";
+          break;
+        case "hsl+l":
+          computedWidth = "102.992";
+          break;
+        case "l":
+          computedWidth = "33.2812";
+          break;
+        default:
+          break;
+      }
+    }
+    // console.log(computedWidth);
+    const computedWidthInNumber = parseFloat(computedWidth) / 2;
+
+    tooltip.style.left = x - computedWidthInNumber + "px";
+    if (positionY.selectedOptions[0].value === "middle") {
+      tooltip.style.top = `${y - 33 / 2 + 8.5 + 20}px`;
+      return;
+    }
   }
   if (positionY.selectedOptions[0].value === "top") {
     tooltip.style.top = y - 33 + "px";
+  } else if (positionY.selectedOptions[0].value === "middle") {
+    tooltip.style.top = `${y - 33 / 2 + 8.5}px`;
+  }
+  if (
+    positionY.selectedOptions[0].value === "middle" &&
+    positionX.selectedOptions[0].value === "right"
+  ) {
+    tooltip.style.left = x + 10 + "px";
   }
 }
 
@@ -1361,21 +1426,35 @@ function download() {
   }
   // Canvasのイメージデータを取得する
   let imageData;
-  if (format.selectedOptions[0].value === "png") {
-    imageData = canvas.toDataURL("image/png");
-  } else {
-    imageData = canvas.toDataURL("image/webP", 0.8);
+  switch (format.selectedOptions[0].value) {
+    case "png":
+      imageData = canvas.toDataURL("image/png");
+      break;
+    case "jpeg":
+      imageData = canvas.toDataURL("image/jpeg", 0.85);
+      break;
+    case "webp":
+      imageData = canvas.toDataURL("image/webP", 0.8);
+      break;
+    default:
+      imageData = canvas.toDataURL("image/png");
   }
-
   // ダウンロード用のリンクを作成する
   const downloadLink = document.createElement("a");
   downloadLink.href = imageData;
-  if (format.selectedOptions[0].value === "png") {
-    downloadLink.download = "image.png";
-  } else {
-    downloadLink.download = "image.webp";
+  switch (format.selectedOptions[0].value) {
+    case "png":
+      downloadLink.download = "image.png";
+      break;
+    case "jpeg":
+      downloadLink.download = "image.jpg";
+      break;
+    case "webp":
+      downloadLink.download = "image.webp";
+      break;
+    default:
+      downloadLink.download = "image.png";
   }
-
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
 }
