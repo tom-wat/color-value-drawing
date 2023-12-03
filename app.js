@@ -36,7 +36,8 @@ const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
-const clickPointAdjustment = -2;
+const clickPointAdjustmentX = -2;
+const clickPointAdjustmentY = -2;
 const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
@@ -639,7 +640,7 @@ function drawMultilineText(
     const cardWidth = textWidth + padding * 2;
     const cardHeight = fontSize + padding * 2;
     const offSetXWidth = fontSize * columnNumber;
-    let xOffsetAdjustment = fontSize / 3 + fontSize / 2;
+    let xOffsetAdjustment = fontSize / 2;
     let yOffsetAdjustment = fontSize / 2;
     let colorSet;
 
@@ -755,7 +756,7 @@ function drawMultilineText(
 function positionTooltip(x, y) {
   // ツールチップを表示する位置を設定
   tooltip.style.left = x + 0 + "px";
-  tooltip.style.top = y + 25 + "px";
+  tooltip.style.top = y + 12 + "px";
   if (positionX.selectedOptions[0].value === "left") {
     // Get the computed styles for the element
     const computedStyles = window.getComputedStyle(tooltip);
@@ -799,10 +800,11 @@ function positionTooltip(x, y) {
     }
     // console.log(computedWidth);
     const computedWidthInNumber = parseFloat(computedWidth);
-
     tooltip.style.left = x - computedWidthInNumber + "px";
     if (positionY.selectedOptions[0].value === "middle") {
+      tooltip.style.top = y - 10 + "px";
       tooltip.style.left = x - computedWidthInNumber - 10 + "px";
+      return;
     }
   } else if (positionX.selectedOptions[0].value === "middle") {
     // Get the computed styles for the element
@@ -850,7 +852,7 @@ function positionTooltip(x, y) {
 
     tooltip.style.left = x - computedWidthInNumber + "px";
     if (positionY.selectedOptions[0].value === "middle") {
-      tooltip.style.top = `${y - 33 / 2 + 8.5 + 20}px`;
+      tooltip.style.top = `${y - 33 / 2 + 8.5 + 12}px`;
       return;
     }
   }
@@ -863,6 +865,7 @@ function positionTooltip(x, y) {
     positionY.selectedOptions[0].value === "middle" &&
     positionX.selectedOptions[0].value === "right"
   ) {
+    tooltip.style.top = y - 10 + "px";
     tooltip.style.left = x + 10 + "px";
   }
 }
@@ -1066,8 +1069,8 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
 }
 
 function getColor(event) {
-  const x = event.offsetX + clickPointAdjustment;
-  const y = event.offsetY + clickPointAdjustment;
+  const x = event.offsetX + clickPointAdjustmentX;
+  const y = event.offsetY + clickPointAdjustmentY;
   const color = ctx.getImageData(x, y, 1, 1).data;
   rgb = [color[0], color[1], color[2]];
   hex = rgbToHex(color[0], color[1], color[2]);
@@ -1082,8 +1085,8 @@ function getColor(event) {
 }
 
 function getColorForTooltip(event) {
-  const x = event.offsetX + clickPointAdjustment;
-  const y = event.offsetY + clickPointAdjustment;
+  const x = event.offsetX + clickPointAdjustmentX;
+  const y = event.offsetY + clickPointAdjustmentY;
   const color = ctx.getImageData(x, y, 1, 1).data;
   rgb2 = [color[0], color[1], color[2]];
   hex2 = rgbToHex(color[0], color[1], color[2]);
@@ -1173,30 +1176,30 @@ canvas.addEventListener("click", function (event) {
   if (pointer.checked === true) {
     if (lab.labL > 85) {
       ctx.beginPath();
-      ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustment + 3);
-      ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustment + 3);
+      ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
+      ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustmentY + 3);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustment + 3);
-      ctx.lineTo(pointX + 7, pointY + clickPointAdjustment + 3);
+      ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustmentY + 3);
+      ctx.lineTo(pointX + 7, pointY + clickPointAdjustmentY + 3);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(pointX + clickPointAdjustment, pointY - 2.5);
-      ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY - 2.5);
+      ctx.moveTo(pointX + clickPointAdjustmentX, pointY - 2.5);
+      ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY - 2.5);
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.moveTo(pointX + clickPointAdjustment, pointY + 6.5);
-      ctx.lineTo(pointX + clickPointAdjustment + 3.5, pointY + 6.5);
+      ctx.moveTo(pointX + clickPointAdjustmentX, pointY + 6.5);
+      ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY + 6.5);
       ctx.stroke();
     }
 
-    ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustment, 5, 3);
-    ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustment, 5.2, 3);
-    ctx.fillRect(pointX + clickPointAdjustment, pointY - 7.5, 3.5, 5);
-    ctx.fillRect(pointX + clickPointAdjustment, pointY + 1.5, 3.5, 5);
+    ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustmentY, 5, 3);
+    ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustmentY, 5.2, 3);
+    ctx.fillRect(pointX + clickPointAdjustmentX, pointY - 7.5, 3.5, 5);
+    ctx.fillRect(pointX + clickPointAdjustmentX, pointY + 1.5, 3.5, 5);
   }
 
   // update current state
