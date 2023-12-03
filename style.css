@@ -48,6 +48,7 @@
 }
 html{
   overflow: auto;
+  cursor: crosshair;
 }
 body {
   background-color: var(--secondary-black);
