@@ -20,6 +20,7 @@
   --toggle-color: hsl(211, 50%, 70%);
   --toggle-color-dark: hsl(211, 30%, 50%);
   --scroll-bar: 5px;
+  --menu-width: 260px;
 }
 
 @font-face {
@@ -47,7 +48,6 @@
   box-sizing: border-box;
 }
 html{
-  overflow: auto;
   cursor: crosshair;
 }
 body {
@@ -58,9 +58,6 @@ body {
 ul,li{
   list-style: none;
   outline: none;
-}
-.list li{
-  padding-inline-start: 2rem;
 }
 button,
 input,
@@ -120,6 +117,32 @@ output{
   border-radius: 4px;
   z-index: 20;
 }
+.menu{
+  width: var(--menu-width);
+  position: fixed;
+  padding-block-start: 1.2rem;
+  padding-block-end: 1rem;
+  /* border-radius: 1rem; */
+  background-color: var(--primary-black);
+  height: 100vh;
+  z-index: 10;
+  overflow: scroll;
+  scrollbar-gutter: stable;
+  transition: transform 0.2s ease-out;
+}
+.menu.close{
+  transform: translateX(calc(0px - var(--menu-width)));  
+}
+
+.main{
+  padding-block: 3rem;
+  padding-inline: 5rem;
+  margin-inline-start: var(--menu-width);
+  transition: margin 0.2s ease-out;
+}
+.main.close{
+  margin-inline-start: 0;
+}
 .grid{
   max-width: 980px;
   display: grid;
@@ -129,17 +152,13 @@ output{
   "title notes";
   gap: 2rem;
   place-items: start;
-  margin-inline: auto;
-}
-#board{
-  padding-block: 3rem;
-  padding-inline: 3rem;
+  
 }
 .title{
   grid-area: title;
 }
 
-#board svg{
+.main svg{
   width: 360px;
   height: 360px;
   vertical-align: bottom;
@@ -211,6 +230,24 @@ output{
   font-weight: var(--font-weight-light);
   padding-inline-start: 1rem;
 }
+.list li{
+  padding-inline-start: 2rem;
+}
+
+.image-container{
+  height: auto;
+  margin-inline-start: var(--menu-width);
+  transition: margin 0.2s ease-out;
+}
+.image-container.close{
+  margin-inline-start: 0;
+}
+.image-container canvas {
+  vertical-align: bottom;
+  margin-inline: auto;
+  display: none;
+}
+
 .icon svg{
   width: 14px;
   fill: var(--icon);
@@ -235,65 +272,18 @@ output{
   height: 100%;
   margin-inline: auto;
   font-size: var(--font-size-small);
-  padding-inline-start: 2rem;
-  padding-inline-end: 0.5rem;
+  padding-inline-start: 1.5rem;
+  /* padding-inline-end: 0.5rem; */
   border-radius: 8px;
   font-weight: var(--font-weight-medium);
   background-color: var(--primary-black);
   color: var(--primary-white);
-  line-height: 2;
+  line-height: 2.2;
   text-align: left;
   cursor: pointer;
 }
-
 .button:focus-visible{
   background-color: var(--secondary-black);
-}
-
-.menu{
-  min-width: 320px;
-  max-height: 700px;
-  position: fixed;
-  padding-block-start: 1.2rem;
-  padding-block-end: 3rem;
-  border-radius: 1rem;
-  background-color: var(--primary-black);
-  bottom:3rem;
-  left:3rem;
-  height: calc(90vh - 1rem);
-  z-index: 10;
-}
-.menu-content{
-  display: grid;
-  height: 100%;
-  overflow: hidden;
-  scrollbar-gutter: stable;
-}
-.menu-content::-webkit-scrollbar-track {
-  border-radius: var(--scroll-bar);
-  background-color: var(--primary-black);
-}
-.menu-content::-webkit-scrollbar-thumb {
-  border-radius: var(--scroll-bar);
-  background-color: var(--grey-3)
-}
-.menu-content::-webkit-scrollbar{
-  background-color: var(--primary-white);
-  width: var(--scroll-bar);
-  /* height: var(--scroll-bar); */
-  border-radius: var(--scroll-bar);
-}
-.menu.close{
-  width: 0;
-  min-width: 0;
-  padding: 0;
-  border:none;
-}
-.menu.close .menu-content{
-  display: none;  
-}
-.menu.close #close-button{
-  display: none;
 }
 .button-type-b{
   cursor: auto;
@@ -335,6 +325,79 @@ label:focus-visible{
 .inline-button:focus-visible{
   background-color: var(--secondary-black);
 }
+.close-button{
+  width: 32px;
+  height: 24px;
+  font-size: 10px;
+  border-radius: 0.3rem;
+  background-color: var(--secondary-black);
+  color: var(--primary-white);
+  cursor: pointer;
+  position: absolute;
+  top: 1.5rem;
+  right: 1.2rem;
+  z-index: 10;
+}
+.close-button.close{
+  display: none;
+}
+.close-button:focus-visible{
+  outline: 1px solid var(--primary-white);
+}
+.open-button{
+  width: 32px;
+  height: 24px;
+  font-size: 10px;
+  border-radius: 0.3rem;
+  background-color: var(--primary-black);
+  color: var(--primary-white);
+  cursor: pointer;
+  position: fixed;
+  top: 1.5rem;
+  left: 1.2rem;
+  transition: opacity 0.2s ease-in;
+}
+.open-button.close{
+  opacity: 0;
+  pointer-events: none;
+}
+.open-button:focus-visible{
+  outline: 1px solid var(--primary-white);
+}
+.toggle-button {
+  display: inline-block;
+  position: relative;
+  width: var(--toggle-size);
+  height: calc(var(--toggle-size) * 3 / 4);
+  border-radius: calc(var(--toggle-size) * 3 / 4);
+  background-color: var(--grey-1);
+  cursor: pointer;
+  transition: background-color .4s;
+  margin-inline-end: 1rem;
+  transform: translateY(1px);
+}
+.toggle-button:has(:checked) {
+  background-color: var(--toggle-color-dark);
+}
+.toggle-button::after {
+  position: absolute;
+  top: -1.5px;
+  left: 0;
+  width: var(--toggle-size);
+  height: var(--toggle-size);
+  border-radius: 50%;
+  box-shadow: 0 0 5px rgb(0 0 0 / 20%);
+  background-color: var(--tertiary-white);
+  content: '';
+  transition: left .4s;
+}
+.toggle-button:has(:checked)::after {
+  left: var(--toggle-size);
+  background-color: var(--toggle-color);
+}
+.toggle-button-input {
+  display: none;
+}
 
 .flex{
   display: flex;
@@ -358,113 +421,29 @@ label:focus-visible{
 #file-input {
   display: none;
 }
+#color-info {
+  --background-color: var(--tertiary-white);
+  position: relative;
+  color: var(--tertiary-white);
+  margin-inline-start: 0.5rem;
+  padding-inline-end: 1rem;
+  max-width: 22ch;
+}
+.color-block {
+  content: "";
+  display: inline-block;
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  background-color: var(--tertiary-white);
+  margin-inline-start: 22px;
+}
 
 .object{
   color:var(--grey-1);
   font-size: var(--font-size-small);
-  padding-inline-start: 2rem;
+  padding-inline-start: 1.5rem;
   padding-block: calc(1rem / 2);
   transform: translateY(4px);
-}
-.open-button{
-  width: 64px;
-  height: 64px;
-  font-size: var(--font-size-ss);
-  border-radius: 1rem;
-  background-color: var(--primary-black);
-  color: var(--primary-white);
-  cursor: pointer;
-  position: fixed;
-  bottom: 3rem;
-  left: 3rem;
-  z-index: 10;
-}
-.open-button.close{
-  display: none;
-}
-
-.open-button:focus-visible{
-  outline: 1px solid var(--primary-white);
-  outline-offset: -4px;
-}
-
-
-#close-button{
-  padding-block: calc(1rem / 2);
-  width: 95%;
-  height: auto;
-  padding-inline-end: 2rem;
-}
-.close-arrow{
-  font-size: var(--font-size-ss);
-  margin-inline: auto;
-}
-
-.image-container{
-  height: auto;
-}
-
-#canvas {
-  vertical-align: bottom;
-  margin-inline: auto;
-  display: none;
-}
-
-#colorInfo {
-  --background-color: var(--tertiary-white);
-  position: relative;
-  color: var(--tertiary-white);
-  padding-inline-end: 1rem;
-  text-align: right;
-  max-width: 22ch;
-}
-#colorInfo::before {
-  content: "";
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  background-color: var(--background-color);
-  transform: translate(-50%, 15%);
-}
-
-
-.toggle-button {
-  display: inline-block;
-  position: relative;
-  width: var(--toggle-size);
-  height: calc(var(--toggle-size) * 3 / 4);
-  border-radius: calc(var(--toggle-size) * 3 / 4);
-  background-color: var(--grey-1);
-  cursor: pointer;
-  transition: background-color .4s;
-  margin-inline-end: 1rem;
-  transform: translateY(1px);
-}
-
-.toggle-button:has(:checked) {
-  background-color: var(--toggle-color-dark);
-}
-
-.toggle-button::after {
-  position: absolute;
-  top: -1.5px;
-  left: 0;
-  width: var(--toggle-size);
-  height: var(--toggle-size);
-  border-radius: 50%;
-  box-shadow: 0 0 5px rgb(0 0 0 / 20%);
-  background-color: var(--tertiary-white);
-  content: '';
-  transition: left .4s;
-}
-
-.toggle-button:has(:checked)::after {
-  left: var(--toggle-size);
-  background-color: var(--toggle-color);
-}
-
-.toggle-button-input {
-  display: none;
 }
 
 @media (hover: hover) and (pointer: fine){
@@ -484,13 +463,12 @@ label:focus-visible{
   }
   .open-button:hover{
     outline: 1px solid var(--primary-white);
-    outline-offset: -4px;
+  }
+  .close-button:hover{
+    outline: 1px solid var(--primary-white);
   }
   select:hover{
     background-color: var(--secondary-black);
-  }
-  .menu:hover .menu-content{
-    overflow: auto;
   }
   .description button:active{
     background-color: var(--primary-black);
@@ -507,7 +485,30 @@ label:focus-visible{
   }
 }
 @media (hover: none) and (any-pointer: coarse) {
-
+  .menu{
+    position: fixed;
+    width: var(--menu-width);
+    padding-block-end: 4rem;
+  }
+  .close-button{
+    width: 48px;
+    height: 48px;
+    position: fixed;
+    top: auto;
+    right: auto;
+    left: 1rem;
+    bottom: 1rem;
+  }
+  .open-button{
+    width: 48px;
+    height: 48px;
+    position: fixed;
+    top: auto;
+    right: auto;
+    left: 1rem;
+    bottom: 1rem;
+    background-color: var(--tertiary-black);
+  }
   .grid{
     grid-template-areas:
     "title"
@@ -523,15 +524,15 @@ label:focus-visible{
     border-radius: 1rem;
     padding-inline: 2rem;
   }
-  #board{
+  .main{
     padding-block: 1rem;
     padding-inline: 1rem;
   }
-  #board .flex{
+  .main .flex{
     flex-direction: column;
     align-items: start;
   }
-  #board svg{
+  .main svg{
     width: 240px;
     height: 240px;
     min-width: 240px;
@@ -542,36 +543,14 @@ label:focus-visible{
     border-radius: 1.5rem;
     margin-block-start: 0px;
   }
-  #board .note .flex{
+  .main .note .flex{
     flex-direction: row;
   }
   #fileInput {
     width: 100%;
   }
-  .menu{
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    width: calc(100% - 2rem);
-    max-width: 370px;
-    min-width: 280px;
-  }
-  .menu-content{
-    overflow: auto;
-  }
-  .close-button{
-    transform: translateX(-12px);
-  }
-  .open-button{
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-  }
   input{
     max-width: 30%;
-  }
-  .button{
-    min-width: 280px;
   }
   .object{
     padding-inline-start: 1.5rem;
@@ -599,7 +578,10 @@ label:focus-visible{
 }
 
 @media (width < 800px) and (hover: hover) and (pointer: fine) {
-
+  .menu{
+    position: fixed;
+    width: var(--menu-width);
+  }
   .grid{
     grid-template-areas:
     "title"
@@ -615,15 +597,15 @@ label:focus-visible{
     border-radius: 1rem;
     padding-inline: 2rem;
   }
-  #board{
+  .main{
     padding-block: 1rem;
     padding-inline: 1rem;
   }
-  #board .flex{
+  .main .flex{
     flex-direction: column;
     align-items: start;
   }
-  #board svg{
+  .main svg{
     width: 240px;
     height: 240px;
     min-width: 240px;
@@ -634,37 +616,14 @@ label:focus-visible{
     border-radius: 1.5rem;
     margin-block-start: 0px;
   }
-  #board .note .flex{
+  .main .note .flex{
     flex-direction: row;
   }
   #fileInput {
     width: 100%;
   }
-  .menu{
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    width: calc(100% - 2rem);
-    max-width: 370px;
-    min-width: 280px;
-  }
-  /* .menu:hover .menu-content .button{
-    padding-inline-end: calc(0.5rem - var(--scroll-bar));
-  }
-  .close-button{
-    transform: translateX(-12px);
-  } */
-  .open-button{
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-  }
   input{
     max-width: 30%;
-  }
-  .button{
-    min-width: 280px;
-    padding-inline-end: 0.5rem;
   }
   .object{
     padding-inline-start: 1.5rem;

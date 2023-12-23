@@ -1,13 +1,15 @@
-const board = document.getElementById("board");
+const main = document.getElementById("main");
 const tooltip = document.getElementById("tooltip");
 const pc = document.getElementsByClassName("pc");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
+const imageContainer = document.querySelector(".image-container");
 const container = document.querySelector(".container");
 const format = document.getElementById("format");
 const filter = document.getElementById("filter");
-const colorInfoElement = document.getElementById("colorInfo");
+const colorBlockElement = document.getElementById("color-block");
+const colorInfoElement = document.getElementById("color-info");
 const colorSpace = document.getElementById("color-space");
 const webp = document.getElementById("webp");
 const png = document.getElementById("png");
@@ -137,9 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
     element.setAttribute("tabindex", index + 1);
   });
   if (!!isMobile) {
-    // fontInput.value = String(12);
-    // updateOutput(fontInput, fontOutput);
-    // changeFontSize(ctx, fontInput);
+    navToggle();
     Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
@@ -153,7 +153,7 @@ const openFile = (event) => {
     console.error("No file selected.");
     return;
   }
-  board.style.display = "none";
+  main.style.display = "none";
   const reader = new FileReader();
   reader.onload = function () {
     canvas.style.display = "block";
@@ -1058,8 +1058,8 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `lab(${lab.labL}% 0 0)`;
       colorInfoElement.textContent = `L:${lab.labL}`;
-      colorInfoElement.style.setProperty(
-        "--background-color",
+      colorBlockElement.style.setProperty(
+        "background-color",
         `lab(${lab.labL}% 0 0)`
       );
       break;
@@ -1139,8 +1139,8 @@ if (!!isMobile === false && !!isTablet === false) {
 
 canvas.addEventListener("click", function (event) {
   getColor(event, [colorInfoElement]);
-  colorInfoElement.style.setProperty(
-    "--background-color",
+  colorBlockElement.style.setProperty(
+    "background-color",
     `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
   );
   isInitialValue = false;
@@ -1702,6 +1702,9 @@ columnSubtract.addEventListener("keydown", (event) => {
 function navToggle() {
   menu.classList.toggle("close");
   openButton.classList.toggle("close");
+  closeButton.classList.toggle("close");
+  main.classList.toggle("close");
+  imageContainer.classList.toggle("close");
 }
 
 /// find contrast color
