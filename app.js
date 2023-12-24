@@ -794,6 +794,9 @@ function positionTooltip(x, y) {
         case "l":
           computedWidth = "33.2812";
           break;
+        case "hs":
+          computedWidth = "60.828";
+          break;
         default:
           break;
       }
@@ -842,6 +845,9 @@ function positionTooltip(x, y) {
           break;
         case "l":
           computedWidth = "33.2812";
+          break;
+        case "hs":
+          computedWidth = "60.828";
           break;
         default:
           break;
@@ -968,6 +974,13 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       tooltip.textContent = `L:${lab2.labL}`;
       tooltip.style.setProperty("--background-color", `lab(${lab2.labL}% 0 0)`);
       break;
+    case "hs":
+      if (isInitialValue2) {
+        tooltip.textContent = `H:-- S:--`;
+        break;
+      }
+      tooltip.textContent = `H:${hsl2.h} S:${hsl2.s}`;
+      break;
     default:
       break;
   }
@@ -1062,6 +1075,14 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
         "background-color",
         `lab(${lab.labL}% 0 0)`
       );
+      break;
+    case "hs":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `H:-- S:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
+      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s}`;
       break;
     default:
       break;
