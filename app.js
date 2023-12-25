@@ -1,3 +1,4 @@
+const html = document.getElementsByTagName("html");
 const main = document.getElementById("main");
 const tooltip = document.getElementById("tooltip");
 const pc = document.getElementsByClassName("pc");
@@ -45,6 +46,7 @@ const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
+const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 const isTablet = navigator.userAgent.match(
   /iPad|Android.*Tablet|Kindle|Playbook/
@@ -80,6 +82,12 @@ let initialState;
 let currentStates;
 let pointerX = 0;
 let pointerY = 0;
+let scaleValue = 1;
+let scaleMultiplier = 0.8;
+let startDragOffset = {};
+let dragX = 0;
+let dragY = 0;
+let colors = [];
 
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
@@ -93,6 +101,7 @@ function setStyles() {
   const settingFontSize = localStorage.getItem("fontSize");
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
+  const settingPan = localStorage.getItem("pan");
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
@@ -108,6 +117,7 @@ function setStyles() {
   changeFontSize(ctx, fontInput);
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
+  setValueToChecked(pan, settingPan);
 }
 function setValue(element, value, output) {
   if (!value) return;
@@ -138,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
-  if (!!isMobile) {
+  if (!!isMobile === true) {
     menu.classList.toggle("close");
     openButton.classList.toggle("close");
     closeButton.classList.toggle("close");
@@ -149,6 +159,16 @@ document.addEventListener("DOMContentLoaded", function () {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
   filterCanvas();
+  if (!!isMobile === false && !!isTablet === false) {
+    if (pan.checked === true) {
+      canvas.addEventListener("mousedown", panMode);
+      html[0].style.cursor = "grab";
+    } else {
+      canvas.addEventListener("mousemove", throttledGetColor);
+      document.addEventListener("mousemove", showTooltip);
+      canvas.addEventListener("mousedown", storeColor);
+    }
+  }
 });
 
 const openFile = (event) => {
@@ -178,14 +198,16 @@ const openFile = (event) => {
           adjustedDrawImage();
       }
       changeFontSize(ctx, fontInput);
+      initialState = ctx.getImageData(0, 0, image.width, image.height);
+      colors = [];
       undoStates = [];
-      getCurrentImageState();
-      initialState = undoStates[0];
+      redoStates = [];
+      dragX = 0;
+      dragY = 0;
     };
   };
 
   reader.readAsDataURL(file);
-  // 配列のファイルを削除する (インデックス0以降のすべての要素を削除)
 };
 
 fileInput.addEventListener("change", openFile);
@@ -527,36 +549,44 @@ function hslToRgb(h, s, l) {
   ];
 }
 
-function getCurrentImageState() {
-  currentStates = ctx.getImageData(0, 0, image.width, image.height);
-  undoStates.unshift(currentStates);
-}
-
 // function to undo
 function undo() {
-  if (undoStates.length <= 1) return;
-  let firstUndoStates = undoStates.shift();
-  redoStates.unshift(firstUndoStates);
-  // redraw canvas
-  ctx.putImageData(undoStates[0], 0, 0);
+  if (undoStates.length === 0) {
+    return;
+  }
+  redoStates.push(undoStates.pop());
+  // console.log(undoStates);
+  if (undoStates.length > 0) {
+    const undoStatesCopy = structuredClone(undoStates[undoStates.length - 1]);
+    colors = undoStatesCopy;
+  } else {
+    colors = [];
+  }
+  drawImage();
 }
-
-// function to redo
 function redo() {
-  // check if there's a next state in the array
-  if (redoStates.length === 0) return;
-  let firstRedoStates = redoStates.shift();
-  undoStates.unshift(firstRedoStates);
-  // redraw canvas
-  ctx.putImageData(undoStates[0], 0, 0);
+  if (redoStates.length > 0) {
+    undoStates.push(redoStates.pop());
+    // console.log(undoStates);
+    // console.log(redoStates);
+    // console.log(colors);
+    const undoStatesCopy = structuredClone(undoStates[undoStates.length - 1]);
+    colors = undoStatesCopy;
+    drawImage();
+  }
+}
+function updateUndoStates() {
+  const colorsCopy = structuredClone(colors);
+  undoStates.push(colorsCopy);
 }
 
 function clearCanvas() {
   if (!initialState) return;
   if (initialState === undoStates[0]) return;
-  undoStates.unshift(initialState);
+  colors = [];
+  updateUndoStates();
   redoStates = [];
-  ctx.putImageData(initialState, 0, 0);
+  drawImage();
 }
 
 async function copyToClipboard() {
@@ -612,7 +642,10 @@ function drawMultilineText(
   fontSize,
   offsetX,
   offsetY,
-  columnNumber
+  columnNumber,
+  colorList,
+  colorSpaceValue,
+  pointerChecked
 ) {
   const colorElements = colorText.split(" ");
   const padding = fontSize / 4;
@@ -648,25 +681,25 @@ function drawMultilineText(
     let yOffsetAdjustment = fontSize / 2;
     let colorSet;
 
-    if (pointer.checked === false) {
+    if (pointerChecked) {
       xOffsetAdjustment = 0;
       yOffsetAdjustment = 0;
     }
 
-    switch (colorSpace.selectedOptions[0].value) {
+    switch (colorSpaceValue) {
       case "hsl+l":
         colorSet = [
-          [hsl.h, hsl.h, hsl.h, 0],
-          [100, hsl.s, hsl.s, 0],
-          [50, 50, hsl.l, lab.labL],
+          [colorList.hsl.h, colorList.hsl.h, colorList.hsl.h, 0],
+          [100, colorList.hsl.s, colorList.hsl.s, 0],
+          [50, 50, colorList.hsl.l, colorList.lab.labL],
         ];
         context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
         break;
       case "l":
-        context.fillStyle = `lab(${lab.labL}% 0 0)`;
+        context.fillStyle = `lab(${colorList.lab.labL}% 0 0)`;
         break;
       default:
-        context.fillStyle = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
+        context.fillStyle = `rgb(${colorList.rgb[0]} ${colorList.rgb[1]} ${colorList.rgb[2]})`;
         break;
     }
 
@@ -710,34 +743,40 @@ function drawMultilineText(
       false
     );
 
-    switch (colorSpace.selectedOptions[0].value) {
+    switch (colorSpaceValue) {
       case "hsl+l":
         if (i === 0) {
-          const baseColorRgb = hslToRgb(hsl.h, 100, 50);
+          const baseColorRgb = hslToRgb(colorList.hsl.h, 100, 50);
           const contrastColor =
             getGreyScaleColorWithHighestContrast(baseColorRgb);
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
         if (i === 1) {
-          const baseColorRgb = hslToRgb(hsl.h, hsl.s, 50);
+          const baseColorRgb = hslToRgb(colorList.hsl.h, colorList.hsl.s, 50);
           const contrastColor =
             getGreyScaleColorWithHighestContrast(baseColorRgb);
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
         if (i === 2) {
-          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+          const contrastColor = getGreyScaleColorWithHighestContrast(
+            colorList.rgb
+          );
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
         if (i === 3) {
-          const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+          const contrastColor = getGreyScaleColorWithHighestContrast(
+            colorList.rgb
+          );
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
       default:
-        const contrastColor = getGreyScaleColorWithHighestContrast(rgb);
+        const contrastColor = getGreyScaleColorWithHighestContrast(
+          colorList.rgb
+        );
         context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
         break;
     }
@@ -1107,6 +1146,17 @@ function getColor(event) {
   lch = labToLch(lab.labL, lab.labA, lab.labB);
   oklab = rgb2oklab(color[0], color[1], color[2]);
   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+  const colorList = {
+    rgb: rgb,
+    hex: hex,
+    hsv: hsv,
+    hsl: hsl,
+    lab: lab,
+    lch: lch,
+    oklab: oklab,
+    oklch: oklch,
+  };
+  return colorList;
 }
 
 function getColorForTooltip(event) {
@@ -1157,21 +1207,17 @@ const throttledGetColor = throttle(function (event) {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
 
-if (!!isMobile === false && !!isTablet === false) {
-  canvas.addEventListener("mousemove", throttledGetColor);
-  document.addEventListener("mousemove", showTooltip);
-}
-
-canvas.addEventListener("click", function (event) {
-  getColor(event, [colorInfoElement]);
+function storeColor(event) {
+  const colorList = getColor(event);
   colorBlockElement.style.setProperty(
     "background-color",
     `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
   );
   isInitialValue = false;
-  changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
-  const pointX = event.offsetX;
-  const pointY = event.offsetY;
+  const colorSpaceValue = colorSpace.selectedOptions[0].value;
+  changeColorSpaceForMenu(colorSpaceValue);
+  const pointX = event.offsetX - dragX;
+  const pointY = event.offsetY - dragY;
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
@@ -1179,64 +1225,91 @@ canvas.addEventListener("click", function (event) {
   const textPositionX = positionX.selectedOptions[0].value;
   const textPositionY = positionY.selectedOptions[0].value;
   const columnNumberValue = parseInt(columnNumber.value);
-
-  // 新しい描画を行う
-  drawMultilineText(
-    ctx,
+  const pointerChecked = pointer.checked;
+  colors.push({
+    colorList,
     colorText,
+    colorSpaceValue,
     pointX,
     pointY,
-    textPositionX,
-    textPositionY,
     fontSize,
     offsetXValue,
     offsetYValue,
-    columnNumberValue
-  );
-
-  ctx.fillStyle = `hsl( 0, 0%, 100%)`;
-  ctx.lineWidth = 0.5;
-  ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
-
-  if (pointer.checked === true) {
-    if (lab.labL > 85) {
-      ctx.beginPath();
-      ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
-      ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustmentY + 3);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustmentY + 3);
-      ctx.lineTo(pointX + 7, pointY + clickPointAdjustmentY + 3);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(pointX + clickPointAdjustmentX, pointY - 2.5);
-      ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY - 2.5);
-      ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(pointX + clickPointAdjustmentX, pointY + 6.5);
-      ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY + 6.5);
-      ctx.stroke();
-    }
-
-    ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustmentY, 5, 3);
-    ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustmentY, 5.2, 3);
-    ctx.fillRect(pointX + clickPointAdjustmentX, pointY - 7.5, 3.5, 5);
-    ctx.fillRect(pointX + clickPointAdjustmentX, pointY + 1.5, 3.5, 5);
-  }
-
-  // update current state
+    textPositionX,
+    textPositionY,
+    columnNumberValue,
+    pointerChecked,
+  });
+  console.log("colors", colors);
+  updateUndoStates();
   redoStates = [];
-  getCurrentImageState();
+  console.log("undoStates", undoStates);
+
   if (undoStates.length > undoStatesLimitNumber) {
     undoStates.length = undoStatesLimitNumber;
   }
-});
+  drawImage();
+}
+
+function drawingColor() {
+  if (colors.length === false) return;
+  colors.forEach((color) => {
+    drawMultilineText(
+      ctx,
+      color.colorText,
+      color.pointX,
+      color.pointY,
+      color.textPositionX,
+      color.textPositionY,
+      color.fontSize,
+      color.offsetXValue,
+      color.offsetYValue,
+      color.columnNumberValue,
+      color.colorList,
+      color.colorSpaceValue,
+      color.pointerChecked
+    );
+
+    ctx.fillStyle = `hsl( 0, 0%, 100%)`;
+    ctx.lineWidth = 0.5;
+    ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
+
+    if (color.pointerChecked === true) {
+      drawingPointer(color.pointX, color.pointY);
+    }
+  });
+}
+
+function drawingPointer(pointX, pointY) {
+  if (lab.labL > 85) {
+    ctx.beginPath();
+    ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
+    ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustmentY + 3);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustmentY + 3);
+    ctx.lineTo(pointX + 7, pointY + clickPointAdjustmentY + 3);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + clickPointAdjustmentX, pointY - 2.5);
+    ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY - 2.5);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(pointX + clickPointAdjustmentX, pointY + 6.5);
+    ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY + 6.5);
+    ctx.stroke();
+  }
+
+  ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustmentY, 5, 3);
+  ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustmentY, 5.2, 3);
+  ctx.fillRect(pointX + clickPointAdjustmentX, pointY - 7.5, 3.5, 5);
+  ctx.fillRect(pointX + clickPointAdjustmentX, pointY + 1.5, 3.5, 5);
+}
 
 /// keyboard shortcuts ///
-
 // Add event listeners to track the state of each key
 document.addEventListener("keydown", (event) => {
   if (event.key === "r") {
@@ -1334,6 +1407,10 @@ document.addEventListener("keydown", (event) => {
     if (keyMeta) return;
     changeSelectedElement(filter);
     filterCanvas();
+  }
+  if (event.key === "a") {
+    if (keyMeta) return;
+    changeCheckedPan();
   }
 });
 
@@ -1446,6 +1523,7 @@ function download() {
   if (!!initialState === false) {
     return;
   }
+  drawImageDefault();
   // Canvasのイメージデータを取得する
   let imageData;
   switch (format.selectedOptions[0].value) {
@@ -1479,6 +1557,7 @@ function download() {
   }
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
+  drawImage();
 }
 const debouncedDownload = debounce(download, 2000, true);
 
@@ -1536,11 +1615,6 @@ function changeSelectedElement(element) {
     }
     localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
   }
-}
-
-function changeCheckedPointer() {
-  pointer.checked = !pointer.checked;
-  localStorage.setItem(`pointer`, pointer.checked);
 }
 
 fileButton.addEventListener("click", function () {
@@ -1732,6 +1806,11 @@ function navToggle() {
   imageContainer.classList.toggle("close");
 }
 
+function changeCheckedPointer() {
+  pointer.checked = !pointer.checked;
+  localStorage.setItem(`pointer`, pointer.checked);
+}
+
 /// find contrast color
 
 function getGreyScaleColorWithHighestContrast(backgroundRGBColor) {
@@ -1782,4 +1861,78 @@ function filterCanvas() {
   if (filter.selectedOptions[0].value === "greyscale") {
     canvas.style.filter = "grayscale(100%)";
   }
+}
+
+/// switch mode ///
+
+function changeCheckedPan() {
+  pan.checked = !pan.checked;
+  localStorage.setItem(`pan`, pan.checked);
+  if (pan.checked === true) {
+    tooltip.style.display = "none";
+    html[0].style.cursor = "grab";
+    removeEventListenerTooltip();
+    canvas.removeEventListener("mousedown", storeColor);
+    canvas.addEventListener("mousedown", panMode);
+  } else {
+    html[0].style.cursor = "crosshair";
+    canvas.removeEventListener("mousedown", panMode);
+    canvas.addEventListener("mousemove", throttledGetColor);
+    document.addEventListener("mousemove", showTooltip);
+    canvas.addEventListener("mousedown", storeColor);
+  }
+}
+function removeEventListenerTooltip() {
+  canvas.removeEventListener("mousemove", throttledGetColor);
+  document.removeEventListener("mousemove", showTooltip);
+  canvas.removeEventListener("mouseup", removeEventListenerTooltip);
+  canvas.removeEventListener("mouseout", removeEventListenerTooltip);
+}
+function panMode(event) {
+  startDragOffset.x = event.clientX - canvas.offsetLeft - dragX;
+  startDragOffset.y = event.clientY - canvas.offsetTop - dragY;
+  canvas.addEventListener("mousemove", onMouseMove);
+  canvas.addEventListener("mouseup", onMouseUp);
+  canvas.addEventListener("mouseout", onMouseUp);
+}
+
+function onMouseMove(event) {
+  dragX = event.clientX - canvas.offsetLeft - startDragOffset.x;
+  dragY = event.clientY - canvas.offsetTop - startDragOffset.y;
+  drawImage();
+}
+
+function onMouseUp() {
+  canvas.removeEventListener("mousemove", onMouseMove);
+  canvas.removeEventListener("mouseup", onMouseUp);
+  canvas.removeEventListener("mouseout", onMouseUp);
+}
+
+function drawImage() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.translate(dragX, dragY);
+  ctx.scale(scaleValue, scaleValue);
+  ctx.drawImage(image, 0, 0, image.width, image.height);
+  drawingColor();
+  ctx.restore();
+}
+
+function drawImageDefault() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.save();
+  ctx.scale(1, 1);
+  ctx.drawImage(image, 0, 0, image.width, image.height);
+  drawingColor();
+  ctx.restore();
+}
+
+function zoomIn() {
+  scaleValue /= scaleMultiplier;
+  drawImage();
+}
+
+function zoomOut() {
+  scaleValue *= scaleMultiplier;
+  drawImage();
 }
