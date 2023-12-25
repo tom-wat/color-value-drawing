@@ -139,7 +139,11 @@ document.addEventListener("DOMContentLoaded", function () {
     element.setAttribute("tabindex", index + 1);
   });
   if (!!isMobile) {
-    navToggle();
+    menu.classList.toggle("close");
+    openButton.classList.toggle("close");
+    closeButton.classList.toggle("close");
+    main.classList.toggle("close");
+    imageContainer.classList.toggle("close");
     Array.from(pc).forEach((element) => (element.style.display = "none"));
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
