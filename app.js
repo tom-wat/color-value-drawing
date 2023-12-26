@@ -9,6 +9,7 @@ const imageContainer = document.querySelector(".image-container");
 const container = document.querySelector(".container");
 const format = document.getElementById("format");
 const filter = document.getElementById("filter");
+const resetElement = document.getElementById("reset");
 const colorBlockElement = document.getElementById("color-block");
 const colorInfoElement = document.getElementById("color-info");
 const colorSpace = document.getElementById("color-space");
@@ -105,7 +106,6 @@ function setStyles() {
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
   const settingPan = localStorage.getItem("pan");
-  const settingZoom = localStorage.getItem("zoom");
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
@@ -122,7 +122,6 @@ function setStyles() {
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(pan, settingPan);
-  setValueToChecked(zoomElement, settingZoom);
 }
 function setValue(element, value, output) {
   if (!value) return;
@@ -1324,13 +1323,13 @@ document.addEventListener("keydown", (event) => {
 
     fileInput.click();
   }
-  if (event.key === "w") {
+  if (event.key === "s") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
-  if (event.key === "q") {
+  if (event.key === "a") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
     changeFontSize(ctx, fontInput.value);
@@ -1371,7 +1370,7 @@ document.addEventListener("keydown", (event) => {
 
     debouncedDownload();
   }
-  if (event.key === "s") {
+  if (event.key === "w") {
     if (keyMeta) return;
     changeSelectedElement(scale);
   }
@@ -1415,7 +1414,7 @@ document.addEventListener("keydown", (event) => {
     changeSelectedElement(filter);
     filterCanvas();
   }
-  if (event.key === "a") {
+  if (event.key === "q") {
     if (keyMeta) return;
     changeCheckedPan();
   }
@@ -1430,6 +1429,9 @@ document.addEventListener("keydown", (event) => {
     updateOutput(zoomElement, zoomOutput);
     localStorage.setItem("zoom", zoomElement.value);
     zoom();
+  }
+  if (event.key === "3") {
+    reset();
   }
 });
 
@@ -1822,7 +1824,6 @@ zoomAdd.addEventListener("click", function (event) {
   count += 10;
   zoomElement.value = String(count);
   updateOutput(zoomElement, zoomOutput);
-  localStorage.setItem("zoom", zoomElement.value);
   zoom();
 });
 zoomSubtract.addEventListener("click", function (event) {
@@ -1831,7 +1832,6 @@ zoomSubtract.addEventListener("click", function (event) {
   count -= 10;
   zoomElement.value = String(count);
   updateOutput(zoomElement, zoomOutput);
-  localStorage.setItem("zoom", zoomElement.value);
   zoom();
 });
 zoomAdd.addEventListener("keydown", function (event) {
@@ -1841,7 +1841,6 @@ zoomAdd.addEventListener("keydown", function (event) {
     count += 10;
     zoomElement.value = String(count);
     updateOutput(zoomElement, zoomOutput);
-    localStorage.setItem("zoom", zoomElement.value);
     zoom();
   }
 });
@@ -1852,8 +1851,15 @@ zoomSubtract.addEventListener("keydown", function (event) {
     count -= 10;
     zoomElement.value = String(count);
     updateOutput(zoomElement, zoomOutput);
-    localStorage.setItem("zoom", zoomElement.value);
     zoom();
+  }
+});
+resetElement.addEventListener("click", function () {
+  reset();
+});
+resetElement.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    reset();
   }
 });
 
@@ -1991,4 +1997,13 @@ function zoom() {
   const zoomValue = zoomElement.value / 100;
   scaleValue = zoomValue;
   drawImage();
+}
+
+function reset() {
+  drawImageDefault();
+  dragX = 0;
+  dragY = 0;
+  scaleValue = 1;
+  zoomElement.value = String(100);
+  updateOutput(zoomElement, zoomOutput);
 }
