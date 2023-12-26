@@ -16,6 +16,10 @@ const webp = document.getElementById("webp");
 const png = document.getElementById("png");
 const clear = document.getElementById("clear-btn");
 const scale = document.getElementById("scale");
+const zoomElement = document.getElementById("zoom");
+const zoomOutput = document.getElementById("zoom-output");
+const zoomAdd = document.getElementById("zoom-add");
+const zoomSubtract = document.getElementById("zoom-subtract");
 const fontInput = document.getElementById("font-size-input");
 const fontOutput = document.getElementById("font-size-output");
 const fontSizeAdd = document.getElementById("font-size-add");
@@ -83,7 +87,6 @@ let currentStates;
 let pointerX = 0;
 let pointerY = 0;
 let scaleValue = 1;
-let scaleMultiplier = 0.8;
 let startDragOffset = {};
 let dragX = 0;
 let dragY = 0;
@@ -102,6 +105,7 @@ function setStyles() {
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
   const settingPan = localStorage.getItem("pan");
+  const settingZoom = localStorage.getItem("zoom");
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
@@ -114,10 +118,11 @@ function setStyles() {
   setValue(offsetX, settingOffsetX, offsetXOutput);
   setValue(offsetY, settingOffsetY, offsetYOutput);
   setValue(fontInput, settingFontSize, fontOutput);
-  changeFontSize(ctx, fontInput);
+  changeFontSize(ctx, fontInput.value);
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(pan, settingPan);
+  setValueToChecked(zoomElement, settingZoom);
 }
 function setValue(element, value, output) {
   if (!value) return;
@@ -155,6 +160,7 @@ document.addEventListener("DOMContentLoaded", function () {
     main.classList.toggle("close");
     imageContainer.classList.toggle("close");
     Array.from(pc).forEach((element) => (element.style.display = "none"));
+    canvas.addEventListener("mousedown", storeColor);
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
@@ -197,7 +203,7 @@ const openFile = (event) => {
         default:
           adjustedDrawImage();
       }
-      changeFontSize(ctx, fontInput);
+      changeFontSize(ctx, fontInput.value);
       initialState = ctx.getImageData(0, 0, image.width, image.height);
       colors = [];
       undoStates = [];
@@ -655,6 +661,7 @@ function drawMultilineText(
   let xOffset = 0;
   let yOffset = 0;
   let maxWidth = 0;
+  changeFontSize(ctx, fontSize);
 
   for (let i = 0; i < colorElements.length; i++) {
     const row = colorElements.slice(i * columnNumber, (i + 1) * columnNumber);
@@ -1216,8 +1223,8 @@ function storeColor(event) {
   isInitialValue = false;
   const colorSpaceValue = colorSpace.selectedOptions[0].value;
   changeColorSpaceForMenu(colorSpaceValue);
-  const pointX = event.offsetX - dragX;
-  const pointY = event.offsetY - dragY;
+  const pointX = (event.offsetX - dragX) / scaleValue;
+  const pointY = (event.offsetY - dragY) / scaleValue;
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
@@ -1240,10 +1247,10 @@ function storeColor(event) {
     columnNumberValue,
     pointerChecked,
   });
-  console.log("colors", colors);
+  // console.log("colors", colors);
   updateUndoStates();
   redoStates = [];
-  console.log("undoStates", undoStates);
+  // console.log("undoStates", undoStates);
 
   if (undoStates.length > undoStatesLimitNumber) {
     undoStates.length = undoStatesLimitNumber;
@@ -1320,13 +1327,13 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "w") {
     fontInput.value = (parseInt(fontInput.value) + 1).toString();
     updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
+    changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
   if (event.key === "q") {
     fontInput.value = (parseInt(fontInput.value) - 1).toString();
     updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
+    changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
   if (event.key === "j") {
@@ -1411,6 +1418,18 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "a") {
     if (keyMeta) return;
     changeCheckedPan();
+  }
+  if (event.key === "2") {
+    zoomElement.value = (parseInt(zoomElement.value) + 10).toString();
+    updateOutput(zoomElement, zoomOutput);
+    localStorage.setItem("zoom", zoomElement.value);
+    zoom();
+  }
+  if (event.key === "1") {
+    zoomElement.value = (parseInt(zoomElement.value) - 10).toString();
+    updateOutput(zoomElement, zoomOutput);
+    localStorage.setItem("zoom", zoomElement.value);
+    zoom();
   }
 });
 
@@ -1584,13 +1603,13 @@ function debounce(func, delay, immediate) {
 
 /// UI function eventListener ///
 
-function changeFontSize(context, fontInput) {
-  const fontSize = parseInt(fontInput.value);
-  context.font = `500 ${fontSize}px 'Inter','Helvetica Neue', Arial, sans-serif `;
+function changeFontSize(context, fontSize) {
+  const fontSizeValue = parseInt(fontSize);
+  context.font = `500 ${fontSizeValue}px 'Inter','Helvetica Neue', Arial, sans-serif `;
 }
 
 fontInput.addEventListener("input", function () {
-  changeFontSize(ctx, fontInput);
+  changeFontSize(ctx, fontInput.value);
 });
 
 function updateOutput(inputField, outputField) {
@@ -1730,7 +1749,7 @@ fontSizeAdd.addEventListener("click", function () {
   count += 1;
   fontInput.value = String(count);
   updateOutput(fontInput, fontOutput);
-  changeFontSize(ctx, fontInput);
+  changeFontSize(ctx, fontInput.value);
   localStorage.setItem("fontSize", fontInput.value);
 });
 fontSizeSubtract.addEventListener("click", function () {
@@ -1738,7 +1757,7 @@ fontSizeSubtract.addEventListener("click", function () {
   count -= 1;
   fontInput.value = String(count);
   updateOutput(fontInput, fontOutput);
-  changeFontSize(ctx, fontInput);
+  changeFontSize(ctx, fontInput.value);
   localStorage.setItem("fontSize", fontInput.value);
 });
 fontSizeAdd.addEventListener("keydown", (event) => {
@@ -1747,7 +1766,7 @@ fontSizeAdd.addEventListener("keydown", (event) => {
     count += 1;
     fontInput.value = String(count);
     updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
+    changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
 });
@@ -1757,7 +1776,7 @@ fontSizeSubtract.addEventListener("keydown", (event) => {
     count -= 1;
     fontInput.value = String(count);
     updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput);
+    changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
 });
@@ -1795,6 +1814,46 @@ columnSubtract.addEventListener("keydown", (event) => {
     columnNumber.value = String(count);
     updateOutput(columnNumber, columnNumberOutput);
     localStorage.setItem("column", columnNumber.value);
+  }
+});
+zoomAdd.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(zoomElement.value);
+  count += 10;
+  zoomElement.value = String(count);
+  updateOutput(zoomElement, zoomOutput);
+  localStorage.setItem("zoom", zoomElement.value);
+  zoom();
+});
+zoomSubtract.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(zoomElement.value);
+  count -= 10;
+  zoomElement.value = String(count);
+  updateOutput(zoomElement, zoomOutput);
+  localStorage.setItem("zoom", zoomElement.value);
+  zoom();
+});
+zoomAdd.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(zoomElement.value);
+    count += 10;
+    zoomElement.value = String(count);
+    updateOutput(zoomElement, zoomOutput);
+    localStorage.setItem("zoom", zoomElement.value);
+    zoom();
+  }
+});
+zoomSubtract.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(zoomElement.value);
+    count -= 10;
+    zoomElement.value = String(count);
+    updateOutput(zoomElement, zoomOutput);
+    localStorage.setItem("zoom", zoomElement.value);
+    zoom();
   }
 });
 
@@ -1909,6 +1968,7 @@ function onMouseUp() {
 }
 
 function drawImage() {
+  if (!!image === false) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.translate(dragX, dragY);
@@ -1927,12 +1987,8 @@ function drawImageDefault() {
   ctx.restore();
 }
 
-function zoomIn() {
-  scaleValue /= scaleMultiplier;
-  drawImage();
-}
-
-function zoomOut() {
-  scaleValue *= scaleMultiplier;
+function zoom() {
+  const zoomValue = zoomElement.value / 100;
+  scaleValue = zoomValue;
   drawImage();
 }
