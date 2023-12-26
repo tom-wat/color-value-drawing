@@ -203,7 +203,7 @@ const openFile = (event) => {
           adjustedDrawImage();
       }
       changeFontSize(ctx, fontInput.value);
-      initialState = ctx.getImageData(0, 0, image.width, image.height);
+      initialState = ctx.getImageData(0, 0, canvas.width, canvas.height);
       colors = [];
       undoStates = [];
       redoStates = [];
@@ -1982,7 +1982,7 @@ function drawImage() {
   ctx.save();
   ctx.translate(dragX, dragY);
   ctx.scale(scaleValue, scaleValue);
-  ctx.drawImage(image, 0, 0, image.width, image.height);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawingColor();
   ctx.restore();
 }
@@ -1991,7 +1991,7 @@ function drawImageDefault() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.scale(1, 1);
-  ctx.drawImage(image, 0, 0, image.width, image.height);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawingColor();
   ctx.restore();
 }
