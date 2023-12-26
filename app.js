@@ -56,7 +56,7 @@ const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 const isTablet = navigator.userAgent.match(
   /iPad|Android.*Tablet|Kindle|Playbook/
 );
-const undoStatesLimitNumber = 50;
+// const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
 let hsl;
@@ -690,7 +690,7 @@ function drawMultilineText(
     let yOffsetAdjustment = fontSize / 2;
     let colorSet;
 
-    if (pointerChecked) {
+    if (pointerChecked === false) {
       xOffsetAdjustment = 0;
       yOffsetAdjustment = 0;
     }
@@ -1254,9 +1254,9 @@ function storeColor(event) {
   redoStates = [];
   // console.log("undoStates", undoStates);
 
-  if (undoStates.length > undoStatesLimitNumber) {
-    undoStates.length = undoStatesLimitNumber;
-  }
+  // if (undoStates.length > undoStatesLimitNumber) {
+  //   undoStates.length = undoStatesLimitNumber;
+  // }
   drawImage();
 }
 
@@ -1377,10 +1377,10 @@ document.addEventListener("keydown", (event) => {
   //   if (keyMeta) return;
   //   changeSelectedElement(scale);
   // }
-  if (event.key === "f") {
-    if (keyMeta) return;
-    changeSelectedElement(format);
-  }
+  // if (event.key === "f") {
+  //   if (keyMeta) return;
+  //   changeSelectedElement(format);
+  // }
   if (event.key === "c") {
     if (keyMeta) return;
 
