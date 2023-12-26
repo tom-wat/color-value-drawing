@@ -209,6 +209,9 @@ const openFile = (event) => {
       redoStates = [];
       dragX = 0;
       dragY = 0;
+      scaleValue = 1;
+      zoomElement.value = String(100);
+      updateOutput(zoomElement, zoomOutput);
     };
   };
 
@@ -1335,26 +1338,26 @@ document.addEventListener("keydown", (event) => {
     changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
-  if (event.key === "j") {
-    offsetX.value = (parseInt(offsetX.value) + 1).toString();
-    updateOutput(offsetX, offsetXOutput);
-    localStorage.setItem("offsetX", offsetX.value);
-  }
-  if (event.key === "h") {
-    offsetX.value = (parseInt(offsetX.value) - 1).toString();
-    updateOutput(offsetX, offsetXOutput);
-    localStorage.setItem("offsetX", offsetX.value);
-  }
-  if (event.key === "u") {
-    offsetY.value = (parseInt(offsetY.value) + 1).toString();
-    updateOutput(offsetY, offsetYOutput);
-    localStorage.setItem("offsetY", offsetY.value);
-  }
-  if (event.key === "y") {
-    offsetY.value = (parseInt(offsetY.value) - 1).toString();
-    updateOutput(offsetY, offsetYOutput);
-    localStorage.setItem("offsetY", offsetY.value);
-  }
+  // if (event.key === "j") {
+  //   offsetX.value = (parseInt(offsetX.value) + 1).toString();
+  //   updateOutput(offsetX, offsetXOutput);
+  //   localStorage.setItem("offsetX", offsetX.value);
+  // }
+  // if (event.key === "h") {
+  //   offsetX.value = (parseInt(offsetX.value) - 1).toString();
+  //   updateOutput(offsetX, offsetXOutput);
+  //   localStorage.setItem("offsetX", offsetX.value);
+  // }
+  // if (event.key === "u") {
+  //   offsetY.value = (parseInt(offsetY.value) + 1).toString();
+  //   updateOutput(offsetY, offsetYOutput);
+  //   localStorage.setItem("offsetY", offsetY.value);
+  // }
+  // if (event.key === "y") {
+  //   offsetY.value = (parseInt(offsetY.value) - 1).toString();
+  //   updateOutput(offsetY, offsetYOutput);
+  //   localStorage.setItem("offsetY", offsetY.value);
+  // }
   if (event.key === "x") {
     if (keyMeta) return;
     changeSelectedElement(positionX);
@@ -1370,10 +1373,10 @@ document.addEventListener("keydown", (event) => {
 
     debouncedDownload();
   }
-  if (event.key === "w") {
-    if (keyMeta) return;
-    changeSelectedElement(scale);
-  }
+  // if (event.key === "w") {
+  //   if (keyMeta) return;
+  //   changeSelectedElement(scale);
+  // }
   if (event.key === "f") {
     if (keyMeta) return;
     changeSelectedElement(format);
@@ -1383,20 +1386,20 @@ document.addEventListener("keydown", (event) => {
 
     clearCanvas();
   }
-  if (event.key === "m") {
-    if (keyMeta) return;
+  // if (event.key === "m") {
+  //   if (keyMeta) return;
 
-    columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
-    updateOutput(columnNumber, columnNumberOutput);
-    localStorage.setItem("column", columnNumber.value);
-  }
-  if (event.key === "n") {
-    if (keyMeta) return;
+  //   columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
+  //   updateOutput(columnNumber, columnNumberOutput);
+  //   localStorage.setItem("column", columnNumber.value);
+  // }
+  // if (event.key === "n") {
+  //   if (keyMeta) return;
 
-    columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
-    updateOutput(columnNumber, columnNumberOutput);
-    localStorage.setItem("column", columnNumber.value);
-  }
+  //   columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
+  //   updateOutput(columnNumber, columnNumberOutput);
+  //   localStorage.setItem("column", columnNumber.value);
+  // }
   if (event.key === "Escape") {
     navToggle();
   }
