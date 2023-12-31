@@ -235,9 +235,11 @@ output{
 }
 
 .image-container{
+  display: none;
   height: auto;
   margin-inline-start: var(--menu-width);
   transition: margin 0.2s ease-out;
+  position: relative;
 }
 .image-container.close{
   margin-inline-start: 0;
@@ -245,7 +247,12 @@ output{
 .image-container canvas {
   vertical-align: bottom;
   margin-inline: auto;
-  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.canvas-base{
+  background-color: var(--primary-black);
 }
 
 .icon svg{

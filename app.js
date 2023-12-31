@@ -5,9 +5,15 @@ const pc = document.getElementsByClassName("pc");
 const fileButton = document.getElementById("file-button");
 const fileInput = document.getElementById("file-input");
 const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const compositeCanvas = document.getElementById("compositeCanvas");
+const ctxComposite = compositeCanvas.getContext("2d");
+const canvasBase = document.getElementById("canvas-base");
+const ctxBase = canvasBase.getContext("2d");
 const imageContainer = document.querySelector(".image-container");
 const container = document.querySelector(".container");
 const format = document.getElementById("format");
+const colorsOnlyElement = document.getElementById("colors-only");
 const filter = document.getElementById("filter");
 const resetElement = document.getElementById("reset");
 const colorBlockElement = document.getElementById("color-block");
@@ -43,7 +49,6 @@ const offsetYAdd = document.getElementById("offset-y-add");
 const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const clickPointAdjustmentX = -2;
 const clickPointAdjustmentY = -2;
 const scaleFull = document.getElementById("scale-full");
@@ -106,6 +111,7 @@ function setStyles() {
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
   const settingPan = localStorage.getItem("pan");
+  const settingColorsOnly = localStorage.getItem("colors-only");
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
@@ -122,6 +128,7 @@ function setStyles() {
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(pan, settingPan);
+  setValueToChecked(colorsOnlyElement, settingColorsOnly);
 }
 function setValue(element, value, output) {
   if (!value) return;
@@ -185,7 +192,6 @@ const openFile = (event) => {
   main.style.display = "none";
   const reader = new FileReader();
   reader.onload = function () {
-    canvas.style.display = "block";
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
@@ -202,6 +208,7 @@ const openFile = (event) => {
         default:
           adjustedDrawImage();
       }
+      imageContainer.style.display = "block";
       changeFontSize(ctx, fontInput.value);
       initialState = ctx.getImageData(0, 0, canvas.width, canvas.height);
       colors = [];
@@ -221,23 +228,34 @@ const openFile = (event) => {
 fileInput.addEventListener("change", openFile);
 
 function dividedDrawImage(divisor) {
-  if (!image) return;
   canvas.width = image.width / divisor;
   canvas.height = image.height / divisor;
-  // ctx.drawImage(image, 0, 0);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  canvasBase.width = image.width / divisor;
+  canvasBase.height = image.height / divisor;
+  compositeCanvas.width = image.width / divisor;
+  compositeCanvas.height = image.height / divisor;
+  imageContainer.style.width = `${image.width / divisor}px`;
+  imageContainer.style.height = `${image.height / divisor}px`;
+  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 //ウインドウの幅にキャンバスを合わせる
 function adjustedDrawImage() {
-  if (!image) return;
   const canvasWidth = Math.min(
     parseInt(window.getComputedStyle(container).width),
     image.width
   );
   canvas.width = canvasWidth;
   canvas.height = image.height * (canvasWidth / image.width);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+  canvasBase.width = canvasWidth;
+  canvasBase.height = image.height * (canvasWidth / image.width);
+  compositeCanvas.width = canvasWidth;
+  compositeCanvas.height = image.height * (canvasWidth / image.width);
+  imageContainer.style.width = `${canvasWidth}px`;
+  imageContainer.style.height = `${
+    image.height * (canvasWidth / image.width)
+  }px`;
+  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 function rgbToHex(r, g, b) {
@@ -1144,7 +1162,7 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
 function getColor(event) {
   const x = event.offsetX + clickPointAdjustmentX;
   const y = event.offsetY + clickPointAdjustmentY;
-  const color = ctx.getImageData(x, y, 1, 1).data;
+  const color = ctxBase.getImageData(x, y, 1, 1).data;
   rgb = [color[0], color[1], color[2]];
   hex = rgbToHex(color[0], color[1], color[2]);
   hsl = rgbToHsl(color[0], color[1], color[2]);
@@ -1171,7 +1189,7 @@ function getColor(event) {
 function getColorForTooltip(event) {
   const x = event.offsetX + clickPointAdjustmentX;
   const y = event.offsetY + clickPointAdjustmentY;
-  const color = ctx.getImageData(x, y, 1, 1).data;
+  const color = ctxBase.getImageData(x, y, 1, 1).data;
   rgb2 = [color[0], color[1], color[2]];
   hex2 = rgbToHex(color[0], color[1], color[2]);
   hsl2 = rgbToHsl(color[0], color[1], color[2]);
@@ -1550,18 +1568,35 @@ function download() {
   drawImageDefault();
   // Canvasのイメージデータを取得する
   let imageData;
+  ctxComposite.drawImage(canvasBase, 0, 0);
+  ctxComposite.drawImage(canvas, 0, 0);
   switch (format.selectedOptions[0].value) {
     case "png":
-      imageData = canvas.toDataURL("image/png");
+      imageData = compositeCanvas.toDataURL("image/png");
       break;
     case "jpeg":
-      imageData = canvas.toDataURL("image/jpeg", 0.85);
+      imageData = compositeCanvas.toDataURL("image/jpeg", 0.85);
       break;
     case "webp":
-      imageData = canvas.toDataURL("image/webP", 0.8);
+      imageData = compositeCanvas.toDataURL("image/webP", 0.8);
       break;
     default:
-      imageData = canvas.toDataURL("image/png");
+      imageData = compositeCanvas.toDataURL("image/png");
+  }
+  if (colorsOnlyElement.checked === true) {
+    switch (format.selectedOptions[0].value) {
+      case "png":
+        imageData = canvas.toDataURL("image/png");
+        break;
+      case "jpeg":
+        imageData = canvas.toDataURL("image/jpeg", 0.85);
+        break;
+      case "webp":
+        imageData = canvas.toDataURL("image/webP", 0.8);
+        break;
+      default:
+        imageData = canvas.toDataURL("image/png");
+    }
   }
   // ダウンロード用のリンクを作成する
   const downloadLink = document.createElement("a");
@@ -1581,6 +1616,7 @@ function download() {
   }
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
+  ctxComposite.clearRect(0, 0, compositeCanvas.width, compositeCanvas.height);
   drawImage();
 }
 const debouncedDownload = debounce(download, 2000, true);
@@ -1878,6 +1914,10 @@ function changeCheckedPointer() {
   pointer.checked = !pointer.checked;
   localStorage.setItem(`pointer`, pointer.checked);
 }
+function changeCheckedColorsOnly() {
+  colorsOnlyElement.checked = !colorsOnlyElement.checked;
+  localStorage.setItem(`colors-only`, colorsOnlyElement.checked);
+}
 
 /// find contrast color
 
@@ -1980,21 +2020,36 @@ function onMouseUp() {
 
 function drawImage() {
   if (!!image === false) return;
+  ctxBase.clearRect(0, 0, canvas.width, canvas.height);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctxBase.save();
+  ctxBase.translate(dragX, dragY);
+  ctxBase.scale(scaleValue, scaleValue);
+
   ctx.save();
   ctx.translate(dragX, dragY);
   ctx.scale(scaleValue, scaleValue);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawingColor();
+  ctxBase.restore();
   ctx.restore();
 }
 
 function drawImageDefault() {
+  ctxBase.clearRect(0, 0, canvas.width, canvas.height);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctxBase.save();
+  ctxBase.scale(1, 1);
+
   ctx.save();
   ctx.scale(1, 1);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawingColor();
+  ctxBase.restore();
   ctx.restore();
 }
 
