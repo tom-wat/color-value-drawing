@@ -1957,6 +1957,7 @@ function removeEventListenerTooltip() {
   canvas.removeEventListener("mouseout", removeEventListenerTooltip);
 }
 function panMode(event) {
+  html[0].style.cursor = "grabbing";
   startDragOffset.x = event.clientX - canvas.offsetLeft - dragX;
   startDragOffset.y = event.clientY - canvas.offsetTop - dragY;
   canvas.addEventListener("mousemove", onMouseMove);
@@ -1971,6 +1972,7 @@ function onMouseMove(event) {
 }
 
 function onMouseUp() {
+  html[0].style.cursor = "grab";
   canvas.removeEventListener("mousemove", onMouseMove);
   canvas.removeEventListener("mouseup", onMouseUp);
   canvas.removeEventListener("mouseout", onMouseUp);
