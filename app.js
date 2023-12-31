@@ -1964,10 +1964,10 @@ function calculateContrastRatio(foregroundRGBColor, backgroundRGBColor) {
 
 function filterCanvas() {
   if (filter.selectedOptions[0].value === "off") {
-    canvas.style.filter = "grayscale(0%)";
+    canvasBase.style.filter = "grayscale(0%)";
   }
   if (filter.selectedOptions[0].value === "greyscale") {
-    canvas.style.filter = "grayscale(100%)";
+    canvasBase.style.filter = "grayscale(100%)";
   }
 }
 
