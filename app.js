@@ -160,6 +160,9 @@ document.addEventListener("DOMContentLoaded", function () {
     element.setAttribute("tabindex", index + 1);
   });
   if (!!isMobile === true) {
+    menu.style.transition = "none";
+    main.style.transition = "none";
+    openButton.style.transition = "none";
     menu.classList.toggle("close");
     openButton.classList.toggle("close");
     closeButton.classList.toggle("close");
