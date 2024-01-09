@@ -182,6 +182,12 @@ document.addEventListener("DOMContentLoaded", function () {
       canvas.addEventListener("mousedown", storeColor);
     }
   }
+  if (!!isMobile === true) {
+    setTimeout(() => {
+      backdrop.style.display = "none";
+    }, 200);
+    return;
+  }
   backdrop.style.display = "none";
 });
 
