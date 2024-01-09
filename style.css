@@ -54,6 +54,7 @@ body {
   background-color: var(--secondary-black);
   color: var(--primary-white);
   font-family: "Inter", "Helvetica Neue", "Arial", sans-serif;
+  position: relative;
 }
 ul,li{
   list-style: none;
@@ -102,6 +103,15 @@ output{
   width: 2ch;
   text-align: right;
   margin-inline-end: 1ch;
+}
+.backdrop{
+  width: 100lvw;
+  height: 100lvh;
+  background-color: var(--secondary-black);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 .tooltip {
   --color: var(--primary-white);
