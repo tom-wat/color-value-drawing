@@ -97,7 +97,18 @@ let startDragOffset = {};
 let dragX = 0;
 let dragY = 0;
 let colors = [];
-
+if (!!isMobile === true) {
+  menu.style.transition = "none";
+  main.style.transition = "none";
+  openButton.style.transition = "none";
+  menu.classList.toggle("close");
+  openButton.classList.toggle("close");
+  closeButton.classList.toggle("close");
+  main.classList.toggle("close");
+  imageContainer.classList.toggle("close");
+  Array.from(pc).forEach((element) => (element.style.display = "none"));
+  canvas.addEventListener("mousedown", storeColor);
+}
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
   const settingFormat = localStorage.getItem("format");
@@ -159,18 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
-  if (!!isMobile === true) {
-    menu.style.transition = "none";
-    main.style.transition = "none";
-    openButton.style.transition = "none";
-    menu.classList.toggle("close");
-    openButton.classList.toggle("close");
-    closeButton.classList.toggle("close");
-    main.classList.toggle("close");
-    imageContainer.classList.toggle("close");
-    Array.from(pc).forEach((element) => (element.style.display = "none"));
-    canvas.addEventListener("mousedown", storeColor);
-  }
+
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
   filterCanvas();
