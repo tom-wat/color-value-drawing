@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!!isMobile === true) {
     setTimeout(() => {
       backdrop.style.display = "none";
-    }, 200);
+    }, 220);
     return;
   }
   backdrop.style.display = "none";
