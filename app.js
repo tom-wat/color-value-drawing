@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (!!isMobile === true) {
     setTimeout(() => {
       backdrop.style.display = "none";
-    }, 220);
+    }, 250);
     return;
   }
   backdrop.style.display = "none";
@@ -1286,7 +1286,7 @@ function storeColor(event) {
   drawImage();
 }
 
-function drawingColor() {
+function drawColors() {
   if (colors.length === false) return;
   colors.forEach((color) => {
     drawMultilineText(
@@ -1310,12 +1310,12 @@ function drawingColor() {
     ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
 
     if (color.pointerChecked === true) {
-      drawingPointer(color.pointX, color.pointY);
+      drawPointer(color.pointX, color.pointY);
     }
   });
 }
 
-function drawingPointer(pointX, pointY) {
+function drawPointer(pointX, pointY) {
   if (lab.labL > 85) {
     ctx.beginPath();
     ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
@@ -2040,7 +2040,7 @@ function drawImage() {
   ctx.scale(scaleValue, scaleValue);
 
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
-  drawingColor();
+  drawColors();
   ctxBase.restore();
   ctx.restore();
 }
@@ -2056,7 +2056,7 @@ function drawImageDefault() {
   ctx.scale(1, 1);
 
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
-  drawingColor();
+  drawColors();
   ctxBase.restore();
   ctx.restore();
 }
