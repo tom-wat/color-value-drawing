@@ -1,4 +1,4 @@
-:root{
+:root {
   --primary-white: hsl(0, 0%, 85%);
   --secondary-white: hsl(0, 0%, 96%);
   --tertiary-white: hsl(0, 0%, 70%);
@@ -7,9 +7,9 @@
   --secondary-black: hsl(240, 5%, 20%);
   --tertiary-black: hsl(240, 10%, 15%);
   --quaternary-black: hsl(240, 5%, 25%);
-  --grey-1:hsl(0, 0%, 50%);
-  --grey-2:hsl(0, 0%, 25%);
-  --grey-3:hsl(0, 0%, 45%);
+  --grey-1: hsl(0, 0%, 50%);
+  --grey-2: hsl(0, 0%, 25%);
+  --grey-3: hsl(0, 0%, 45%);
   --font-weight-medium: 500;
   --font-weight-light: 300;
   --font-size-large: 18px;
@@ -24,21 +24,19 @@
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: local('Inter-ExtraLight'),
-       url('fonts/Inter-ExtraLight.woff2') format('woff2');
+  font-family: "Inter";
+  src: local("Inter-ExtraLight"),
+    url("fonts/Inter-ExtraLight.woff2") format("woff2");
   font-display: swap;
   font-weight: 300;
 }
 
 @font-face {
-  font-family: 'Inter';
-  src: local('Inter-Medium'),
-       url('fonts/Inter-Medium.woff2') format('woff2');
+  font-family: "Inter";
+  src: local("Inter-Medium"), url("fonts/Inter-Medium.woff2") format("woff2");
   font-display: swap;
   font-weight: 500;
 }
-
 
 *,
 *::before,
@@ -47,7 +45,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-html{
+html {
   cursor: crosshair;
 }
 body {
@@ -56,7 +54,8 @@ body {
   font-family: "Inter", "Helvetica Neue", "Arial", sans-serif;
   position: relative;
 }
-ul,li{
+ul,
+li {
   list-style: none;
   outline: none;
 }
@@ -80,31 +79,31 @@ select {
   text-align: end;
   border-radius: 4px;
 }
-select:focus-visible{
+select:focus-visible {
   background-color: var(--secondary-black);
 }
-input[type='range']{
+input[type="range"] {
   appearance: none;
   background-color: transparent;
   width: 0;
 }
-input[type='range']::-webkit-slider-thumb{
+input[type="range"]::-webkit-slider-thumb {
   appearance: none;
 }
-input[type='range']::-moz-range-track{
-  background:transparent; 
-  border:0px;
+input[type="range"]::-moz-range-track {
+  background: transparent;
+  border: 0px;
 }
-input[type='range']::-moz-range-thumb{
-  background:transparent; 
-  border:0px;
+input[type="range"]::-moz-range-thumb {
+  background: transparent;
+  border: 0px;
 }
-output{
-  width: 2ch;
+output {
+  width: 3ch;
   text-align: right;
-  margin-inline-end: 1ch;
+  margin-inline-end: 4px;
 }
-.backdrop{
+.backdrop {
   width: 100lvw;
   height: 100lvh;
   background-color: var(--secondary-black);
@@ -128,7 +127,7 @@ output{
   border-radius: 4px;
   z-index: 20;
 }
-.menu{
+.menu {
   width: var(--menu-width);
   position: fixed;
   padding-block-start: 1.2rem;
@@ -141,41 +140,40 @@ output{
   scrollbar-gutter: stable;
   transition: transform 0.2s ease-out;
 }
-.menu.close{
-  transform: translateX(calc(0px - var(--menu-width)));  
+.menu.close {
+  transform: translateX(calc(0px - var(--menu-width)));
 }
 
-.main{
+.main {
   padding-block: 3rem;
   padding-inline: 5rem;
   margin-inline-start: var(--menu-width);
   transition: margin 0.2s ease-out;
 }
-.main.close{
+.main.close {
   margin-inline-start: 0;
 }
-.grid{
+.grid {
   max-width: 980px;
   display: grid;
   grid-template-columns: 360px 1fr;
   grid-template-areas:
-  "title description"
-  "title notes";
+    "title description"
+    "title notes";
   gap: 2rem;
   place-items: start;
-  
 }
-.title{
+.title {
   grid-area: title;
 }
 
-.main svg{
+.main svg {
   width: 360px;
   height: 360px;
   vertical-align: bottom;
 }
 
-.description{
+.description {
   grid-area: description;
   background-color: var(--primary-black);
   padding: 2rem;
@@ -184,7 +182,7 @@ output{
   font-weight: var(--font-weight-light);
   margin-block-start: 2px;
 }
-.description button{
+.description button {
   padding-inline: 12px;
   padding-block: 4px;
   background-color: var(--primary-black);
@@ -194,12 +192,12 @@ output{
   margin-inline-end: 6px;
   cursor: pointer;
 }
-.description button:focus-visible{
+.description button:focus-visible {
   background-color: var(--primary-white);
   color: var(--secondary-black);
 }
-.description ol{
-	counter-reset: list;
+.description ol {
+  counter-reset: list;
 }
 .description li {
   position: relative;
@@ -208,25 +206,25 @@ output{
   line-height: 1.6;
   text-wrap: balance;
 }
-.description li::before{
+.description li::before {
   position: absolute;
-	top: 0;
-	left: 0;
-	font-weight: var(--font-weight-medium);
-	color: var(--primary-white);
-	counter-increment: list;
-	content: counter(list)'.';
+  top: 0;
+  left: 0;
+  font-weight: var(--font-weight-medium);
+  color: var(--primary-white);
+  counter-increment: list;
+  content: counter(list) ".";
 }
-.description li + li{
+.description li + li {
   margin-block-start: 1rem;
 }
-.notes{
+.notes {
   grid-area: notes;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
-.note{
+.note {
   background-color: var(--primary-black);
   padding: 2rem;
   padding-inline: 3rem;
@@ -234,25 +232,25 @@ output{
   font-weight: var(--font-weight-light);
   line-height: 1.6;
 }
-.note span{
+.note span {
   font-weight: var(--font-weight-medium);
 }
-.note span + span{
+.note span + span {
   font-weight: var(--font-weight-light);
   padding-inline-start: 1rem;
 }
-.list li{
+.list li {
   padding-inline-start: 2rem;
 }
 
-.image-container{
+.image-container {
   display: none;
   height: auto;
   margin-inline-start: var(--menu-width);
   transition: margin 0.2s ease-out;
   position: relative;
 }
-.image-container.close{
+.image-container.close {
   margin-inline-start: 0;
 }
 .image-container canvas {
@@ -262,30 +260,30 @@ output{
   top: 0;
   left: 0;
 }
-.canvas-base{
+.canvas-base {
   background-color: var(--primary-black);
 }
 
-.icon svg{
+.icon svg {
   width: 14px;
   fill: var(--icon);
   margin-inline-end: 8px;
   transform: translateY(2px);
 }
-.object-icon svg{
+.object-icon svg {
   fill: var(--primary-white);
   width: 14px;
   height: 14px;
   vertical-align: top;
   transform: translateY(1px);
 }
-.margin-inline-end-4px{
+.margin-inline-end-4px {
   margin-inline-end: 4px;
 }
-.margin-inline-end-8px{
+.margin-inline-end-8px {
   margin-inline-end: 8px;
 }
-.button{
+.button {
   width: 95%;
   height: 100%;
   margin-inline: auto;
@@ -300,35 +298,35 @@ output{
   text-align: left;
   cursor: pointer;
 }
-.button:focus-visible{
+.button:focus-visible {
   background-color: var(--secondary-black);
 }
-.button-type-b{
+.button-type-b {
   cursor: auto;
 }
-.button-type-b:focus-visible{
+.button-type-b:focus-visible {
   background-color: var(--primary-black);
   color: var(--primary-white);
 }
-.button:focus-visible svg{
+.button:focus-visible svg {
   fill: var(--icon);
 }
-.button label{
+.button label {
   color: var(--tertiary-white);
 }
 
-.button output{
+.button output {
   color: var(--tertiary-white);
 }
-label{
+label {
   line-height: 1.5;
   padding-inline: 1rem;
   border-radius: 1rem;
 }
-label:focus-visible{
-  box-shadow:0 0 0 1px var(--tertiary-white) inset;
+label:focus-visible {
+  box-shadow: 0 0 0 1px var(--tertiary-white) inset;
 }
-.inline-button{
+.inline-button {
   font-weight: var(--font-weight-medium);
   background-color: inherit;
   color: var(--tertiary-white);
@@ -340,10 +338,10 @@ label:focus-visible{
   cursor: pointer;
 }
 
-.inline-button:focus-visible{
+.inline-button:focus-visible {
   background-color: var(--secondary-black);
 }
-.close-button{
+.close-button {
   width: 32px;
   height: 24px;
   font-size: 10px;
@@ -356,13 +354,13 @@ label:focus-visible{
   right: 1.2rem;
   z-index: 10;
 }
-.close-button.close{
+.close-button.close {
   display: none;
 }
-.close-button:focus-visible{
+.close-button:focus-visible {
   outline: 1px solid var(--primary-white);
 }
-.open-button{
+.open-button {
   width: 32px;
   height: 24px;
   font-size: 10px;
@@ -375,11 +373,11 @@ label:focus-visible{
   left: 1.2rem;
   transition: opacity 0.2s ease-in;
 }
-.open-button.close{
+.open-button.close {
   opacity: 0;
   pointer-events: none;
 }
-.open-button:focus-visible{
+.open-button:focus-visible {
   outline: 1px solid var(--primary-white);
 }
 .toggle-button {
@@ -390,7 +388,7 @@ label:focus-visible{
   border-radius: calc(var(--toggle-size) * 3 / 4);
   background-color: var(--grey-1);
   cursor: pointer;
-  transition: background-color .4s;
+  transition: background-color 0.4s;
   margin-inline-end: 1rem;
   transform: translateY(1px);
 }
@@ -406,8 +404,8 @@ label:focus-visible{
   border-radius: 50%;
   box-shadow: 0 0 5px rgb(0 0 0 / 20%);
   background-color: var(--tertiary-white);
-  content: '';
-  transition: left .4s;
+  content: "";
+  transition: left 0.4s;
 }
 .toggle-button:has(:checked)::after {
   left: var(--toggle-size);
@@ -417,22 +415,22 @@ label:focus-visible{
   display: none;
 }
 
-.flex{
+.flex {
   display: flex;
 }
-.flex-center{
+.flex-center {
   display: flex;
   align-items: center;
 }
-.margin-left{
+.margin-left {
   margin-left: 1.5rem;
 }
 
-.margin-block-end-1{
+.margin-block-end-1 {
   margin-block-end: 1rem;
 }
 
-.row-1{
+.row-1 {
   margin-right: auto;
 }
 
@@ -456,59 +454,64 @@ label:focus-visible{
   margin-inline-start: 22px;
 }
 
-.object{
-  color:var(--grey-1);
+.object {
+  color: var(--grey-1);
   font-size: var(--font-size-small);
   padding-inline-start: 1.5rem;
   padding-block: calc(1rem / 2);
   transform: translateY(4px);
 }
 
-@media (hover: hover) and (pointer: fine){
-  .button:hover{
+.input-color {
+  border: none;
+  background: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
     background-color: var(--secondary-black);
   }
-  .button-type-b:hover{
+  .button-type-b:hover {
     background-color: var(--primary-black);
     color: var(--primary-white);
   }
-  .description button:hover{
+  .description button:hover {
     background-color: var(--primary-white);
     color: var(--primary-black);
   }
-  .inline-button:hover{
+  .inline-button:hover {
     background-color: var(--secondary-black);
   }
-  .open-button:hover{
+  .open-button:hover {
     outline: 1px solid var(--primary-white);
   }
-  .close-button:hover{
+  .close-button:hover {
     outline: 1px solid var(--primary-white);
   }
-  select:hover{
+  select:hover {
     background-color: var(--secondary-black);
   }
-  .description button:active{
+  .description button:active {
     background-color: var(--primary-black);
     color: var(--primary-white);
   }
-  .button:active{
+  .button:active {
     background-color: var(--quaternary-black);
   }
-  .button-type-b:active{
+  .button-type-b:active {
     background-color: var(--primary-black);
   }
-  .inline-button:active{
+  .inline-button:active {
     background-color: var(--quaternary-black);
   }
 }
 @media (hover: none) and (any-pointer: coarse) {
-  .menu{
+  .menu {
     position: fixed;
     width: var(--menu-width);
     padding-block-end: 4rem;
   }
-  .close-button{
+  .close-button {
     width: 48px;
     height: 48px;
     position: fixed;
@@ -517,7 +520,7 @@ label:focus-visible{
     left: 1rem;
     bottom: 1rem;
   }
-  .open-button{
+  .open-button {
     width: 48px;
     height: 48px;
     position: fixed;
@@ -527,139 +530,139 @@ label:focus-visible{
     bottom: 1rem;
     background-color: var(--tertiary-black);
   }
-  .grid{
+  .grid {
     grid-template-areas:
-    "title"
-    "description"
-    "notes";
+      "title"
+      "description"
+      "notes";
     gap: 1rem;
     grid-template-columns: 100%;
   }
-  .notes{
+  .notes {
     gap: 1rem;
   }
-  .note{
+  .note {
     border-radius: 1rem;
     padding-inline: 2rem;
   }
-  .main{
+  .main {
     padding-block: 1rem;
     padding-inline: 1rem;
   }
-  .main .flex{
+  .main .flex {
     flex-direction: column;
     align-items: start;
   }
-  .main svg{
+  .main svg {
     width: 240px;
     height: 240px;
     min-width: 240px;
   }
-  .description{
+  .description {
     padding: 1.5rem;
     padding-inline: 2rem;
     border-radius: 1.5rem;
     margin-block-start: 0px;
   }
-  .main .note .flex{
+  .main .note .flex {
     flex-direction: row;
   }
   #fileInput {
     width: 100%;
   }
-  input{
+  input {
     max-width: 30%;
   }
-  .object{
+  .object {
     padding-inline-start: 1.5rem;
   }
-  .margin-left{
+  .margin-left {
     margin-left: 0;
   }
-  .description button:active{
+  .description button:active {
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
-  .button:active{
+  .button:active {
     background-color: var(--quaternary-black);
   }
-  .button-type-b:active{
+  .button-type-b:active {
     background-color: var(--primary-black);
   }
-  span.inline-button:active{
+  span.inline-button:active {
     background-color: var(--quaternary-black);
   }
-  .tooltip{
+  .tooltip {
     opacity: 0;
     pointer-events: none;
   }
 }
 
 @media (width < 800px) and (hover: hover) and (pointer: fine) {
-  .menu{
+  .menu {
     position: fixed;
     width: var(--menu-width);
   }
-  .grid{
+  .grid {
     grid-template-areas:
-    "title"
-    "description"
-    "notes";
+      "title"
+      "description"
+      "notes";
     gap: 1rem;
     grid-template-columns: 100%;
   }
-  .notes{
+  .notes {
     gap: 1rem;
   }
-  .note{
+  .note {
     border-radius: 1rem;
     padding-inline: 2rem;
   }
-  .main{
+  .main {
     padding-block: 1rem;
     padding-inline: 1rem;
   }
-  .main .flex{
+  .main .flex {
     flex-direction: column;
     align-items: start;
   }
-  .main svg{
+  .main svg {
     width: 240px;
     height: 240px;
     min-width: 240px;
   }
-  .description{
+  .description {
     padding: 1.5rem;
     padding-inline: 2rem;
     border-radius: 1.5rem;
     margin-block-start: 0px;
   }
-  .main .note .flex{
+  .main .note .flex {
     flex-direction: row;
   }
   #fileInput {
     width: 100%;
   }
-  input{
+  input {
     max-width: 30%;
   }
-  .object{
+  .object {
     padding-inline-start: 1.5rem;
   }
-  .margin-left{
+  .margin-left {
     margin-left: 0;
   }
-  .description button:active{
+  .description button:active {
     background-color: var(--primary-white);
     color: var(--secondary-black);
   }
-  .button:active{
+  .button:active {
     background-color: var(--quaternary-black);
   }
-  .button-type-b:active{
+  .button-type-b:active {
     background-color: var(--primary-black);
   }
-  span.inline-button:active{
+  span.inline-button:active {
     background-color: var(--quaternary-black);
   }
 }
