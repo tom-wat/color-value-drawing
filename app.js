@@ -10,7 +10,9 @@ const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const compositeCanvas = document.getElementById("compositeCanvas");
 const ctxComposite = compositeCanvas.getContext("2d");
 const canvasBase = document.getElementById("canvas-base");
-const ctxBase = canvasBase.getContext("2d");
+const ctxBase = canvasBase.getContext("2d", {
+  willReadFrequently: true,
+});
 const imageContainer = document.querySelector(".image-container");
 const container = document.querySelector(".container");
 const format = document.getElementById("format");
@@ -50,13 +52,23 @@ const offsetYAdd = document.getElementById("offset-y-add");
 const offsetYSubtract = document.getElementById("offset-y-subtract");
 const offsetY = document.getElementById("offset-y");
 const offsetYOutput = document.getElementById("offset-y-output");
-const clickPointAdjustmentX = -2;
-const clickPointAdjustmentY = -2;
+const clickPointAdjustmentX = 0;
+const clickPointAdjustmentY = 0;
 const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
+const lineOpacityElement = document.getElementById("line-opacity");
+const lineOpacityOutput = document.getElementById("line-opacity-output");
+const lineOpacityAdd = document.getElementById("line-opacity-add");
+const lineOpacitySubtract = document.getElementById("line-opacity-subtract");
+const lineWidthElement = document.getElementById("line-width");
+const lineWidthOutput = document.getElementById("line-width-output");
+const lineWidthAdd = document.getElementById("line-width-add");
+const lineWidthSubtract = document.getElementById("line-width-subtract");
+const lineColorElement = document.getElementById("line-color");
+const angleConstraintElement = document.getElementById("angle-constraint");
 const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 const isTablet = navigator.userAgent.match(
@@ -73,19 +85,20 @@ let lab;
 let lch;
 let oklab;
 let oklch;
-let rgb2;
-let hex2;
-let hsl2;
-let hsv2;
-let xyz2;
-let xyzD502;
-let lab2;
-let lch2;
-let oklab2;
-let oklch2;
+let hsl50;
+let rgbForTooltip;
+let hexForTooltip;
+let hslForTooltip;
+let hsvForTooltip;
+let xyzForTooltip;
+let xyzD50ForTooltip;
+let labForTooltip;
+let lchForTooltip;
+let oklabForTooltip;
+let oklchForTooltip;
 let colorCode;
 let isInitialValue = true;
-let isInitialValue2 = true;
+let isInitialValueForTooltip = true;
 let image;
 let undoStates = [];
 let redoStates = [];
@@ -98,7 +111,10 @@ let startDragOffset = {};
 let dragX = 0;
 let dragY = 0;
 let colors = [];
+let checkedPoints = [];
+let lines = [];
 
+const throttledStoreLine = throttle(storeLine, 100);
 function setStyles() {
   const settingScale = localStorage.getItem("scale");
   const settingFormat = localStorage.getItem("format");
@@ -113,6 +129,7 @@ function setStyles() {
   const settingPointer = localStorage.getItem("pointer");
   const settingPan = localStorage.getItem("pan");
   const settingColorsOnly = localStorage.getItem("colors-only");
+  const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
   setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
@@ -130,6 +147,7 @@ function setStyles() {
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(pan, settingPan);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
+  setValueToChecked(angleConstraintElement, settingAngleConstraint);
 }
 function setValue(element, value, output) {
   if (!value) return;
@@ -167,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function () {
     main.classList.toggle("close");
     imageContainer.classList.toggle("close");
     Array.from(pc).forEach((element) => (element.style.display = "none"));
-    canvas.addEventListener("mousedown", storeColor);
+    canvas.addEventListener("mousedown", throttledStoreLine);
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
@@ -179,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       canvas.addEventListener("mousemove", throttledGetColor);
       document.addEventListener("mousemove", showTooltip);
-      canvas.addEventListener("mousedown", storeColor);
+      canvas.addEventListener("mousedown", throttledStoreLine);
     }
   }
   if (!!isMobile === true) {
@@ -220,6 +238,8 @@ const openFile = (event) => {
       changeFontSize(ctx, fontInput.value);
       initialState = ctx.getImageData(0, 0, canvas.width, canvas.height);
       colors = [];
+      lines = [];
+      checkedPoints = [];
       undoStates = [];
       redoStates = [];
       dragX = 0;
@@ -547,40 +567,55 @@ function oklab2okLch(L, a, b) {
 }
 
 function hslToRgb(h, s, l) {
-  // H, S, L values are expected to be in the range [0, 1]
-  // Convert HSL to RGB
-  let toRgbH = h / 360;
-  let toRgbS = s / 100;
-  let toRgbL = l / 100;
-  let toRgbR, toRgbG, toRgbB;
+  s /= 100;
+  l /= 100;
 
-  if (toRgbS === 0) {
-    toRgbR = toRgbG = toRgbB = toRgbL; // achromatic
-  } else {
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-
-    const q =
-      toRgbL < 0.5 ? toRgbL * (1 + toRgbS) : toRgbL + toRgbS - toRgbL * toRgbS;
-    const p = 2 * toRgbL - q;
-
-    toRgbR = hue2rgb(p, q, toRgbH + 1 / 3);
-    toRgbG = hue2rgb(p, q, toRgbH);
-    toRgbB = hue2rgb(p, q, toRgbH - 1 / 3);
+  if (s === 0) {
+    l *= 255; // 輝度だけで色が決まる
+    return [l, l, l];
   }
 
-  // Scale the RGB values to the range [0, 255] and round them
-  return [
-    Math.round(toRgbR * 255),
-    Math.round(toRgbG * 255),
-    Math.round(toRgbB * 255),
-  ];
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+
+  const r = hue2rgb(p, q, h / 360 + 1 / 3);
+  const g = hue2rgb(p, q, h / 360);
+  const b = hue2rgb(p, q, h / 360 - 1 / 3);
+
+  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+
+function hslToHsl50(hslH, oklchC) {
+  let storeDiff = 100;
+  let prevStoreDiff = 0;
+  let saturation = 0;
+  for (let i = 0; i <= 100; i++) {
+    const rgb = hslToRgb(hslH, i, 50);
+    // const xyz = rgbToXyzD65(rgb[0], rgb[1], rgb[2]);
+    // const xyzD50 = bradfordTransformationD65toD50(xyz);
+    // const lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
+    // const lch = labToLch(lab.labL, lab.labA, lab.labB);
+    const oklab = rgb2oklab(rgb[0], rgb[1], rgb[2]);
+    const oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+    const diff = Math.abs(oklchC - oklch.oklchC);
+    const minDiff = Math.min(diff, storeDiff);
+    storeDiff = minDiff;
+    if (prevStoreDiff - storeDiff !== 0) {
+      saturation = i;
+    }
+    prevStoreDiff = storeDiff;
+    console.log(minDiff);
+  }
+  return saturation;
 }
 
 // function to undo
@@ -592,10 +627,13 @@ function undo() {
   // console.log(undoStates);
   if (undoStates.length > 0) {
     const undoStatesCopy = structuredClone(undoStates[undoStates.length - 1]);
-    colors = undoStatesCopy;
+    lines = undoStatesCopy.lines;
+    colors = undoStatesCopy.colors;
   } else {
+    lines = [];
     colors = [];
   }
+  checkedPoints = [];
   drawImage();
 }
 function redo() {
@@ -605,19 +643,25 @@ function redo() {
     // console.log(redoStates);
     // console.log(colors);
     const undoStatesCopy = structuredClone(undoStates[undoStates.length - 1]);
-    colors = undoStatesCopy;
+    lines = undoStatesCopy.lines;
+    colors = undoStatesCopy.colors;
+    checkedPoints = [];
     drawImage();
   }
 }
 function updateUndoStates() {
   const colorsCopy = structuredClone(colors);
-  undoStates.push(colorsCopy);
+  const linesCopy = structuredClone(lines);
+  const object = { lines: linesCopy, colors: colorsCopy };
+  undoStates.push(object);
 }
 
 function clearCanvas() {
   if (!initialState) return;
   if (initialState === undoStates[0]) return;
   colors = [];
+  lines = [];
+  checkedPoints = [];
   updateUndoStates();
   redoStates = [];
   drawImage();
@@ -730,6 +774,9 @@ function drawMultilineText(
         ];
         context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
         break;
+      // case "hsl50":
+      //   context.fillStyle = `hsl(${colorList.hsl.h} ${colorList.hsl50}% 50%)`;
+      //   break;
       case "l":
         context.fillStyle = `lab(${colorList.lab.labL}% 0 0)`;
         break;
@@ -808,10 +855,13 @@ function drawMultilineText(
           context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
           break;
         }
+      // case "hsl50":
+      //   const baseColorRgb = hslToRgb(colorList.hsl.h, colorList.hsl50, 50);
+      //   let contrastColor = getGreyScaleColorWithHighestContrast(baseColorRgb);
+      //   context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+      //   break;
       default:
-        const contrastColor = getGreyScaleColorWithHighestContrast(
-          colorList.rgb
-        );
+        let contrastColor = getGreyScaleColorWithHighestContrast(colorList.rgb);
         context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
         break;
     }
@@ -977,87 +1027,90 @@ function showTooltip(event) {
 function changeColorSpaceForTooltip(ColorSpaceValue) {
   switch (ColorSpaceValue) {
     case "rgb":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `R:-- G:-- B:--`;
         break;
       }
-      tooltip.textContent = `R:${rgb2[0]} G:${rgb2[1]} B:${rgb2[2]}`;
+      tooltip.textContent = `R:${rgbForTooltip[0]} G:${rgbForTooltip[1]} B:${rgbForTooltip[2]}`;
       break;
     case "hex":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `#------`;
         break;
       }
       2;
-      tooltip.textContent = hex2;
+      tooltip.textContent = hexForTooltip;
       break;
     case "hsv":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `H:-- S:-- V:--`;
         break;
       }
-      tooltip.textContent = `H:${hsv2.hsvH} S:${hsv2.hsvS} V:${hsv2.hsvB}`;
+      tooltip.textContent = `H:${hsvForTooltip.hsvH} S:${hsvForTooltip.hsvS} V:${hsvForTooltip.hsvB}`;
       break;
     case "hsl":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `H:-- S:-- L:--`;
         break;
       }
-      tooltip.textContent = `H:${hsl2.h} S:${hsl2.s} L:${hsl2.l}`;
+      tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
       break;
     case "lab":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `L:-- a:-- b:--`;
         break;
       }
-      tooltip.textContent = `L:${lab2.labL} a:${lab2.labA} b:${lab2.labB}`;
+      tooltip.textContent = `L:${labForTooltip.labL} a:${labForTooltip.labA} b:${labForTooltip.labB}`;
       tooltip.style.setProperty(
         "--background-color",
-        `lab(${lab2.labL}% ${lab2.labA} ${lab2.labB})`
+        `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
       );
       break;
     case "lch":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `L:-- C:-- H:--`;
         break;
       }
-      tooltip.textContent = `L:${lch2.lchL} C:${lch2.lchC} H:${lch2.lchH}`;
+      tooltip.textContent = `L:${lchForTooltip.lchL} C:${lchForTooltip.lchC} H:${lchForTooltip.lchH}`;
       break;
     case "oklab":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `l:-- a:-- b:--`;
         break;
       }
-      tooltip.textContent = `l:${oklab2.oklabLRounded} a:${oklab2.oklabARounded} b:${oklab2.oklabBRounded}`;
+      tooltip.textContent = `l:${oklabForTooltip.oklabLRounded} a:${oklabForTooltip.oklabARounded} b:${oklabForTooltip.oklabBRounded}`;
       break;
     case "oklch":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `l:-- c:-- h:--`;
         break;
       }
-      tooltip.textContent = `l:${oklch2.oklchL} c:${oklch2.oklchC} h:${oklch2.oklchH}`;
+      tooltip.textContent = `l:${oklchForTooltip.oklchL} c:${oklchForTooltip.oklchC} h:${oklchForTooltip.oklchH}`;
       break;
     case "hsl+l":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `h:-- s:-- l:-- L:--`;
         break;
       }
-      tooltip.textContent = `h:${hsl2.h} s:${hsl2.s} l:${hsl2.l} L:${lab2.labL}`;
+      tooltip.textContent = `h:${hslForTooltip.h} s:${hslForTooltip.s} l:${hslForTooltip.l} L:${labForTooltip.labL}`;
       break;
     case "l":
-      if (isInitialValue2) {
+      if (isInitialValueForTooltip) {
         tooltip.textContent = `L:--`;
         break;
       }
-      tooltip.textContent = `L:${lab2.labL}`;
-      tooltip.style.setProperty("--background-color", `lab(${lab2.labL}% 0 0)`);
+      tooltip.textContent = `L:${labForTooltip.labL}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `lab(${labForTooltip.labL}% 0 0)`
+      );
       break;
-    case "hs":
-      if (isInitialValue2) {
-        tooltip.textContent = `H:-- S:--`;
+    case "hsl50":
+      if (isInitialValueForTooltip) {
+        tooltip.textContent = `H:-- S:-- L:--`;
         break;
       }
-      tooltip.textContent = `H:${hsl2.h} S:${hsl2.s}`;
+      tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
       break;
     default:
       break;
@@ -1073,6 +1126,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
       colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "hex":
       if (isInitialValue) {
@@ -1081,6 +1138,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = hex;
       colorInfoElement.textContent = hex;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "hsv":
       if (isInitialValue) {
@@ -1089,6 +1150,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `h:${hsv.hsvH} s:${hsv.hsvS} v:${hsv.hsvB}`;
       colorInfoElement.textContent = `H:${hsv.hsvH} S:${hsv.hsvS} V:${hsv.hsvB}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "hsl":
       if (isInitialValue) {
@@ -1097,6 +1162,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
       colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "lab":
       if (isInitialValue) {
@@ -1105,9 +1174,9 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
       colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
-      colorInfoElement.style.setProperty(
-        "--background-color",
-        `lab(${lab.labL}% ${lab.labA} ${lab.labB})`
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
       );
       break;
     case "lch":
@@ -1117,6 +1186,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
       colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "oklab":
       if (isInitialValue) {
@@ -1125,6 +1198,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `oklab(${oklab.oklabLRounded}% ${oklab.oklabARounded} ${oklab.oklabBRounded})`;
       colorInfoElement.textContent = `l:${oklab.oklabLRounded} a:${oklab.oklabARounded} b:${oklab.oklabBRounded}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "oklch":
       if (isInitialValue) {
@@ -1133,6 +1210,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
       colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "hsl+l":
       if (isInitialValue) {
@@ -1141,6 +1222,10 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
       colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     case "l":
       if (isInitialValue) {
@@ -1154,19 +1239,49 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
         `lab(${lab.labL}% 0 0)`
       );
       break;
-    case "hs":
+    case "hsl50":
       if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:--`;
+        colorInfoElement.textContent = `H:-- S:-- L:50`;
         break;
       }
-      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
-      colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s}`;
+      colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
+      colorInfoElement.textContent = `H:${hsl.h} S:${hsl50} L:50`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
       break;
     default:
       break;
   }
 }
-
+function getColorForTooltip(event) {
+  const x = event.offsetX + clickPointAdjustmentX;
+  const y = event.offsetY + clickPointAdjustmentY;
+  const color = ctxBase.getImageData(x, y, 1, 1).data;
+  rgbForTooltip = [color[0], color[1], color[2]];
+  hexForTooltip = rgbToHex(color[0], color[1], color[2]);
+  hslForTooltip = rgbToHsl(color[0], color[1], color[2]);
+  hsvForTooltip = rgbToHsv(color[0], color[1], color[2]);
+  xyzForTooltip = rgbToXyzD65(color[0], color[1], color[2]);
+  xyzD50ForTooltip = bradfordTransformationD65toD50(xyzForTooltip);
+  labForTooltip = xyzToLab(
+    xyzD50ForTooltip[0],
+    xyzD50ForTooltip[1],
+    xyzD50ForTooltip[2]
+  );
+  lchForTooltip = labToLch(
+    labForTooltip.labL,
+    labForTooltip.labA,
+    labForTooltip.labB
+  );
+  oklabForTooltip = rgb2oklab(color[0], color[1], color[2]);
+  oklchForTooltip = oklab2okLch(
+    oklabForTooltip.oklabL,
+    oklabForTooltip.oklabA,
+    oklabForTooltip.oklabB
+  );
+}
 function getColor(event) {
   const x = event.offsetX + clickPointAdjustmentX;
   const y = event.offsetY + clickPointAdjustmentY;
@@ -1181,33 +1296,6 @@ function getColor(event) {
   lch = labToLch(lab.labL, lab.labA, lab.labB);
   oklab = rgb2oklab(color[0], color[1], color[2]);
   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
-  const colorList = {
-    rgb: rgb,
-    hex: hex,
-    hsv: hsv,
-    hsl: hsl,
-    lab: lab,
-    lch: lch,
-    oklab: oklab,
-    oklch: oklch,
-  };
-  return colorList;
-}
-
-function getColorForTooltip(event) {
-  const x = event.offsetX + clickPointAdjustmentX;
-  const y = event.offsetY + clickPointAdjustmentY;
-  const color = ctxBase.getImageData(x, y, 1, 1).data;
-  rgb2 = [color[0], color[1], color[2]];
-  hex2 = rgbToHex(color[0], color[1], color[2]);
-  hsl2 = rgbToHsl(color[0], color[1], color[2]);
-  hsv2 = rgbToHsv(color[0], color[1], color[2]);
-  xyz2 = rgbToXyzD65(color[0], color[1], color[2]);
-  xyzD502 = bradfordTransformationD65toD50(xyz2);
-  lab2 = xyzToLab(xyzD502[0], xyzD502[1], xyzD502[2]);
-  lch2 = labToLch(lab2.labL, lab2.labA, lab2.labB);
-  oklab2 = rgb2oklab(color[0], color[1], color[2]);
-  oklch2 = oklab2okLch(oklab2.oklabL, oklab2.oklabA, oklab2.oklabB);
 }
 
 function throttle(fn, wait) {
@@ -1226,9 +1314,9 @@ function throttle(fn, wait) {
 function setTooltipView() {
   tooltip.style.setProperty(
     "--background-color",
-    `rgb(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]})`
+    `rgb(${rgbForTooltip[0]}, ${rgbForTooltip[1]}, ${rgbForTooltip[2]})`
   );
-  const contrastColor = getGreyScaleColorWithHighestContrast(rgb2);
+  const contrastColor = getGreyScaleColorWithHighestContrast(rgbForTooltip);
   tooltip.style.setProperty(
     "--color",
     `rgb(${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`
@@ -1238,12 +1326,31 @@ function setTooltipView() {
 const throttledGetColor = throttle(function (event) {
   getColorForTooltip(event);
   setTooltipView();
-  isInitialValue2 = false;
+  isInitialValueForTooltip = false;
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
 
-function storeColor(event) {
-  const colorList = getColor(event);
+function storeColor(posX, posY) {
+  rgb = rgbForTooltip;
+  hex = hexForTooltip;
+  hsv = hsvForTooltip;
+  hsl = hslForTooltip;
+  lab = labForTooltip;
+  lch = lchForTooltip;
+  oklab = oklabForTooltip;
+  oklch = oklchForTooltip;
+  hsl50 = hslToHsl50(hsl.h, oklch.oklchC);
+  const colorList = {
+    rgb: rgb,
+    hex: hex,
+    hsv: hsv,
+    hsl: hsl,
+    lab: lab,
+    lch: lch,
+    oklab: oklab,
+    oklch: oklch,
+    hsl50: hsl50,
+  };
   colorBlockElement.style.setProperty(
     "background-color",
     `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
@@ -1251,8 +1358,8 @@ function storeColor(event) {
   isInitialValue = false;
   const colorSpaceValue = colorSpace.selectedOptions[0].value;
   changeColorSpaceForMenu(colorSpaceValue);
-  const pointX = (event.offsetX - dragX) / scaleValue;
-  const pointY = (event.offsetY - dragY) / scaleValue;
+  const pointX = posX;
+  const pointY = posY;
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
@@ -1275,15 +1382,6 @@ function storeColor(event) {
     columnNumberValue,
     pointerChecked,
   });
-  // console.log("colors", colors);
-  updateUndoStates();
-  redoStates = [];
-  // console.log("undoStates", undoStates);
-
-  // if (undoStates.length > undoStatesLimitNumber) {
-  //   undoStates.length = undoStatesLimitNumber;
-  // }
-  drawImage();
 }
 
 function drawColors() {
@@ -1308,41 +1406,37 @@ function drawColors() {
     ctx.fillStyle = `hsl( 0, 0%, 100%)`;
     ctx.lineWidth = 0.5;
     ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
-
-    if (color.pointerChecked === true) {
-      drawPointer(color.pointX, color.pointY);
-    }
   });
 }
 
-function drawPointer(pointX, pointY) {
-  if (lab.labL > 85) {
-    ctx.beginPath();
-    ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
-    ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustmentY + 3);
-    ctx.stroke();
+// function drawPointer(pointX, pointY) {
+//   if (lab.labL > 85) {
+//     ctx.beginPath();
+//     ctx.moveTo(pointX - 7.5, pointY + clickPointAdjustmentY + 3);
+//     ctx.lineTo(pointX - 2.5, pointY + clickPointAdjustmentY + 3);
+//     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustmentY + 3);
-    ctx.lineTo(pointX + 7, pointY + clickPointAdjustmentY + 3);
-    ctx.stroke();
+//     ctx.beginPath();
+//     ctx.moveTo(pointX + 1.5, pointY + clickPointAdjustmentY + 3);
+//     ctx.lineTo(pointX + 7, pointY + clickPointAdjustmentY + 3);
+//     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustmentX, pointY - 2.5);
-    ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY - 2.5);
-    ctx.stroke();
+//     ctx.beginPath();
+//     ctx.moveTo(pointX + clickPointAdjustmentX, pointY - 2.5);
+//     ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY - 2.5);
+//     ctx.stroke();
 
-    ctx.beginPath();
-    ctx.moveTo(pointX + clickPointAdjustmentX, pointY + 6.5);
-    ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY + 6.5);
-    ctx.stroke();
-  }
+//     ctx.beginPath();
+//     ctx.moveTo(pointX + clickPointAdjustmentX, pointY + 6.5);
+//     ctx.lineTo(pointX + clickPointAdjustmentX + 3.5, pointY + 6.5);
+//     ctx.stroke();
+//   }
 
-  ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustmentY, 5, 3);
-  ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustmentY, 5.2, 3);
-  ctx.fillRect(pointX + clickPointAdjustmentX, pointY - 7.5, 3.5, 5);
-  ctx.fillRect(pointX + clickPointAdjustmentX, pointY + 1.5, 3.5, 5);
-}
+//   ctx.fillRect(pointX - 7.5, pointY + clickPointAdjustmentY, 5, 3);
+//   ctx.fillRect(pointX + 1.5, pointY + clickPointAdjustmentY, 5.2, 3);
+//   ctx.fillRect(pointX + clickPointAdjustmentX, pointY - 7.5, 3.5, 5);
+//   ctx.fillRect(pointX + clickPointAdjustmentX, pointY + 1.5, 3.5, 5);
+// }
 
 /// keyboard shortcuts ///
 // Add event listeners to track the state of each key
@@ -1909,6 +2003,78 @@ resetElement.addEventListener("keydown", function (event) {
     reset();
   }
 });
+lineOpacityAdd.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(lineOpacityElement.value);
+  count += 10;
+  lineOpacityElement.value = String(count);
+  updateOutput(lineOpacityElement, lineOpacityOutput);
+  zoom();
+});
+lineOpacitySubtract.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(lineOpacityElement.value);
+  count -= 10;
+  lineOpacityElement.value = String(count);
+  updateOutput(lineOpacityElement, lineOpacityOutput);
+  zoom();
+});
+lineOpacityAdd.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(lineOpacityElement.value);
+    count += 10;
+    lineOpacityElement.value = String(count);
+    updateOutput(lineOpacityElement, lineOpacityOutput);
+    zoom();
+  }
+});
+lineOpacitySubtract.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(lineOpacityElement.value);
+    count -= 10;
+    lineOpacityElement.value = String(count);
+    updateOutput(lineOpacityElement, lineOpacityOutput);
+    zoom();
+  }
+});
+lineWidthAdd.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(lineWidthElement.value);
+  count += 1;
+  lineWidthElement.value = String(count);
+  updateOutput(lineWidthElement, lineWidthOutput);
+  zoom();
+});
+lineWidthSubtract.addEventListener("click", function (event) {
+  // event.stopPropagation();
+  let count = parseInt(lineWidthElement.value);
+  count -= 1;
+  lineWidthElement.value = String(count);
+  updateOutput(lineWidthElement, lineWidthOutput);
+  zoom();
+});
+lineWidthAdd.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(lineWidthElement.value);
+    count += 1;
+    lineWidthElement.value = String(count);
+    updateOutput(lineWidthElement, lineWidthOutput);
+    zoom();
+  }
+});
+lineWidthSubtract.addEventListener("keydown", function (event) {
+  if (event.key === "Enter" || event.key === " ") {
+    // event.stopPropagation();
+    let count = parseInt(lineWidthElement.value);
+    count -= 1;
+    lineWidthElement.value = String(count);
+    updateOutput(lineWidthElement, lineWidthOutput);
+    zoom();
+  }
+});
 
 function navToggle() {
   menu.classList.toggle("close");
@@ -1925,6 +2091,10 @@ function changeCheckedPointer() {
 function changeCheckedColorsOnly() {
   colorsOnlyElement.checked = !colorsOnlyElement.checked;
   localStorage.setItem(`colors-only`, colorsOnlyElement.checked);
+}
+function changeCheckedAngleConstraint() {
+  angleConstraintElement.checked = !angleConstraintElement.checked;
+  localStorage.setItem(`angle-constraint`, angleConstraintElement.checked);
 }
 
 /// find contrast color
@@ -1988,21 +2158,21 @@ function changeCheckedPan() {
     tooltip.style.display = "none";
     html[0].style.cursor = "grab";
     removeEventListenerTooltip();
-    canvas.removeEventListener("mousedown", storeColor);
+    canvas.removeEventListener("mousedown", throttledStoreLine);
     canvas.addEventListener("mousedown", panMode);
   } else {
     html[0].style.cursor = "crosshair";
     canvas.removeEventListener("mousedown", panMode);
     canvas.addEventListener("mousemove", throttledGetColor);
     document.addEventListener("mousemove", showTooltip);
-    canvas.addEventListener("mousedown", storeColor);
+    canvas.addEventListener("mousedown", throttledStoreLine);
   }
 }
 function removeEventListenerTooltip() {
   canvas.removeEventListener("mousemove", throttledGetColor);
   document.removeEventListener("mousemove", showTooltip);
-  canvas.removeEventListener("mouseup", removeEventListenerTooltip);
-  canvas.removeEventListener("mouseout", removeEventListenerTooltip);
+  // canvas.removeEventListener("mouseup", removeEventListenerTooltip);
+  // canvas.removeEventListener("mouseout", removeEventListenerTooltip);
 }
 function panMode(event) {
   html[0].style.cursor = "grabbing";
@@ -2040,6 +2210,7 @@ function drawImage() {
   ctx.scale(scaleValue, scaleValue);
 
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
+  drawLines();
   drawColors();
   ctxBase.restore();
   ctx.restore();
@@ -2056,6 +2227,7 @@ function drawImageDefault() {
   ctx.scale(1, 1);
 
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
+  drawLines();
   drawColors();
   ctxBase.restore();
   ctx.restore();
@@ -2074,4 +2246,251 @@ function reset() {
   scaleValue = 1;
   zoomElement.value = String(100);
   updateOutput(zoomElement, zoomOutput);
+}
+
+///// Draw a line /////
+
+function drawLineOnMouseMove(event) {
+  const rect = canvas.getBoundingClientRect();
+  const startX = checkedPoints[0].x;
+  const startY = checkedPoints[0].y;
+  let currentX = event.clientX - rect.left + clickPointAdjustmentX;
+  let currentY = event.clientY - rect.top + clickPointAdjustmentY;
+  let lineWidth = parseInt(lineWidthElement.value);
+  if (!lineWidth) {
+    lineWidth = 1;
+  }
+  ctx.lineWidth = parseInt(lineWidth);
+  const opacity = lineOpacityElement.value;
+  const lineColor = lineColorElement.value;
+  let currentColor = hexToRgba(lineColor, opacity);
+  drawImage();
+  drawCross(
+    (startX + dragX / scaleValue) * scaleValue,
+    (startY + dragY / scaleValue) * scaleValue,
+    currentColor,
+    lineWidth
+  );
+  ctx.beginPath();
+  ctx.moveTo(
+    (startX + dragX / scaleValue) * scaleValue,
+    (startY + dragY / scaleValue) * scaleValue
+  );
+  if (angleConstraintElement.checked === true) {
+    const angle = calculateAngle(
+      (startX + dragX / scaleValue) * scaleValue,
+      (startY + dragY / scaleValue) * scaleValue,
+      currentX,
+      currentY
+    );
+    const shiftAngle = adjustedAngle(angle);
+    const adjustedPoint = rotatePoint(
+      (startX + dragX / scaleValue) * scaleValue,
+      (startY + dragY / scaleValue) * scaleValue,
+      currentX,
+      currentY,
+      shiftAngle
+    );
+    ctx.lineTo(adjustedPoint[0], adjustedPoint[1]);
+  } else {
+    ctx.lineTo(currentX, currentY);
+  }
+  ctx.stroke();
+}
+
+function storeLine(event) {
+  const rect = canvas.getBoundingClientRect();
+  let x =
+    (event.clientX - rect.left + clickPointAdjustmentX - dragX) / scaleValue;
+  let y =
+    (event.clientY - rect.top + clickPointAdjustmentY - dragY) / scaleValue;
+  let lineWidth = parseInt(lineWidthElement.value);
+  if (!lineWidth) {
+    lineWidth = 1;
+  }
+  ctx.lineWidth = lineWidth;
+  const opacity = lineOpacityElement.value;
+  const lineColor = lineColorElement.value;
+  const pointerChecked = pointer.checked;
+
+  if (!x || !y) {
+    return;
+  }
+
+  let currentColor = hexToRgba(lineColor, opacity);
+  drawCross(event.clientX, event.clientY, currentColor, lineWidth);
+  checkedPoints.push({
+    x,
+    y,
+    lineColor,
+    lineWidth,
+    opacity,
+    pointerChecked,
+  });
+  canvas.addEventListener("mousemove", drawLineOnMouseMove);
+  removeEventListenerTooltip();
+  tooltip.style.display = "none";
+
+  if (checkedPoints.length === 2) {
+    canvas.removeEventListener("mousemove", drawLineOnMouseMove);
+
+    // console.log("checkedPoints:", checkedPoints);
+    const angle = parseFloat(
+      calculateAngle(
+        checkedPoints[0].x,
+        checkedPoints[0].y,
+        checkedPoints[1].x,
+        checkedPoints[1].y
+      )
+    );
+    // console.log("angle:", angle);
+    const shiftAngle = adjustedAngle(angle);
+    // console.log("shiftAngle:", shiftAngle);
+    const adjustedPoint = rotatePoint(
+      checkedPoints[0].x,
+      checkedPoints[0].y,
+      checkedPoints[1].x,
+      checkedPoints[1].y,
+      shiftAngle
+    );
+    if (angleConstraintElement.checked === true) {
+      checkedPoints[1].x = adjustedPoint[0];
+      checkedPoints[1].y = adjustedPoint[1];
+    }
+    lines.push(checkedPoints);
+    storeColor(checkedPoints[1].x, checkedPoints[1].y);
+    // console.log("lines:", lines);
+    updateUndoStates();
+    // console.log("undoStates:", undoStates);
+    drawImage();
+    canvas.addEventListener("mousemove", throttledGetColor);
+    document.addEventListener("mousemove", showTooltip);
+    checkedPoints = [];
+    redoStates = [];
+  }
+}
+function drawLines() {
+  lines.forEach((line) => {
+    const pointStart = line[0];
+    const pointEnd = line[1];
+    const lineColor = hexToRgba(line[1].lineColor, line[1].opacity);
+    const lineWidth = line[1].lineWidth;
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = parseInt(lineWidth);
+    ctx.beginPath();
+    ctx.moveTo(pointStart.x, pointStart.y);
+    ctx.lineTo(pointEnd.x, pointEnd.y);
+    ctx.stroke();
+    if (line[1].pointerChecked === true) {
+      drawCross(pointStart.x, pointStart.y, lineColor, lineWidth);
+      drawCross(pointEnd.x, pointEnd.y, lineColor, lineWidth);
+    }
+  });
+}
+function adjustedAngle(angle) {
+  if (0 < angle && angle <= 22.5) {
+    return 0;
+  }
+  if (22.5 < angle && angle <= 67.5) {
+    return -45;
+  }
+  if (67.5 < angle && angle <= 112.5) {
+    return -90;
+  }
+  if (112.5 < angle && angle <= 157.5) {
+    return -135;
+  }
+  if (157.5 < angle && angle <= 202.5) {
+    return -180;
+  }
+  if (202.5 < angle && angle <= 247.5) {
+    return 135;
+  }
+  if (247.5 < angle && angle <= 292.5) {
+    return 90;
+  }
+  if (292.5 < angle && angle <= 337.5) {
+    return 45;
+  }
+  if (337.5 < angle && angle <= 360) {
+    return 0;
+  }
+  return 0;
+}
+function drawCross(x, y, color, lineWidth) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = parseInt(lineWidth);
+  const crossSize = 5 + parseInt(lineWidth); // Size of the cross arms
+  ctx.beginPath();
+  ctx.moveTo(x - crossSize, y);
+  ctx.lineTo(x + crossSize, y);
+  ctx.moveTo(x, y - crossSize);
+  ctx.lineTo(x, y + crossSize);
+  ctx.stroke();
+}
+function formatNumber(number) {
+  if (Number.isNaN(number)) {
+    return "Invalid Number";
+  }
+
+  if (Number.isInteger(number)) {
+    return number.toString();
+  }
+
+  const rounded = Math.round(number * 100) / 100; // Round to 2 decimal places
+  const decimalPart = rounded - Math.floor(rounded);
+
+  if (decimalPart === 0) {
+    return Math.floor(rounded).toString();
+  } else {
+    return rounded.toFixed(2);
+  }
+}
+function calculateAngle(x0, y0, x, y) {
+  // Adjust the click coordinates to be relative to the custom origin (x0, y0)
+  let adjustedX = x - x0;
+  let adjustedY = y - y0;
+
+  // Calculate the angle in degrees
+  let angleDegrees = (Math.atan2(adjustedY, adjustedX) * 180) / Math.PI;
+
+  // Normalize the angle to be within 0 to 360 degrees
+  if (angleDegrees > 0) {
+    angleDegrees -= 360;
+  }
+  return formatNumber(Math.abs(angleDegrees));
+}
+function rotatePoint(x0, y0, x, y, degree) {
+  // Convert degrees to radians
+  const rad = degree * (Math.PI / 180);
+
+  // Calculate the distance from the origin to the point
+  const distance = Math.sqrt(Math.pow(x - x0, 2) + Math.pow(y - y0, 2));
+
+  // Calculate new coordinates
+  const x1 = x0 + distance * Math.cos(rad);
+  const y1 = y0 + distance * Math.sin(rad);
+
+  return [x1, y1];
+}
+function hexToRgba(hex, alpha) {
+  // HEX値を正規化（3桁の場合は6桁に拡張）
+  let normalizedHex = hex.replace(/^#/, "");
+  if (normalizedHex.length === 3) {
+    normalizedHex = normalizedHex
+      .split("")
+      .map((char) => char + char)
+      .join("");
+  }
+
+  // 16進数を10進数のRGB値に変換
+  const r = parseInt(normalizedHex.substring(0, 2), 16);
+  const g = parseInt(normalizedHex.substring(2, 4), 16);
+  const b = parseInt(normalizedHex.substring(4, 6), 16);
+
+  // α値を0から1の範囲に変換
+  const a = alpha / 100;
+
+  // RGBA値を返す
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
