@@ -59,6 +59,7 @@ const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
 const pointer = document.getElementById("pointer");
+const line = document.getElementById("line");
 const lineOpacityElement = document.getElementById("line-opacity");
 const lineOpacityOutput = document.getElementById("line-opacity-output");
 const lineOpacityAdd = document.getElementById("line-opacity-add");
@@ -127,6 +128,7 @@ function setStyles() {
   const settingFontSize = localStorage.getItem("fontSize");
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
+  const settingLine = localStorage.getItem("line");
   const settingColorsOnly = localStorage.getItem("colors-only");
   const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
@@ -144,6 +146,7 @@ function setStyles() {
   changeFontSize(ctx, fontInput.value);
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
+  setValueToChecked(line, settingLine);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
   setValueToChecked(angleConstraintElement, settingAngleConstraint);
 }
@@ -2086,6 +2089,10 @@ function changeCheckedPointer() {
   pointer.checked = !pointer.checked;
   localStorage.setItem(`pointer`, pointer.checked);
 }
+function changeCheckedLine() {
+  line.checked = !line.checked;
+  localStorage.setItem(`line`, line.checked);
+}
 function changeCheckedColorsOnly() {
   colorsOnlyElement.checked = !colorsOnlyElement.checked;
   localStorage.setItem(`colors-only`, colorsOnlyElement.checked);
@@ -2309,6 +2316,7 @@ function storeLine(event) {
   const opacity = lineOpacityElement.value;
   const lineColor = lineColorElement.value;
   const pointerChecked = pointer.checked;
+  const lineChecked = line.checked;
 
   if (!x || !y) {
     return;
@@ -2328,6 +2336,7 @@ function storeLine(event) {
     lineWidth,
     opacity,
     pointerChecked,
+    lineChecked,
   });
   if (!!isMobile === false && !!isTablet === false) {
     canvas.addEventListener("mousemove", drawLineOnMouseMove);
@@ -2387,10 +2396,12 @@ function drawLines() {
     const lineWidth = line[1].lineWidth;
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = parseInt(lineWidth);
-    ctx.beginPath();
-    ctx.moveTo(pointStart.x, pointStart.y);
-    ctx.lineTo(pointEnd.x, pointEnd.y);
-    ctx.stroke();
+    if (line[1].lineChecked === true) {
+      ctx.beginPath();
+      ctx.moveTo(pointStart.x, pointStart.y);
+      ctx.lineTo(pointEnd.x, pointEnd.y);
+      ctx.stroke();
+    }
     if (line[1].pointerChecked === true) {
       drawCross(pointStart.x, pointStart.y, lineColor, lineWidth);
       drawCross(pointEnd.x, pointEnd.y, lineColor, lineWidth);
