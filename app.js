@@ -127,7 +127,6 @@ function setStyles() {
   const settingFontSize = localStorage.getItem("fontSize");
   const settingColumn = localStorage.getItem("column");
   const settingPointer = localStorage.getItem("pointer");
-  const settingPan = localStorage.getItem("pan");
   const settingColorsOnly = localStorage.getItem("colors-only");
   const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
@@ -145,7 +144,6 @@ function setStyles() {
   changeFontSize(ctx, fontInput.value);
   setValue(columnNumber, settingColumn, columnNumberOutput);
   setValueToChecked(pointer, settingPointer);
-  setValueToChecked(pan, settingPan);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
   setValueToChecked(angleConstraintElement, settingAngleConstraint);
 }
@@ -185,20 +183,15 @@ document.addEventListener("DOMContentLoaded", function () {
     main.classList.toggle("close");
     imageContainer.classList.toggle("close");
     Array.from(pc).forEach((element) => (element.style.display = "none"));
-    canvas.addEventListener("mousedown", throttledStoreLine);
+    canvas.addEventListener("click", throttledStoreLine);
   }
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
   filterCanvas();
   if (!!isMobile === false && !!isTablet === false) {
-    if (pan.checked === true) {
-      canvas.addEventListener("mousedown", panMode);
-      html[0].style.cursor = "grab";
-    } else {
-      canvas.addEventListener("mousemove", throttledGetColor);
-      document.addEventListener("mousemove", showTooltip);
-      canvas.addEventListener("mousedown", throttledStoreLine);
-    }
+    canvas.addEventListener("mousemove", throttledGetColor);
+    document.addEventListener("mousemove", showTooltip);
+    canvas.addEventListener("mousedown", throttledStoreLine);
   }
   if (!!isMobile === true) {
     setTimeout(() => {
@@ -613,7 +606,7 @@ function hslToHsl50(hslH, oklchC) {
       saturation = i;
     }
     prevStoreDiff = storeDiff;
-    console.log(minDiff);
+    // console.log(minDiff);
   }
   return saturation;
 }
@@ -1282,9 +1275,9 @@ function getColorForTooltip(event) {
     oklabForTooltip.oklabB
   );
 }
-function getColor(event) {
-  const x = event.offsetX + clickPointAdjustmentX;
-  const y = event.offsetY + clickPointAdjustmentY;
+function getColor(posX, posY) {
+  const x = (posX + dragX / scaleValue) * scaleValue;
+  const y = (posY + dragY / scaleValue) * scaleValue;
   const color = ctxBase.getImageData(x, y, 1, 1).data;
   rgb = [color[0], color[1], color[2]];
   hex = rgbToHex(color[0], color[1], color[2]);
@@ -1296,6 +1289,7 @@ function getColor(event) {
   lch = labToLch(lab.labL, lab.labA, lab.labB);
   oklab = rgb2oklab(color[0], color[1], color[2]);
   oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+  hsl50 = hslToHsl50(hsl.h, oklch.oklchC);
 }
 
 function throttle(fn, wait) {
@@ -1330,16 +1324,20 @@ const throttledGetColor = throttle(function (event) {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
 }, 50);
 
-function storeColor(posX, posY) {
-  rgb = rgbForTooltip;
-  hex = hexForTooltip;
-  hsv = hsvForTooltip;
-  hsl = hslForTooltip;
-  lab = labForTooltip;
-  lch = lchForTooltip;
-  oklab = oklabForTooltip;
-  oklch = oklchForTooltip;
-  hsl50 = hslToHsl50(hsl.h, oklch.oklchC);
+function storeColor(startX, startY, endX, endY) {
+  if (!!isMobile === true) {
+    getColor(startX, startY);
+  } else {
+    rgb = rgbForTooltip;
+    hex = hexForTooltip;
+    hsv = hsvForTooltip;
+    hsl = hslForTooltip;
+    lab = labForTooltip;
+    lch = lchForTooltip;
+    oklab = oklabForTooltip;
+    oklch = oklchForTooltip;
+    hsl50 = hslToHsl50(hsl.h, oklch.oklchC);
+  }
   const colorList = {
     rgb: rgb,
     hex: hex,
@@ -1358,8 +1356,8 @@ function storeColor(posX, posY) {
   isInitialValue = false;
   const colorSpaceValue = colorSpace.selectedOptions[0].value;
   changeColorSpaceForMenu(colorSpaceValue);
-  const pointX = posX;
-  const pointY = posY;
+  const pointX = endX;
+  const pointY = endY;
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
   const offsetXValue = parseInt(offsetX.value);
@@ -2153,7 +2151,6 @@ function filterCanvas() {
 
 function changeCheckedPan() {
   pan.checked = !pan.checked;
-  localStorage.setItem(`pan`, pan.checked);
   if (pan.checked === true) {
     tooltip.style.display = "none";
     html[0].style.cursor = "grab";
@@ -2318,7 +2315,12 @@ function storeLine(event) {
   }
 
   let currentColor = hexToRgba(lineColor, opacity);
-  drawCross(event.clientX, event.clientY, currentColor, lineWidth);
+  drawCross(
+    event.clientX - rect.left,
+    event.clientY - rect.top,
+    currentColor,
+    lineWidth
+  );
   checkedPoints.push({
     x,
     y,
@@ -2327,13 +2329,16 @@ function storeLine(event) {
     opacity,
     pointerChecked,
   });
-  canvas.addEventListener("mousemove", drawLineOnMouseMove);
-  removeEventListenerTooltip();
-  tooltip.style.display = "none";
+  if (!!isMobile === false && !!isTablet === false) {
+    canvas.addEventListener("mousemove", drawLineOnMouseMove);
+    removeEventListenerTooltip();
+    tooltip.style.display = "none";
+  }
 
   if (checkedPoints.length === 2) {
-    canvas.removeEventListener("mousemove", drawLineOnMouseMove);
-
+    if (!!isMobile === false && !!isTablet === false) {
+      canvas.removeEventListener("mousemove", drawLineOnMouseMove);
+    }
     // console.log("checkedPoints:", checkedPoints);
     const angle = parseFloat(
       calculateAngle(
@@ -2358,7 +2363,12 @@ function storeLine(event) {
       checkedPoints[1].y = adjustedPoint[1];
     }
     lines.push(checkedPoints);
-    storeColor(checkedPoints[1].x, checkedPoints[1].y);
+    storeColor(
+      checkedPoints[0].x,
+      checkedPoints[0].y,
+      checkedPoints[1].x,
+      checkedPoints[1].y
+    );
     // console.log("lines:", lines);
     updateUndoStates();
     // console.log("undoStates:", undoStates);
