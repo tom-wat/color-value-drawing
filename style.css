@@ -465,6 +465,7 @@ label:focus-visible {
 .input-color {
   border: none;
   background: none;
+  width: 3ch;
 }
 
 @media (hover: hover) and (pointer: fine) {
