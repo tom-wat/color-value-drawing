@@ -54,6 +54,9 @@ body {
   font-family: "Inter", "Helvetica Neue", "Arial", sans-serif;
   position: relative;
 }
+body.close {
+  overflow: hidden;
+}
 ul,
 li {
   list-style: none;
@@ -137,6 +140,7 @@ output {
   height: 100vh;
   z-index: 10;
   overflow: scroll;
+  overscroll-behavior-y: contain;
   scrollbar-gutter: stable;
   transition: transform 0.2s ease-out;
 }
