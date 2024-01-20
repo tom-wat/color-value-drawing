@@ -8,6 +8,7 @@
   </head>
   <body>
     <div id="backdrop" class="backdrop"></div>
+
     <div class="container">
       <div id="tooltip" class="tooltip"></div>
       <menu>
@@ -157,7 +158,7 @@
               </form>
             </button>
           </li>
-          <li title="Shortcut: G">
+          <li title="Shortcut: F">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon"
                 ><svg
@@ -309,7 +310,6 @@
                 <option value="hex">HEX</option>
                 <option value="hsv">HSV</option>
                 <option value="hsl">HSL</option>
-                <option value="hsl+l">HSL+L</option>
                 <option value="hsl50">HSL50</option>
                 <option value="l">L</option>
                 <option value="lab">Lab</option>
@@ -340,6 +340,330 @@
             <button class="button flex-center button-type-b" tabindex="-1">
               <span id="color-block" class="color-block"></span>
               <span id="color-info">R:-- G:-- B:--</span>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button flex-center"
+              data-tabindex
+              onclick="changeCheckedColor()"
+            >
+              <span class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 512 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M512 256c0 .9 0 1.8 0 2.7c-.4 36.5-33.6 61.3-70.1 61.3H344c-26.5 0-48 21.5-48 48c0 3.4 .4 6.7 1 9.9c2.1 10.2 6.5 20 10.8 29.9c6.1 13.8 12.1 27.5 12.1 42c0 31.8-21.6 60.7-53.4 62c-3.5 .1-7 .2-10.6 .2C114.6 512 0 397.4 0 256S114.6 0 256 0S512 114.6 512 256zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm0-96a32 32 0 1 0 0-64 32 32 0 1 0 0 64zM288 96a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm96 96a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Color</span>
+
+              <form class="flex">
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="color"
+                    name="color"
+                    class="toggle-button-input"
+                    disabled
+                    checked
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button flex-center"
+              data-tabindex
+              onclick="changeCheckedPointer()"
+            >
+              <span class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 448 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Pointer</span>
+
+              <form class="flex">
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="pointer"
+                    name="pointer"
+                    class="toggle-button-input"
+                    disabled
+                    checked
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button flex-center"
+              data-tabindex
+              onclick="changeCheckedLine()"
+            >
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                  <path
+                    d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Line</span>
+
+              <form class="flex">
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="line"
+                    name="line"
+                    class="toggle-button-input"
+                    disabled
+                    checked
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li>
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                  <path
+                    d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Line Opacity</span>
+              <input
+                type="range"
+                id="line-opacity"
+                min="0"
+                max="100"
+                value="100"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="line-opacity-subtract"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="line-opacity-output"
+                  name="line-opacity-output"
+                  for="line-opacity"
+                  >100</output
+                >
+                <span
+                  id="line-opacity-add"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                  <path
+                    d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Line Width</span>
+              <input
+                type="range"
+                id="line-width"
+                min="1"
+                max="9"
+                value="1"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="line-width-subtract"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="line-width-output"
+                  name="line-width-output"
+                  for="line-width"
+                  >1</output
+                >
+                <span
+                  id="line-width-add"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="button flex-center" data-tabindex>
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                  <path
+                    d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Line Color</span>
+
+              <form class="flex">
+                <label>
+                  <input
+                    type="color"
+                    id="line-color"
+                    name="line-color"
+                    class="input-color"
+                    value="#ffffff"
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li>
+            <button
+              class="button flex-center"
+              data-tabindex
+              onclick="changeCheckedAngleConstraint()"
+            >
+              <span class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                  <path
+                    d="M177.9 494.1c-18.7 18.7-49.1 18.7-67.9 0L17.9 401.9c-18.7-18.7-18.7-49.1 0-67.9l50.7-50.7 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 41.4-41.4 48 48c6.2 6.2 16.4 6.2 22.6 0s6.2-16.4 0-22.6l-48-48 50.7-50.7c18.7-18.7 49.1-18.7 67.9 0l92.1 92.1c18.7 18.7 18.7 49.1 0 67.9L177.9 494.1z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Angle Constraint</span>
+
+              <form class="flex">
+                <label class="toggle-button">
+                  <input
+                    type="checkbox"
+                    id="angle-constraint"
+                    name="angle-constraint"
+                    class="toggle-button-input"
+                    disabled
+                  />
+                </label>
+              </form>
+            </button>
+          </li>
+          <li title="Shortcut: -A +S">
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 448 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Font Size</span>
+              <input
+                type="range"
+                id="font-size-input"
+                min="10"
+                max="30"
+                value="14"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="font-size-subtract"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="font-size-output"
+                  name="font-size-output"
+                  for="font-size"
+                  >14</output
+                >
+                <span
+                  id="font-size-add"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
+            </button>
+          </li>
+          <li>
+            <button class="button flex-center button-type-b" tabindex="-1">
+              <span class="icon"
+                ><svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="1em"
+                  viewBox="0 0 320 512"
+                >
+                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+                  <path
+                    d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"
+                  />
+                </svg>
+              </span>
+              <span class="row-1">Column</span>
+              <input
+                type="range"
+                id="column-number"
+                min="1"
+                max="3"
+                value="1"
+                tabindex="-1"
+              />
+              <div class="flex-center">
+                <span
+                  id="column-subtract"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >-</span
+                >
+                <output
+                  id="column-number-output"
+                  name="column-number-output"
+                  for="column-number"
+                  >1</output
+                >
+                <span
+                  id="column-add"
+                  class="inline-button flex-center"
+                  data-tabindex
+                  >+</span
+                >
+              </div>
             </button>
           </li>
           <li title="Shortcut: ⌘C">
@@ -431,228 +755,6 @@
               <span class="row-1">Clear</span>
             </button>
           </li>
-          <li title="Shortcut: T">
-            <button
-              class="button flex-center"
-              data-tabindex
-              onclick="changeCheckedPointer()"
-            >
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Pointer</span>
-
-              <form class="flex">
-                <label class="toggle-button">
-                  <input
-                    type="checkbox"
-                    id="pointer"
-                    name="pointer"
-                    class="toggle-button-input"
-                    disabled
-                    checked
-                  />
-                </label>
-              </form>
-            </button>
-          </li>
-          <li title="Shortcut: T">
-            <button
-              class="button flex-center"
-              data-tabindex
-              onclick="changeCheckedLine()"
-            >
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Line</span>
-
-              <form class="flex">
-                <label class="toggle-button">
-                  <input
-                    type="checkbox"
-                    id="line"
-                    name="line"
-                    class="toggle-button-input"
-                    disabled
-                    checked
-                  />
-                </label>
-              </form>
-            </button>
-          </li>
-          <li title="Shortcut: -1 +2">
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="16"
-                  width="16"
-                  viewBox="0 0 512 512"
-                >
-                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-                  <path
-                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Line Opacity</span>
-              <input
-                type="range"
-                id="line-opacity"
-                min="0"
-                max="100"
-                value="100"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="line-opacity-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="line-opacity-output"
-                  name="line-opacity-output"
-                  for="line-opacity"
-                  >100</output
-                >
-                <span
-                  id="line-opacity-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-            </button>
-          </li>
-          <li title="Shortcut: -1 +2">
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="16"
-                  width="16"
-                  viewBox="0 0 512 512"
-                >
-                  <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
-                  <path
-                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Line Width</span>
-              <input
-                type="range"
-                id="line-width"
-                min="1"
-                max="9"
-                value="1"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="line-width-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="line-width-output"
-                  name="line-width-output"
-                  for="line-width"
-                  >1</output
-                >
-                <span
-                  id="line-width-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-            </button>
-          </li>
-          <li>
-            <button class="button flex-center" data-tabindex>
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Line Color</span>
-
-              <form class="flex">
-                <label>
-                  <input
-                    type="color"
-                    id="line-color"
-                    name="line-color"
-                    class="input-color"
-                    value="#ffffff"
-                  />
-                </label>
-              </form>
-            </button>
-          </li>
-          <li title="Shortcut: T">
-            <button
-              class="button flex-center"
-              data-tabindex
-              onclick="changeCheckedAngleConstraint()"
-            >
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Angle Constraint</span>
-
-              <form class="flex">
-                <label class="toggle-button">
-                  <input
-                    type="checkbox"
-                    id="angle-constraint"
-                    name="angle-constraint"
-                    class="toggle-button-input"
-                    disabled
-                  />
-                </label>
-              </form>
-            </button>
-          </li>
           <li title="Shortcut: X">
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
@@ -695,186 +797,6 @@
                 <option value="middle">Middle</option>
                 <option value="bottom" selected>Bottom</option>
               </select>
-            </button>
-          </li>
-          <li title="Shortcut: -A +S">
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 448 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M254 52.8C249.3 40.3 237.3 32 224 32s-25.3 8.3-30 20.8L57.8 416H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32h-1.8l18-48H303.8l18 48H320c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H390.2L254 52.8zM279.8 304H168.2L224 155.1 279.8 304z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Font Size</span>
-              <input
-                type="range"
-                id="font-size-input"
-                min="10"
-                max="30"
-                value="14"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="font-size-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="font-size-output"
-                  name="font-size-output"
-                  for="font-size"
-                  >14</output
-                >
-                <span
-                  id="font-size-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-            </button>
-          </li>
-          <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon"
-                ><svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 320 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M48 64C21.5 64 0 85.5 0 112V400c0 26.5 21.5 48 48 48H80c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H48zm192 0c-26.5 0-48 21.5-48 48V400c0 26.5 21.5 48 48 48h32c26.5 0 48-21.5 48-48V112c0-26.5-21.5-48-48-48H240z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Column</span>
-              <input
-                type="range"
-                id="column-number"
-                min="1"
-                max="4"
-                value="1"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="column-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="column-number-output"
-                  name="column-number-output"
-                  for="column-number"
-                  >1</output
-                >
-                <span
-                  id="column-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-            </button>
-          </li>
-          <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 512 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M406.6 374.6l96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224l-293.5 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 288l293.5 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Offset-X</span>
-              <input
-                type="range"
-                id="offset-x"
-                min="0"
-                max="4"
-                value="0"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="offset-x-subtract"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="offset-x-output"
-                  name="offset-x-output"
-                  for="offset-x"
-                  >0</output
-                >
-                <span
-                  id="offset-x-add"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
-            </button>
-          </li>
-          <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
-              <span class="icon">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
-                  viewBox="0 0 320 512"
-                >
-                  <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
-                  <path
-                    d="M182.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L128 109.3V402.7L86.6 361.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 402.7V109.3l41.4 41.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-96-96z"
-                  />
-                </svg>
-              </span>
-              <span class="row-1">Offset-Y</span>
-              <input
-                type="range"
-                id="offset-y"
-                min="0"
-                max="4"
-                value="0"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="offset-y-subtract"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="offset-y-output"
-                  name="offset-y-output"
-                  for="offset-y"
-                  >0</output
-                >
-                <span
-                  id="offset-y-add"
-                  class="flex-center inline-button"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
             </button>
           </li>
           <input type="file" id="file-input" tabindex="-1" />
@@ -1026,7 +948,10 @@
                   Read</button
                 >an image file. (.jpg, .png, .webp, etc.)
               </li>
-              <li>Touch or click anywhere to draw a color value.</li>
+              <li>
+                Touch or click anywhere to get a color value.<br />
+                And Touch or click anywhere to draw a color value.
+              </li>
             </ol>
           </div>
           <div class="notes">
@@ -1037,9 +962,11 @@
                 <li>HEX</li>
                 <li>HSV</li>
                 <li>HSL</li>
-                <li>HSL + Lightness from Lab color.</li>
-                <li>HS from HSL color.</li>
-                <li>Lightness from Lab color.</li>
+                <li>
+                  HSL50 (a value that closely matches the saturation of the
+                  color obtained, while maintaining a lightness value of 50.)
+                </li>
+                <li>L (Lightness from Lab color.)</li>
                 <li>Lab</li>
                 <li>LCH</li>
                 <li>Oklab</li>
@@ -1050,6 +977,7 @@
           </div>
         </div>
       </section>
+      <div id="overlay" class="overlay"></div>
       <section id="image-container" class="image-container">
         <canvas id="compositeCanvas"></canvas>
         <canvas

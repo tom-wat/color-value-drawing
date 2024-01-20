@@ -467,7 +467,20 @@ label:focus-visible {
   background: none;
   width: 3ch;
 }
-
+.overlay {
+  width: 100%;
+  height: 100lvh;
+  background: black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 50%;
+  display: none;
+  z-index: 1;
+}
+.overlay.close {
+  display: block;
+}
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
     background-color: var(--secondary-black);
@@ -570,9 +583,6 @@ label:focus-visible {
   }
   #fileInput {
     width: 100%;
-  }
-  input {
-    max-width: 30%;
   }
   .object {
     padding-inline-start: 1.5rem;
