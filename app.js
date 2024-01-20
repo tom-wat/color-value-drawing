@@ -744,15 +744,7 @@ function drawMultilineText(
     const textWidth = context.measureText(colorElement).width;
     const cardWidth = textWidth + padding * 2;
     const cardHeight = fontSize + padding * 2;
-    const offSetXWidth = fontSize * columnNumber;
-    let xOffsetAdjustment = fontSize / 2;
-    let yOffsetAdjustment = fontSize / 2;
-    let colorSet;
-
-    if (pointerChecked === false) {
-      xOffsetAdjustment = 0;
-      yOffsetAdjustment = 0;
-    }
+    // let colorSet;
 
     switch (colorSpaceValue) {
       // case "hsl+l":
@@ -775,18 +767,17 @@ function drawMultilineText(
     }
 
     if (textPositionX === "left") {
-      xOffset = -xOffsetAdjustment - maxWidth;
+      xOffset = -maxWidth;
     } else if (textPositionX === "middle") {
       xOffset = -maxWidth / 2;
     } else {
-      xOffset = xOffsetAdjustment;
+      xOffset = 0;
     }
     if (textPositionY === "top") {
       yOffset =
-        -yOffsetAdjustment -
-        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber) +
-        margin -
-        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber);
+        -(cardHeight + margin) *
+          Math.ceil(colorElements.length / columnNumber) +
+        margin;
     } else if (textPositionY === "middle") {
       yOffset =
         (-(cardHeight + margin) *
@@ -794,9 +785,7 @@ function drawMultilineText(
           margin) /
         2;
     } else {
-      yOffset =
-        yOffsetAdjustment +
-        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber);
+      yOffset = 0;
     }
 
     drawRoundedRectangle(
@@ -2279,7 +2268,7 @@ function drawLines() {
     }
     if (line[1].pointerChecked === true) {
       drawCross(pointStart.x, pointStart.y, lineColor, lineWidth);
-      drawCross(pointEnd.x, pointEnd.y, lineColor, lineWidth);
+      // drawCross(pointEnd.x, pointEnd.y, lineColor, lineWidth);
     }
   });
 }
