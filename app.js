@@ -1,4 +1,5 @@
 const html = document.getElementsByTagName("html");
+const body = document.getElementsByTagName("body");
 const backdrop = document.getElementById("backdrop");
 const main = document.getElementById("main");
 const tooltip = document.getElementById("tooltip");
@@ -1951,6 +1952,7 @@ function navToggle() {
   imageContainer.classList.toggle("close");
   if (!!isMobile === true) {
     overlay.classList.toggle("close");
+    body[0].classList.toggle("close");
   }
 }
 
