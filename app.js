@@ -44,20 +44,13 @@ const openButton = document.getElementById("open-button");
 const closeButton = document.getElementById("close-button");
 const positionX = document.getElementById("position-x");
 const positionY = document.getElementById("position-y");
-const offsetX = document.getElementById("offset-x");
-const offsetXOutput = document.getElementById("offset-x-output");
-const offsetXAdd = document.getElementById("offset-x-add");
-const offsetXSubtract = document.getElementById("offset-x-subtract");
-const offsetYAdd = document.getElementById("offset-y-add");
-const offsetYSubtract = document.getElementById("offset-y-subtract");
-const offsetY = document.getElementById("offset-y");
-const offsetYOutput = document.getElementById("offset-y-output");
 const clickPointAdjustmentX = 0;
 const clickPointAdjustmentY = 0;
 const scaleFull = document.getElementById("scale-full");
 const scaleHalf = document.getElementById("scale-half");
 const scaleQuarter = document.getElementById("scale-quarter");
 const scaleWindow = document.getElementById("scale-window");
+const color = document.getElementById("color");
 const pointer = document.getElementById("pointer");
 const line = document.getElementById("line");
 const lineOpacityElement = document.getElementById("line-opacity");
@@ -75,6 +68,7 @@ const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 const isTablet = navigator.userAgent.match(
   /iPad|Android.*Tablet|Kindle|Playbook/
 );
+const overlay = document.getElementById("overlay");
 // const undoStatesLimitNumber = 50;
 let rgb;
 let hex;
@@ -123,12 +117,13 @@ function setStyles() {
   const settingColorSpace = localStorage.getItem("color-space");
   const settingPositionX = localStorage.getItem("position-x");
   const settingPositionY = localStorage.getItem("position-y");
-  const settingOffsetX = localStorage.getItem("offsetX");
-  const settingOffsetY = localStorage.getItem("offsetY");
   const settingFontSize = localStorage.getItem("fontSize");
   const settingColumn = localStorage.getItem("column");
+  const settingColor = localStorage.getItem("color");
   const settingPointer = localStorage.getItem("pointer");
   const settingLine = localStorage.getItem("line");
+  const settingLineOpacity = localStorage.getItem("line-opacity");
+  const settingLineWidth = localStorage.getItem("line-width");
   const settingColorsOnly = localStorage.getItem("colors-only");
   const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
@@ -140,13 +135,14 @@ function setStyles() {
   changeColorSpaceForTooltip(settingColorSpace);
   setValueToSelected(positionX, settingPositionX);
   setValueToSelected(positionY, settingPositionY);
-  setValue(offsetX, settingOffsetX, offsetXOutput);
-  setValue(offsetY, settingOffsetY, offsetYOutput);
   setValue(fontInput, settingFontSize, fontOutput);
   changeFontSize(ctx, fontInput.value);
   setValue(columnNumber, settingColumn, columnNumberOutput);
+  setValueToChecked(color, settingColor);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(line, settingLine);
+  setValue(lineOpacityElement, settingLineOpacity, lineOpacityOutput);
+  setValue(lineWidthElement, settingLineWidth, lineWidthOutput);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
   setValueToChecked(angleConstraintElement, settingAngleConstraint);
 }
@@ -714,8 +710,6 @@ function drawMultilineText(
   textPositionX,
   textPositionY,
   fontSize,
-  offsetX,
-  offsetY,
   columnNumber,
   colorList,
   colorSpaceValue,
@@ -747,8 +741,6 @@ function drawMultilineText(
   for (let i = 0; i < colorElements.length; i++) {
     const colorElement = colorElements[i];
     const textWidth = context.measureText(colorElement).width;
-    const offsetXValue = [0, 1, 2, 3, 4];
-    const offsetYValue = [0, 0.5, 1, 1.5, 2];
     const cardWidth = textWidth + padding * 2;
     const cardHeight = fontSize + padding * 2;
     const offSetXWidth = fontSize * columnNumber;
@@ -762,14 +754,14 @@ function drawMultilineText(
     }
 
     switch (colorSpaceValue) {
-      case "hsl+l":
-        colorSet = [
-          [colorList.hsl.h, colorList.hsl.h, colorList.hsl.h, 0],
-          [100, colorList.hsl.s, colorList.hsl.s, 0],
-          [50, 50, colorList.hsl.l, colorList.lab.labL],
-        ];
-        context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
-        break;
+      // case "hsl+l":
+      //   colorSet = [
+      //     [colorList.hsl.h, colorList.hsl.h, colorList.hsl.h, 0],
+      //     [100, colorList.hsl.s, colorList.hsl.s, 0],
+      //     [50, 50, colorList.hsl.l, colorList.lab.labL],
+      //   ];
+      //   context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
+      //   break;
       // case "hsl50":
       //   context.fillStyle = `hsl(${colorList.hsl.h} ${colorList.hsl50}% 50%)`;
       //   break;
@@ -782,21 +774,18 @@ function drawMultilineText(
     }
 
     if (textPositionX === "left") {
-      xOffset =
-        -xOffsetAdjustment - maxWidth - offSetXWidth * offsetXValue[offsetX];
+      xOffset = -xOffsetAdjustment - maxWidth;
     } else if (textPositionX === "middle") {
       xOffset = -maxWidth / 2;
     } else {
-      xOffset = xOffsetAdjustment + offSetXWidth * offsetXValue[offsetX];
+      xOffset = xOffsetAdjustment;
     }
     if (textPositionY === "top") {
       yOffset =
         -yOffsetAdjustment -
         (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber) +
         margin -
-        (cardHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) *
-          offsetYValue[offsetY];
+        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber);
     } else if (textPositionY === "middle") {
       yOffset =
         (-(cardHeight + margin) *
@@ -806,9 +795,7 @@ function drawMultilineText(
     } else {
       yOffset =
         yOffsetAdjustment +
-        (cardHeight + margin) *
-          Math.ceil(colorElements.length / columnNumber) *
-          offsetYValue[offsetY];
+        (cardHeight + margin) * Math.ceil(colorElements.length / columnNumber);
     }
 
     drawRoundedRectangle(
@@ -822,35 +809,35 @@ function drawMultilineText(
     );
 
     switch (colorSpaceValue) {
-      case "hsl+l":
-        if (i === 0) {
-          const baseColorRgb = hslToRgb(colorList.hsl.h, 100, 50);
-          const contrastColor =
-            getGreyScaleColorWithHighestContrast(baseColorRgb);
-          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
-          break;
-        }
-        if (i === 1) {
-          const baseColorRgb = hslToRgb(colorList.hsl.h, colorList.hsl.s, 50);
-          const contrastColor =
-            getGreyScaleColorWithHighestContrast(baseColorRgb);
-          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
-          break;
-        }
-        if (i === 2) {
-          const contrastColor = getGreyScaleColorWithHighestContrast(
-            colorList.rgb
-          );
-          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
-          break;
-        }
-        if (i === 3) {
-          const contrastColor = getGreyScaleColorWithHighestContrast(
-            colorList.rgb
-          );
-          context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
-          break;
-        }
+      // case "hsl+l":
+      //   if (i === 0) {
+      //     const baseColorRgb = hslToRgb(colorList.hsl.h, 100, 50);
+      //     const contrastColor =
+      //       getGreyScaleColorWithHighestContrast(baseColorRgb);
+      //     context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+      //     break;
+      //   }
+      //   if (i === 1) {
+      //     const baseColorRgb = hslToRgb(colorList.hsl.h, colorList.hsl.s, 50);
+      //     const contrastColor =
+      //       getGreyScaleColorWithHighestContrast(baseColorRgb);
+      //     context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+      //     break;
+      //   }
+      //   if (i === 2) {
+      //     const contrastColor = getGreyScaleColorWithHighestContrast(
+      //       colorList.rgb
+      //     );
+      //     context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+      //     break;
+      //   }
+      //   if (i === 3) {
+      //     const contrastColor = getGreyScaleColorWithHighestContrast(
+      //       colorList.rgb
+      //     );
+      //     context.fillStyle = `rgb( ${contrastColor[0]}, ${contrastColor[1]}, ${contrastColor[2]})`;
+      //     break;
+      //   }
       // case "hsl50":
       //   const baseColorRgb = hslToRgb(colorList.hsl.h, colorList.hsl50, 50);
       //   let contrastColor = getGreyScaleColorWithHighestContrast(baseColorRgb);
@@ -912,9 +899,6 @@ function positionTooltip(x, y) {
         case "oklch":
           computedWidth = "78.9141";
           break;
-        case "hsl+l":
-          computedWidth = "102.992";
-          break;
         case "l":
           computedWidth = "33.2812";
           break;
@@ -963,9 +947,6 @@ function positionTooltip(x, y) {
           break;
         case "oklch":
           computedWidth = "78.9141";
-          break;
-        case "hsl+l":
-          computedWidth = "102.992";
           break;
         case "l":
           computedWidth = "33.2812";
@@ -1083,13 +1064,6 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       }
       tooltip.textContent = `l:${oklchForTooltip.oklchL} c:${oklchForTooltip.oklchC} h:${oklchForTooltip.oklchH}`;
       break;
-    case "hsl+l":
-      if (isInitialValueForTooltip) {
-        tooltip.textContent = `h:-- s:-- l:-- L:--`;
-        break;
-      }
-      tooltip.textContent = `h:${hslForTooltip.h} s:${hslForTooltip.s} l:${hslForTooltip.l} L:${labForTooltip.labL}`;
-      break;
     case "l":
       if (isInitialValueForTooltip) {
         tooltip.textContent = `L:--`;
@@ -1206,18 +1180,6 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       }
       colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
       colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
-      break;
-    case "hsl+l":
-      if (isInitialValue) {
-        colorInfoElement.textContent = `h:-- s:-- l:-- L:--`;
-        break;
-      }
-      colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
-      colorInfoElement.textContent = `h:${hsl.h} s:${hsl.s} l:${hsl.l} L:${lab.labL}`;
       colorBlockElement.style.setProperty(
         "background-color",
         `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
@@ -1363,12 +1325,10 @@ function storeColor(startX, startY, endX, endY) {
   const pointY = endY;
   const colorText = `${colorInfoElement.textContent}`;
   const fontSize = parseInt(fontInput.value);
-  const offsetXValue = parseInt(offsetX.value);
-  const offsetYValue = parseInt(offsetY.value);
   const textPositionX = positionX.selectedOptions[0].value;
   const textPositionY = positionY.selectedOptions[0].value;
   const columnNumberValue = parseInt(columnNumber.value);
-  const pointerChecked = pointer.checked;
+  const colorChecked = color.checked;
   colors.push({
     colorList,
     colorText,
@@ -1376,37 +1336,31 @@ function storeColor(startX, startY, endX, endY) {
     pointX,
     pointY,
     fontSize,
-    offsetXValue,
-    offsetYValue,
     textPositionX,
     textPositionY,
     columnNumberValue,
-    pointerChecked,
+    colorChecked,
   });
 }
 
 function drawColors() {
   if (colors.length === false) return;
   colors.forEach((color) => {
-    drawMultilineText(
-      ctx,
-      color.colorText,
-      color.pointX,
-      color.pointY,
-      color.textPositionX,
-      color.textPositionY,
-      color.fontSize,
-      color.offsetXValue,
-      color.offsetYValue,
-      color.columnNumberValue,
-      color.colorList,
-      color.colorSpaceValue,
-      color.pointerChecked
-    );
-
-    ctx.fillStyle = `hsl( 0, 0%, 100%)`;
-    ctx.lineWidth = 0.5;
-    ctx.strokeStyle = `hsl( 0, 0%, 0%)`;
+    if (color.colorChecked === true) {
+      drawMultilineText(
+        ctx,
+        color.colorText,
+        color.pointX,
+        color.pointY,
+        color.textPositionX,
+        color.textPositionY,
+        color.fontSize,
+        color.columnNumberValue,
+        color.colorList,
+        color.colorSpaceValue,
+        color.pointerChecked
+      );
+    }
   });
 }
 
@@ -1459,26 +1413,6 @@ document.addEventListener("keydown", (event) => {
     changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
-  // if (event.key === "j") {
-  //   offsetX.value = (parseInt(offsetX.value) + 1).toString();
-  //   updateOutput(offsetX, offsetXOutput);
-  //   localStorage.setItem("offsetX", offsetX.value);
-  // }
-  // if (event.key === "h") {
-  //   offsetX.value = (parseInt(offsetX.value) - 1).toString();
-  //   updateOutput(offsetX, offsetXOutput);
-  //   localStorage.setItem("offsetX", offsetX.value);
-  // }
-  // if (event.key === "u") {
-  //   offsetY.value = (parseInt(offsetY.value) + 1).toString();
-  //   updateOutput(offsetY, offsetYOutput);
-  //   localStorage.setItem("offsetY", offsetY.value);
-  // }
-  // if (event.key === "y") {
-  //   offsetY.value = (parseInt(offsetY.value) - 1).toString();
-  //   updateOutput(offsetY, offsetYOutput);
-  //   localStorage.setItem("offsetY", offsetY.value);
-  // }
   if (event.key === "x") {
     if (keyMeta) return;
     changeSelectedElement(positionX);
@@ -1529,11 +1463,7 @@ document.addEventListener("keydown", (event) => {
     changeSelectedElement(colorSpace);
     positionTooltip(pointerX, pointerY);
   }
-  if (event.key === "t") {
-    if (keyMeta) return;
-    changeCheckedPointer();
-  }
-  if (event.key === "g") {
+  if (event.key === "f") {
     if (keyMeta) return;
     changeSelectedElement(filter);
     filterCanvas();
@@ -1779,7 +1709,9 @@ function changeSelectedElement(element) {
     localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
   }
 }
-
+overlay.addEventListener("click", function () {
+  navToggle();
+});
 fileButton.addEventListener("click", function () {
   if (!!isMobile) {
     navToggle();
@@ -1821,72 +1753,6 @@ positionY.addEventListener("change", function () {
   localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
   positionTooltip(pointerX, pointerY);
   // positionY.blur();
-});
-offsetXAdd.addEventListener("click", function () {
-  let count = parseInt(offsetX.value);
-  count += 1;
-  offsetX.value = String(count);
-  updateOutput(offsetX, offsetXOutput);
-  localStorage.setItem("offsetX", offsetX.value);
-});
-offsetXSubtract.addEventListener("click", function () {
-  let count = parseInt(offsetX.value);
-  count -= 1;
-  offsetX.value = String(count);
-  updateOutput(offsetX, offsetXOutput);
-  localStorage.setItem("offsetX", offsetX.value);
-});
-offsetXAdd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(offsetX.value);
-    count += 1;
-    offsetX.value = String(count);
-    updateOutput(offsetX, offsetXOutput);
-    localStorage.setItem("offsetX", offsetX.value);
-  }
-});
-offsetXSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(offsetX.value);
-    count -= 1;
-    offsetX.value = String(count);
-    updateOutput(offsetX, offsetXOutput);
-    localStorage.setItem("offsetX", offsetX.value);
-  }
-});
-offsetYAdd.addEventListener("click", function () {
-  let count = parseInt(offsetY.value);
-  count += 1;
-  offsetY.value = String(count);
-  updateOutput(offsetY, offsetYOutput);
-  localStorage.setItem("offsetY", offsetY.value);
-});
-offsetYSubtract.addEventListener("click", function () {
-  let count = parseInt(offsetY.value);
-  count -= 1;
-  offsetY.value = String(count);
-  updateOutput(offsetY, offsetYOutput);
-  localStorage.setItem("offsetY", offsetY.value);
-});
-offsetYAdd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(offsetY.value);
-    count += 1;
-    offsetY.value = String(count);
-    updateOutput(offsetY, offsetYOutput);
-    localStorage.setItem("offsetY", offsetY.value);
-    // offsetYSubtract.blur();
-  }
-});
-offsetYSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(offsetY.value);
-    count -= 1;
-    offsetY.value = String(count);
-    updateOutput(offsetY, offsetYOutput);
-    localStorage.setItem("offsetY", offsetY.value);
-    // offsetYSubtract.blur();
-  }
 });
 fontSizeAdd.addEventListener("click", function () {
   let count = parseInt(fontInput.value);
@@ -2010,7 +1876,7 @@ lineOpacityAdd.addEventListener("click", function (event) {
   count += 10;
   lineOpacityElement.value = String(count);
   updateOutput(lineOpacityElement, lineOpacityOutput);
-  zoom();
+  localStorage.setItem("line-opacity", lineOpacityElement.value);
 });
 lineOpacitySubtract.addEventListener("click", function (event) {
   // event.stopPropagation();
@@ -2018,7 +1884,7 @@ lineOpacitySubtract.addEventListener("click", function (event) {
   count -= 10;
   lineOpacityElement.value = String(count);
   updateOutput(lineOpacityElement, lineOpacityOutput);
-  zoom();
+  localStorage.setItem("line-opacity", lineOpacityElement.value);
 });
 lineOpacityAdd.addEventListener("keydown", function (event) {
   if (event.key === "Enter" || event.key === " ") {
@@ -2027,7 +1893,7 @@ lineOpacityAdd.addEventListener("keydown", function (event) {
     count += 10;
     lineOpacityElement.value = String(count);
     updateOutput(lineOpacityElement, lineOpacityOutput);
-    zoom();
+    localStorage.setItem("line-opacity", lineOpacityElement.value);
   }
 });
 lineOpacitySubtract.addEventListener("keydown", function (event) {
@@ -2037,7 +1903,7 @@ lineOpacitySubtract.addEventListener("keydown", function (event) {
     count -= 10;
     lineOpacityElement.value = String(count);
     updateOutput(lineOpacityElement, lineOpacityOutput);
-    zoom();
+    localStorage.setItem("line-opacity", lineOpacityElement.value);
   }
 });
 lineWidthAdd.addEventListener("click", function (event) {
@@ -2046,7 +1912,7 @@ lineWidthAdd.addEventListener("click", function (event) {
   count += 1;
   lineWidthElement.value = String(count);
   updateOutput(lineWidthElement, lineWidthOutput);
-  zoom();
+  localStorage.setItem("line-width", lineWidthElement.value);
 });
 lineWidthSubtract.addEventListener("click", function (event) {
   // event.stopPropagation();
@@ -2054,7 +1920,7 @@ lineWidthSubtract.addEventListener("click", function (event) {
   count -= 1;
   lineWidthElement.value = String(count);
   updateOutput(lineWidthElement, lineWidthOutput);
-  zoom();
+  localStorage.setItem("line-width", lineWidthElement.value);
 });
 lineWidthAdd.addEventListener("keydown", function (event) {
   if (event.key === "Enter" || event.key === " ") {
@@ -2063,7 +1929,7 @@ lineWidthAdd.addEventListener("keydown", function (event) {
     count += 1;
     lineWidthElement.value = String(count);
     updateOutput(lineWidthElement, lineWidthOutput);
-    zoom();
+    localStorage.setItem("line-width", lineWidthElement.value);
   }
 });
 lineWidthSubtract.addEventListener("keydown", function (event) {
@@ -2073,7 +1939,7 @@ lineWidthSubtract.addEventListener("keydown", function (event) {
     count -= 1;
     lineWidthElement.value = String(count);
     updateOutput(lineWidthElement, lineWidthOutput);
-    zoom();
+    localStorage.setItem("line-width", lineWidthElement.value);
   }
 });
 
@@ -2083,8 +1949,15 @@ function navToggle() {
   closeButton.classList.toggle("close");
   main.classList.toggle("close");
   imageContainer.classList.toggle("close");
+  if (!!isMobile === true) {
+    overlay.classList.toggle("close");
+  }
 }
 
+function changeCheckedColor() {
+  color.checked = !color.checked;
+  localStorage.setItem(`color`, color.checked);
+}
 function changeCheckedPointer() {
   pointer.checked = !pointer.checked;
   localStorage.setItem(`pointer`, pointer.checked);
@@ -2378,7 +2251,7 @@ function storeLine(event) {
       checkedPoints[1].x,
       checkedPoints[1].y
     );
-    // console.log("lines:", lines);
+    // console.log("colors:", colors);
     updateUndoStates();
     // console.log("undoStates:", undoStates);
     drawImage();
@@ -2441,7 +2314,7 @@ function adjustedAngle(angle) {
 function drawCross(x, y, color, lineWidth) {
   ctx.strokeStyle = color;
   ctx.lineWidth = parseInt(lineWidth);
-  const crossSize = 5 + parseInt(lineWidth); // Size of the cross arms
+  const crossSize = 3 + parseInt(lineWidth); // Size of the cross arms
   ctx.beginPath();
   ctx.moveTo(x - crossSize, y);
   ctx.lineTo(x + crossSize, y);
