@@ -1070,7 +1070,7 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         tooltip.textContent = `H:-- S:-- L:--`;
         break;
       }
-      tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
+      tooltip.textContent = `h:${hslForTooltip.h} s:${hslForTooltip.s} l:${hslForTooltip.l}`;
       break;
     default:
       break;
@@ -1193,7 +1193,7 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
         break;
       }
       colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
-      colorInfoElement.textContent = `H:${hsl.h} S:${hsl50} L:50`;
+      colorInfoElement.textContent = `h:${hsl.h} s:${hsl50} l:50`;
       colorBlockElement.style.setProperty(
         "background-color",
         `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
