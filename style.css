@@ -530,13 +530,7 @@ label:focus-visible {
     padding-block-end: 4rem;
   }
   .close-button {
-    width: 48px;
-    height: 48px;
-    position: fixed;
-    top: auto;
-    right: auto;
-    left: 1rem;
-    bottom: 4rem;
+    display: none;
   }
   .open-button {
     width: 48px;
