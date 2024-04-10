@@ -527,7 +527,7 @@ label:focus-visible {
   .menu {
     position: fixed;
     width: var(--menu-width);
-    padding-block-end: 2rem;
+    padding-block-end: 4rem;
   }
   .close-button {
     display: none;
