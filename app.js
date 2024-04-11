@@ -1452,16 +1452,16 @@ document.addEventListener("keydown", (event) => {
     changeFontSize(ctx, fontInput.value);
     localStorage.setItem("fontSize", fontInput.value);
   }
-  if (event.key === "x") {
-    if (keyMeta) return;
-    changeSelectedElement(positionX);
-    // positionTooltip(pointerX, pointerY);
-  }
-  if (event.key === "z") {
-    if (keyMeta) return;
-    changeSelectedElement(positionY);
-    // positionTooltip(pointerX, pointerY);
-  }
+  // if (event.key === "x") {
+  //   if (keyMeta) return;
+  //   changeSelectedElement(positionX);
+  //   // positionTooltip(pointerX, pointerY);
+  // }
+  // if (event.key === "z") {
+  //   if (keyMeta) return;
+  //   changeSelectedElement(positionY);
+  //   // positionTooltip(pointerX, pointerY);
+  // }
   if (event.key === "d") {
     if (keyMeta) return;
 
