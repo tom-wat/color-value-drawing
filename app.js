@@ -1119,7 +1119,7 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         tooltip.textContent = `H:-- S:-- L:--`;
         break;
       }
-      tooltip.textContent = `h:${hslForTooltip.h} s:${hslForTooltip.s} l:${hslForTooltip.l}`;
+      tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
       break;
     default:
       break;
