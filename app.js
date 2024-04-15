@@ -92,6 +92,7 @@ let labForTooltip;
 let lchForTooltip;
 let oklabForTooltip;
 let oklchForTooltip;
+let hsl50ForTooltip;
 let colorCode;
 let isInitialValue = true;
 let isInitialValueForTooltip = true;
@@ -1116,10 +1117,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       break;
     case "hsl50":
       if (isInitialValueForTooltip) {
-        tooltip.textContent = `H:-- S:-- L:--`;
+        tooltip.textContent = `H:-- S:-- L:50`;
         break;
       }
-      tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
+      tooltip.textContent = `H:${hslForTooltip.h} S:${hsl50ForTooltip} L:50`;
       break;
     default:
       break;
@@ -1278,6 +1279,9 @@ function getColorForTooltip(event) {
     oklabForTooltip.oklabA,
     oklabForTooltip.oklabB
   );
+  if (colorSpace.selectedOptions[0].value === "hsl50") {
+    hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
+  }
 }
 function getColor(posX, posY) {
   const x = (posX + dragX / scaleValue) * scaleValue;
@@ -1500,6 +1504,10 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "v") {
     if (keyMeta) return;
     changeSelectedElement(colorSpace);
+    if (colorSpace.selectedOptions[0].value === "hsl50") {
+      hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
+      changeColorSpaceForTooltip("hsl50");
+    }
     positionTooltipFixed(pointerX, pointerY);
   }
   if (event.key === "f") {
