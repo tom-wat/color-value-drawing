@@ -1778,7 +1778,12 @@ filter.addEventListener("change", function (event) {
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
-  changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
+  if (colorSpace.selectedOptions[0].value === "hsl50") {
+    hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
+    changeColorSpaceForTooltip("hsl50");
+  } else {
+    changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
+  }
   localStorage.setItem(
     `${colorSpace.name}`,
     colorSpace.selectedOptions[0].value
