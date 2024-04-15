@@ -1117,7 +1117,7 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       break;
     case "hsl50":
       if (isInitialValueForTooltip) {
-        tooltip.textContent = `H:-- S:-- L:50`;
+        tooltip.textContent = `h:-- s:-- l:50`;
         break;
       }
       tooltip.textContent = `H:${hslForTooltip.h} S:${hsl50ForTooltip} L:50`;
@@ -1239,7 +1239,7 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       break;
     case "hsl50":
       if (isInitialValue) {
-        colorInfoElement.textContent = `H:-- S:-- L:50`;
+        colorInfoElement.textContent = `h:-- s:-- l:50`;
         break;
       }
       colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
