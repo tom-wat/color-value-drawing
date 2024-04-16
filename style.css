@@ -245,6 +245,14 @@ output {
 }
 .list li {
   padding-inline-start: 2rem;
+  display: grid;
+  grid-template-columns: 64px 1fr;
+}
+.list .color-name {
+  grid-column: 1 / 2;
+}
+.list .color-description {
+  grid-column: 2 / 3;
 }
 
 .image-container {
