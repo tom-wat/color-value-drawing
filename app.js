@@ -110,6 +110,7 @@ let dragY = 0;
 let colors = [];
 let checkedPoints = [];
 let lines = [];
+let storeLineFlag = false;
 
 const throttledStoreLine = throttle(storeLine, 100);
 function setStyles() {
@@ -628,6 +629,12 @@ function undo() {
     colors = [];
   }
   checkedPoints = [];
+  if (storeLineFlag === true && !!isMobile === false && !!isTablet === false) {
+    canvas.removeEventListener("mousemove", drawLineOnMouseMove);
+    canvas.addEventListener("mousemove", throttledGetColor);
+    document.addEventListener("mousemove", showTooltip);
+    storeLineFlag === false;
+  }
   drawImage();
 }
 function redo() {
@@ -640,6 +647,16 @@ function redo() {
     lines = undoStatesCopy.lines;
     colors = undoStatesCopy.colors;
     checkedPoints = [];
+    if (
+      storeLineFlag === true &&
+      !!isMobile === false &&
+      !!isTablet === false
+    ) {
+      canvas.removeEventListener("mousemove", drawLineOnMouseMove);
+      canvas.addEventListener("mousemove", throttledGetColor);
+      document.addEventListener("mousemove", showTooltip);
+      storeLineFlag === false;
+    }
     drawImage();
   }
 }
@@ -656,6 +673,12 @@ function clearCanvas() {
   colors = [];
   lines = [];
   checkedPoints = [];
+  if (storeLineFlag === true && !!isMobile === false && !!isTablet === false) {
+    canvas.removeEventListener("mousemove", drawLineOnMouseMove);
+    canvas.addEventListener("mousemove", throttledGetColor);
+    document.addEventListener("mousemove", showTooltip);
+    storeLineFlag === false;
+  }
   updateUndoStates();
   redoStates = [];
   drawImage();
@@ -2229,6 +2252,7 @@ function drawLineOnMouseMove(event) {
 }
 
 function storeLine(event) {
+  storeLineFlag = true;
   const rect = canvas.getBoundingClientRect();
   let x =
     (event.clientX - rect.left + clickPointAdjustmentX - dragX) / scaleValue;
@@ -2312,6 +2336,7 @@ function storeLine(event) {
     document.addEventListener("mousemove", showTooltip);
     checkedPoints = [];
     redoStates = [];
+    storeLineFlag = false;
   }
 }
 function drawLines() {
