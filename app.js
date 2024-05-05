@@ -779,9 +779,9 @@ function drawMultilineText(
       //   ];
       //   context.fillStyle = `hsl(${colorSet[0][i]} ${colorSet[1][i]}% ${colorSet[2][i]}%)`;
       //   break;
-      // case "hsl50":
-      //   context.fillStyle = `hsl(${colorList.hsl.h} ${colorList.hsl50}% 50%)`;
-      //   break;
+      case "hsl50":
+        context.fillStyle = `hsl(${colorList.hsl.h} ${colorList.hsl50}% 50%)`;
+        break;
       case "l":
         context.fillStyle = `lab(${colorList.lab.labL}% 0 0)`;
         break;
@@ -1144,6 +1144,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `H:${hslForTooltip.h} S:${hsl50ForTooltip} L:50`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `hsl(${hslForTooltip.h} ${hsl50ForTooltip} 50)`
+      );
       break;
     default:
       break;
@@ -1269,7 +1273,7 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
       colorInfoElement.textContent = `h:${hsl.h} s:${hsl50} l:50`;
       colorBlockElement.style.setProperty(
         "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+        `hsl(${hsl.h} ${hsl50} 50)`
       );
       break;
     default:
