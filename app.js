@@ -111,6 +111,7 @@ let colors = [];
 let checkedPoints = [];
 let lines = [];
 let storeLineFlag = false;
+let file;
 
 const throttledStoreLine = throttle(storeLine, 100);
 function setStyles() {
@@ -205,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 const openFile = (event) => {
-  const file = event.target.files[0];
+  file = event.target.files[0];
   if (!file) {
     console.error("No file selected.");
     return;
@@ -1708,18 +1709,19 @@ function download() {
   // ダウンロード用のリンクを作成する
   const downloadLink = document.createElement("a");
   downloadLink.href = imageData;
+  const fileName = removeExtension(file.name);
   switch (format.selectedOptions[0].value) {
     case "png":
-      downloadLink.download = "image.png";
+      downloadLink.download = `${fileName}-color.png`;
       break;
     case "jpeg":
-      downloadLink.download = "image.jpg";
+      downloadLink.download = `${fileName}-color.jpg`;
       break;
     case "webp":
-      downloadLink.download = "image.webp";
+      downloadLink.download = `${fileName}-color.webp`;
       break;
     default:
-      downloadLink.download = "image.png";
+      downloadLink.download = `${fileName}-color.png`;
   }
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
@@ -1727,6 +1729,17 @@ function download() {
   drawImage();
 }
 const debouncedDownload = debounce(download, 2000, true);
+
+function removeExtension(filename) {
+  // 最後のドットの位置を見つける
+  let lastDotIndex = filename.lastIndexOf(".");
+
+  // ドットが見つからなければ、元のファイル名を返す
+  if (lastDotIndex === -1) return filename;
+
+  // ドットの位置から拡張子を除いた部分を返す
+  return filename.substring(0, lastDotIndex);
+}
 
 downloadBtn.addEventListener("click", debouncedDownload);
 
@@ -1805,7 +1818,12 @@ filter.addEventListener("change", function (event) {
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
-  if (colorSpace.selectedOptions[0].value === "hsl50") {
+  if (
+    colorSpace.selectedOptions[0].value === "hsl50" &&
+    hsl50ForTooltip === undefined
+  ) {
+    changeColorSpaceForTooltip("hsl50");
+  } else if (colorSpace.selectedOptions[0].value === "hsl50") {
     hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
     changeColorSpaceForTooltip("hsl50");
   } else {
