@@ -1032,8 +1032,11 @@ function positionTooltipFixed(x, y) {
       case "l":
         computedWidth = "33.2812";
         break;
-      case "hs":
-        computedWidth = "60.828";
+      case "hsl50":
+        computedWidth = "82.61";
+        break;
+      case "l+hsl50":
+        computedWidth = "82.31";
         break;
       default:
         break;
@@ -1102,10 +1105,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `L:${labForTooltip.labL} a:${labForTooltip.labA} b:${labForTooltip.labB}`;
-      tooltip.style.setProperty(
-        "--background-color",
-        `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
-      );
+      // tooltip.style.setProperty(
+      //   "--background-color",
+      //   `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
+      // );
       break;
     case "lch":
       if (isInitialValueForTooltip) {
@@ -1148,6 +1151,18 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       tooltip.style.setProperty(
         "--background-color",
         `hsl(${hslForTooltip.h} ${hsl50ForTooltip} 50)`
+      );
+      break;
+    case "l+hsl50":
+      if (isInitialValueForTooltip) {
+        tooltip.textContent = `L:-- h:-- s:--`;
+        break;
+      }
+      tooltip.textContent = `L:${labForTooltip.labL} h:${hslForTooltip.h} s:${hsl50ForTooltip}`;
+      // ツールチップの背景色を白黒から元に戻す
+      tooltip.style.setProperty(
+        "--background-color",
+        `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
       );
       break;
     default:
@@ -1277,6 +1292,18 @@ function changeColorSpaceForMenu(ColorSpaceValue) {
         `hsl(${hsl.h} ${hsl50} 50)`
       );
       break;
+    case "l+hsl50":
+      if (isInitialValue) {
+        colorInfoElement.textContent = `L:-- h:-- s:--`;
+        break;
+      }
+      colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
+      colorInfoElement.textContent = `L:${lab.labL} h:${hsl.h} s:${hsl50}`;
+      colorBlockElement.style.setProperty(
+        "background-color",
+        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
+      );
+      break;
     default:
       break;
   }
@@ -1308,6 +1335,9 @@ function getColorForTooltip(event) {
     oklabForTooltip.oklabB
   );
   if (colorSpace.selectedOptions[0].value === "hsl50") {
+    hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
+  }
+  if (colorSpace.selectedOptions[0].value === "l+hsl50") {
     hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
   }
 }
