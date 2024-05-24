@@ -213,7 +213,7 @@
               </form>
             </button>
           </li>
-          <li title="Shortcut: -1 +2">
+          <li>
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -229,34 +229,29 @@
                 </svg>
               </span>
               <span class="row-1">Zoom</span>
-              <input
-                type="range"
-                id="zoom"
-                min="10"
-                max="400"
-                value="100"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="zoom-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output id="zoom-output" name="zoom-output" for="zoom"
-                  >100</output
-                >
-                <span
-                  id="zoom-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
+              <select name="zoom" id="zoom" data-tabindex>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+                <option value="80">80</option>
+                <option value="90">90</option>
+                <option value="100" selected>100</option>
+                <option value="125">125</option>
+                <option value="150">150</option>
+                <option value="175">175</option>
+                <option value="200">200</option>
+                <option value="250">250</option>
+                <option value="300">300</option>
+                <option value="350">350</option>
+                <option value="400">400</option>
+              </select>
             </button>
           </li>
-          <li title="Shortcut: 3">
+          <li title="Shortcut: 1">
             <button id="reset" class="button flex-center" data-tabindex>
               <span class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -448,34 +443,18 @@
                 </svg>
               </span>
               <span class="row-1">Line Opacity</span>
-              <input
-                type="range"
-                id="line-opacity"
-                min="0"
-                max="100"
-                value="50"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="line-opacity-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="line-opacity-output"
-                  name="line-opacity-output"
-                  for="line-opacity"
-                  >50</output
-                >
-                <span
-                  id="line-opacity-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
+              <select name="line-opacity" id="line-opacity" data-tabindex>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+                <option value="60">60</option>
+                <option value="70">70</option>
+                <option value="80">80</option>
+                <option value="90">90</option>
+                <option value="100" selected>100</option>
+              </select>
             </button>
           </li>
           <li>
@@ -489,38 +468,27 @@
                 </svg>
               </span>
               <span class="row-1">Line Width</span>
-              <input
-                type="range"
-                id="line-width"
-                min="1"
-                max="9"
-                value="1"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="line-width-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="line-width-output"
-                  name="line-width-output"
-                  for="line-width"
-                  >1</output
-                >
-                <span
-                  id="line-width-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
+              <select name="line-width" id="line-width" data-tabindex>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
             </button>
           </li>
           <li>
-            <button class="button flex-center" data-tabindex>
+            <button
+              id="line-color-btn"
+              class="button flex-center"
+              data-tabindex
+              onclick=""
+            >
               <span class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
@@ -573,7 +541,7 @@
               </form>
             </button>
           </li>
-          <li title="Shortcut: -A +S">
+          <li>
             <button class="button flex-center button-type-b" tabindex="-1">
               <span class="icon">
                 <svg
@@ -588,34 +556,29 @@
                 </svg>
               </span>
               <span class="row-1">Font Size</span>
-              <input
-                type="range"
-                id="font-size-input"
-                min="10"
-                max="30"
-                value="14"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="font-size-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="font-size-output"
-                  name="font-size-output"
-                  for="font-size"
-                  >14</output
-                >
-                <span
-                  id="font-size-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
+              <select name="font-size-input" id="font-size-input" data-tabindex>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16" selected>16</option>
+                <option value="17">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="22">22</option>
+                <option value="24">24</option>
+                <option value="26">26</option>
+                <option value="28">28</option>
+                <option value="30">30</option>
+                <option value="36">36</option>
+                <option value="48">48</option>
+                <option value="64">64</option>
+                <option value="72">72</option>
+                <option value="96">96</option>
+              </select>
             </button>
           </li>
           <li>
@@ -633,34 +596,11 @@
                 </svg>
               </span>
               <span class="row-1">Column</span>
-              <input
-                type="range"
-                id="column-number"
-                min="1"
-                max="3"
-                value="1"
-                tabindex="-1"
-              />
-              <div class="flex-center">
-                <span
-                  id="column-subtract"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >-</span
-                >
-                <output
-                  id="column-number-output"
-                  name="column-number-output"
-                  for="column-number"
-                  >1</output
-                >
-                <span
-                  id="column-add"
-                  class="inline-button flex-center"
-                  data-tabindex
-                  >+</span
-                >
-              </div>
+              <select name="column-number" id="column-number" data-tabindex>
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+              </select>
             </button>
           </li>
           <li title="Shortcut: ⌘C">

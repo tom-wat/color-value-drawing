@@ -85,27 +85,7 @@ select {
 select:focus-visible {
   background-color: var(--secondary-black);
 }
-input[type="range"] {
-  appearance: none;
-  background-color: transparent;
-  width: 0;
-}
-input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
-}
-input[type="range"]::-moz-range-track {
-  background: transparent;
-  border: 0px;
-}
-input[type="range"]::-moz-range-thumb {
-  background: transparent;
-  border: 0px;
-}
-output {
-  width: 3ch;
-  text-align: right;
-  margin-inline-end: 4px;
-}
+
 .backdrop {
   width: 100lvw;
   height: 100lvh;
@@ -327,9 +307,6 @@ output {
   color: var(--tertiary-white);
 }
 
-.button output {
-  color: var(--tertiary-white);
-}
 label {
   line-height: 1.5;
   padding-inline: 1rem;
@@ -338,21 +315,7 @@ label {
 label:focus-visible {
   box-shadow: 0 0 0 1px var(--tertiary-white) inset;
 }
-.inline-button {
-  font-weight: var(--font-weight-medium);
-  background-color: inherit;
-  color: var(--tertiary-white);
-  display: inline-block;
-  line-height: 1.5;
-  padding-inline: 1rem;
-  border-radius: 8px;
-  outline: none;
-  cursor: pointer;
-}
 
-.inline-button:focus-visible {
-  background-color: var(--secondary-black);
-}
 .close-button {
   width: 32px;
   height: 24px;
@@ -505,9 +468,6 @@ label:focus-visible {
     background-color: var(--primary-white);
     color: var(--primary-black);
   }
-  .inline-button:hover {
-    background-color: var(--secondary-black);
-  }
   .open-button:hover {
     outline: 1px solid var(--primary-white);
   }
@@ -526,9 +486,6 @@ label:focus-visible {
   }
   .button-type-b:active {
     background-color: var(--primary-black);
-  }
-  .inline-button:active {
-    background-color: var(--quaternary-black);
   }
 }
 @media (hover: none) and (any-pointer: coarse) {
@@ -606,9 +563,6 @@ label:focus-visible {
   .button-type-b:active {
     background-color: var(--primary-black);
   }
-  span.inline-button:active {
-    background-color: var(--quaternary-black);
-  }
   .tooltip {
     opacity: 0;
     pointer-events: none;
@@ -678,8 +632,5 @@ label:focus-visible {
   }
   .button-type-b:active {
     background-color: var(--primary-black);
-  }
-  span.inline-button:active {
-    background-color: var(--quaternary-black);
   }
 }
