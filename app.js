@@ -28,17 +28,8 @@ const png = document.getElementById("png");
 const clear = document.getElementById("clear-btn");
 const scale = document.getElementById("scale");
 const zoomElement = document.getElementById("zoom");
-const zoomOutput = document.getElementById("zoom-output");
-const zoomAdd = document.getElementById("zoom-add");
-const zoomSubtract = document.getElementById("zoom-subtract");
 const fontInput = document.getElementById("font-size-input");
-const fontOutput = document.getElementById("font-size-output");
-const fontSizeAdd = document.getElementById("font-size-add");
-const fontSizeSubtract = document.getElementById("font-size-subtract");
 const columnNumber = document.getElementById("column-number");
-const columnNumberOutput = document.getElementById("column-number-output");
-const columnAdd = document.getElementById("column-add");
-const columnSubtract = document.getElementById("column-subtract");
 const downloadBtn = document.getElementById("download-btn");
 const menu = document.getElementById("menu");
 const openButton = document.getElementById("open-button");
@@ -55,14 +46,9 @@ const color = document.getElementById("color");
 const pointer = document.getElementById("pointer");
 const line = document.getElementById("line");
 const lineOpacityElement = document.getElementById("line-opacity");
-const lineOpacityOutput = document.getElementById("line-opacity-output");
-const lineOpacityAdd = document.getElementById("line-opacity-add");
-const lineOpacitySubtract = document.getElementById("line-opacity-subtract");
 const lineWidthElement = document.getElementById("line-width");
-const lineWidthOutput = document.getElementById("line-width-output");
-const lineWidthAdd = document.getElementById("line-width-add");
-const lineWidthSubtract = document.getElementById("line-width-subtract");
 const lineColorElement = document.getElementById("line-color");
+const lineColorBtn = document.getElementById("line-color-btn");
 const angleConstraintElement = document.getElementById("angle-constraint");
 const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
@@ -121,13 +107,14 @@ function setStyles() {
   const settingColorSpace = localStorage.getItem("color-space");
   const settingPositionX = localStorage.getItem("position-x");
   const settingPositionY = localStorage.getItem("position-y");
-  const settingFontSize = localStorage.getItem("fontSize");
-  const settingColumn = localStorage.getItem("column");
+  const settingFontSize = localStorage.getItem("font-size-input");
+  const settingColumn = localStorage.getItem("column-number");
   const settingColor = localStorage.getItem("color");
   const settingPointer = localStorage.getItem("pointer");
   const settingLine = localStorage.getItem("line");
   const settingLineOpacity = localStorage.getItem("line-opacity");
   const settingLineWidth = localStorage.getItem("line-width");
+  const settingLineColor = localStorage.getItem("line-color");
   const settingColorsOnly = localStorage.getItem("colors-only");
   const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
@@ -139,22 +126,19 @@ function setStyles() {
   changeColorSpaceForTooltip(settingColorSpace);
   setValueToSelected(positionX, settingPositionX);
   setValueToSelected(positionY, settingPositionY);
-  setValue(fontInput, settingFontSize, fontOutput);
+  setValueToSelected(fontInput, settingFontSize);
   changeFontSize(ctx, fontInput.value);
-  setValue(columnNumber, settingColumn, columnNumberOutput);
+  setValueToSelected(columnNumber, settingColumn);
   setValueToChecked(color, settingColor);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(line, settingLine);
-  setValue(lineOpacityElement, settingLineOpacity, lineOpacityOutput);
-  setValue(lineWidthElement, settingLineWidth, lineWidthOutput);
+  lineColorElement.value = settingLineColor;
+  setValueToSelected(lineOpacityElement, settingLineOpacity);
+  setValueToSelected(lineWidthElement, settingLineWidth);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
   setValueToChecked(angleConstraintElement, settingAngleConstraint);
 }
-function setValue(element, value, output) {
-  if (!value) return;
-  element.value = value;
-  updateOutput(element, output);
-}
+
 function setValueToChecked(element, value) {
   if (value === null) return;
   if (value === "false") {
@@ -242,7 +226,6 @@ const openFile = (event) => {
       dragY = 0;
       scaleValue = 1;
       zoomElement.value = String(100);
-      updateOutput(zoomElement, zoomOutput);
     };
   };
 
@@ -879,123 +862,6 @@ function drawMultilineText(
   }
 }
 
-// function positionTooltip(x, y) {
-//   // ツールチップを表示する位置を設定
-//   tooltip.style.left = x + 0 + "px";
-//   tooltip.style.top = y + 12 + "px";
-//   if (positionX.selectedOptions[0].value === "left") {
-//     // Get the computed styles for the element
-//     const computedStyles = window.getComputedStyle(tooltip);
-//     // Get the computed width
-//     let computedWidth = computedStyles.width;
-//     if (computedWidth === "auto") {
-//       switch (colorSpace.selectedOptions[0].value) {
-//         case "rgb":
-//           computedWidth = "86.4688";
-//           break;
-//         case "hex":
-//           computedWidth = "52.9922";
-//           break;
-//         case "hsv":
-//           computedWidth = "86.1719";
-//           break;
-//         case "hsl":
-//           computedWidth = "85.2891";
-//           break;
-//         case "lab":
-//           computedWidth = "83";
-//           break;
-//         case "lch":
-//           computedWidth = "86.3906";
-//           break;
-//         case "oklab":
-//           computedWidth = "79.2188";
-//           break;
-//         case "oklch":
-//           computedWidth = "78.9141";
-//           break;
-//         case "l":
-//           computedWidth = "33.2812";
-//           break;
-//         case "hs":
-//           computedWidth = "60.828";
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//     // console.log(computedWidth);
-//     const computedWidthInNumber = parseFloat(computedWidth);
-//     tooltip.style.left = x - computedWidthInNumber + "px";
-//     if (positionY.selectedOptions[0].value === "middle") {
-//       tooltip.style.top = y - 10 + "px";
-//       tooltip.style.left = x - computedWidthInNumber - 10 + "px";
-//       return;
-//     }
-//   } else if (positionX.selectedOptions[0].value === "middle") {
-//     // Get the computed styles for the element
-//     const computedStyles = window.getComputedStyle(tooltip);
-//     // Get the computed width
-//     let computedWidth = computedStyles.width;
-//     if (computedWidth === "auto") {
-//       switch (colorSpace.selectedOptions[0].value) {
-//         case "rgb":
-//           computedWidth = "86.4688";
-//           break;
-//         case "hex":
-//           computedWidth = "52.9922";
-//           break;
-//         case "hsv":
-//           computedWidth = "86.1719";
-//           break;
-//         case "hsl":
-//           computedWidth = "85.2891";
-//           break;
-//         case "lab":
-//           computedWidth = "83";
-//           break;
-//         case "lch":
-//           computedWidth = "86.3906";
-//           break;
-//         case "oklab":
-//           computedWidth = "79.2188";
-//           break;
-//         case "oklch":
-//           computedWidth = "78.9141";
-//           break;
-//         case "l":
-//           computedWidth = "33.2812";
-//           break;
-//         case "hs":
-//           computedWidth = "60.828";
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//     // console.log(computedWidth);
-//     const computedWidthInNumber = parseFloat(computedWidth) / 2;
-
-//     tooltip.style.left = x - computedWidthInNumber + "px";
-//     if (positionY.selectedOptions[0].value === "middle") {
-//       tooltip.style.top = `${y - 33 / 2 + 8.5 + 12}px`;
-//       return;
-//     }
-//   }
-//   if (positionY.selectedOptions[0].value === "top") {
-//     tooltip.style.top = y - 33 + "px";
-//   } else if (positionY.selectedOptions[0].value === "middle") {
-//     tooltip.style.top = `${y - 33 / 2 + 8.5}px`;
-//   }
-//   if (
-//     positionY.selectedOptions[0].value === "middle" &&
-//     positionX.selectedOptions[0].value === "right"
-//   ) {
-//     tooltip.style.top = y - 10 + "px";
-//     tooltip.style.left = x + 10 + "px";
-//   }
-// }
-
 function positionTooltipFixed(x, y) {
   // ツールチップを表示する位置を設定
   tooltip.style.top = y + 12 + "px";
@@ -1502,28 +1368,6 @@ document.addEventListener("keydown", (event) => {
 
     fileInput.click();
   }
-  if (event.key === "s") {
-    fontInput.value = (parseInt(fontInput.value) + 1).toString();
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput.value);
-    localStorage.setItem("fontSize", fontInput.value);
-  }
-  if (event.key === "a") {
-    fontInput.value = (parseInt(fontInput.value) - 1).toString();
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput.value);
-    localStorage.setItem("fontSize", fontInput.value);
-  }
-  // if (event.key === "x") {
-  //   if (keyMeta) return;
-  //   changeSelectedElement(positionX);
-  //   // positionTooltip(pointerX, pointerY);
-  // }
-  // if (event.key === "z") {
-  //   if (keyMeta) return;
-  //   changeSelectedElement(positionY);
-  //   // positionTooltip(pointerX, pointerY);
-  // }
   if (event.key === "d") {
     if (keyMeta) return;
 
@@ -1542,20 +1386,6 @@ document.addEventListener("keydown", (event) => {
 
     clearCanvas();
   }
-  // if (event.key === "m") {
-  //   if (keyMeta) return;
-
-  //   columnNumber.value = (parseInt(columnNumber.value) + 1).toString();
-  //   updateOutput(columnNumber, columnNumberOutput);
-  //   localStorage.setItem("column", columnNumber.value);
-  // }
-  // if (event.key === "n") {
-  //   if (keyMeta) return;
-
-  //   columnNumber.value = (parseInt(columnNumber.value) - 1).toString();
-  //   updateOutput(columnNumber, columnNumberOutput);
-  //   localStorage.setItem("column", columnNumber.value);
-  // }
   if (event.key === "Escape") {
     navToggle();
   }
@@ -1577,19 +1407,7 @@ document.addEventListener("keydown", (event) => {
     if (keyMeta) return;
     changeCheckedPan();
   }
-  if (event.key === "2") {
-    zoomElement.value = (parseInt(zoomElement.value) + 10).toString();
-    updateOutput(zoomElement, zoomOutput);
-    localStorage.setItem("zoom", zoomElement.value);
-    zoom();
-  }
   if (event.key === "1") {
-    zoomElement.value = (parseInt(zoomElement.value) - 10).toString();
-    updateOutput(zoomElement, zoomOutput);
-    localStorage.setItem("zoom", zoomElement.value);
-    zoom();
-  }
-  if (event.key === "3") {
     reset();
   }
 });
@@ -1772,6 +1590,7 @@ function removeExtension(filename) {
 }
 
 downloadBtn.addEventListener("click", debouncedDownload);
+downloadBtn.addEventListener("keydown", debouncedDownload);
 
 function debounce(func, delay, immediate) {
   let timerId;
@@ -1799,14 +1618,14 @@ function changeFontSize(context, fontSize) {
   context.font = `500 ${fontSizeValue}px 'Inter','Helvetica Neue', Arial, sans-serif `;
 }
 
-fontInput.addEventListener("input", function () {
+fontInput.addEventListener("change", function () {
   changeFontSize(ctx, fontInput.value);
 });
 
-function updateOutput(inputField, outputField) {
-  const inputValue = inputField.value; // 入力値を取得
-  outputField.textContent = inputValue; // 出力要素に処理後の値を表示
-}
+// function updateOutput(inputField, outputField) {
+//   const inputValue = inputField.value; // 入力値を取得
+//   outputField.textContent = inputValue; // 出力要素に処理後の値を表示
+// }
 
 function changeSelectedElement(element) {
   const selectedIndex = element.selectedIndex;
@@ -1846,6 +1665,40 @@ filter.addEventListener("change", function (event) {
   localStorage.setItem(`${filter.name}`, filter.selectedOptions[0].value);
   filterCanvas();
 });
+zoomElement.addEventListener("change", function (event) {
+  localStorage.setItem(`${zoom.name}`, zoomElement.selectedOptions[0].value);
+  zoom();
+});
+lineOpacityElement.addEventListener("change", function (event) {
+  localStorage.setItem(
+    `${lineOpacityElement.name}`,
+    lineOpacityElement.selectedOptions[0].value
+  );
+});
+lineWidthElement.addEventListener("change", function (event) {
+  localStorage.setItem(
+    `${lineWidthElement.name}`,
+    lineWidthElement.selectedOptions[0].value
+  );
+});
+fontInput.addEventListener("change", function (event) {
+  localStorage.setItem(`${fontInput.name}`, fontInput.selectedOptions[0].value);
+});
+columnNumber.addEventListener("change", function (event) {
+  localStorage.setItem(
+    `${columnNumber.name}`,
+    columnNumber.selectedOptions[0].value
+  );
+});
+lineColorElement.addEventListener("change", function (event) {
+  localStorage.setItem(`${lineColorElement.name}`, lineColorElement.value);
+});
+lineColorBtn.addEventListener("click", function (event) {
+  lineColorElement.click();
+});
+lineColorBtn.addEventListener("keydown", function (event) {
+  lineColorElement.click();
+});
 colorSpace.addEventListener("change", function () {
   changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
   if (
@@ -1881,192 +1734,13 @@ positionY.addEventListener("change", function () {
   // positionTooltip(pointerX, pointerY);
   // positionY.blur();
 });
-fontSizeAdd.addEventListener("click", function () {
-  let count = parseInt(fontInput.value);
-  count += 1;
-  fontInput.value = String(count);
-  updateOutput(fontInput, fontOutput);
-  changeFontSize(ctx, fontInput.value);
-  localStorage.setItem("fontSize", fontInput.value);
-});
-fontSizeSubtract.addEventListener("click", function () {
-  let count = parseInt(fontInput.value);
-  count -= 1;
-  fontInput.value = String(count);
-  updateOutput(fontInput, fontOutput);
-  changeFontSize(ctx, fontInput.value);
-  localStorage.setItem("fontSize", fontInput.value);
-});
-fontSizeAdd.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(fontInput.value);
-    count += 1;
-    fontInput.value = String(count);
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput.value);
-    localStorage.setItem("fontSize", fontInput.value);
-  }
-});
-fontSizeSubtract.addEventListener("keydown", (event) => {
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(fontInput.value);
-    count -= 1;
-    fontInput.value = String(count);
-    updateOutput(fontInput, fontOutput);
-    changeFontSize(ctx, fontInput.value);
-    localStorage.setItem("fontSize", fontInput.value);
-  }
-});
-columnAdd.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(columnNumber.value);
-  count += 1;
-  columnNumber.value = String(count);
-  updateOutput(columnNumber, columnNumberOutput);
-  localStorage.setItem("column", columnNumber.value);
-});
-columnSubtract.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(columnNumber.value);
-  count -= 1;
-  columnNumber.value = String(count);
-  updateOutput(columnNumber, columnNumberOutput);
-  localStorage.setItem("column", columnNumber.value);
-});
-columnAdd.addEventListener("keydown", (event) => {
-  // event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(columnNumber.value);
-    count += 1;
-    columnNumber.value = String(count);
-    updateOutput(columnNumber, columnNumberOutput);
-    localStorage.setItem("column", columnNumber.value);
-  }
-});
-columnSubtract.addEventListener("keydown", (event) => {
-  // event.stopPropagation();
-  if (event.key === "Enter" || event.key === " ") {
-    let count = parseInt(columnNumber.value);
-    count -= 1;
-    columnNumber.value = String(count);
-    updateOutput(columnNumber, columnNumberOutput);
-    localStorage.setItem("column", columnNumber.value);
-  }
-});
-zoomAdd.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(zoomElement.value);
-  count += 10;
-  zoomElement.value = String(count);
-  updateOutput(zoomElement, zoomOutput);
-  zoom();
-});
-zoomSubtract.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(zoomElement.value);
-  count -= 10;
-  zoomElement.value = String(count);
-  updateOutput(zoomElement, zoomOutput);
-  zoom();
-});
-zoomAdd.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(zoomElement.value);
-    count += 10;
-    zoomElement.value = String(count);
-    updateOutput(zoomElement, zoomOutput);
-    zoom();
-  }
-});
-zoomSubtract.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(zoomElement.value);
-    count -= 10;
-    zoomElement.value = String(count);
-    updateOutput(zoomElement, zoomOutput);
-    zoom();
-  }
-});
+
 resetElement.addEventListener("click", function () {
   reset();
 });
 resetElement.addEventListener("keydown", function (event) {
   if (event.key === "Enter" || event.key === " ") {
     reset();
-  }
-});
-lineOpacityAdd.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(lineOpacityElement.value);
-  count += 10;
-  lineOpacityElement.value = String(count);
-  updateOutput(lineOpacityElement, lineOpacityOutput);
-  localStorage.setItem("line-opacity", lineOpacityElement.value);
-});
-lineOpacitySubtract.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(lineOpacityElement.value);
-  count -= 10;
-  lineOpacityElement.value = String(count);
-  updateOutput(lineOpacityElement, lineOpacityOutput);
-  localStorage.setItem("line-opacity", lineOpacityElement.value);
-});
-lineOpacityAdd.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(lineOpacityElement.value);
-    count += 10;
-    lineOpacityElement.value = String(count);
-    updateOutput(lineOpacityElement, lineOpacityOutput);
-    localStorage.setItem("line-opacity", lineOpacityElement.value);
-  }
-});
-lineOpacitySubtract.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(lineOpacityElement.value);
-    count -= 10;
-    lineOpacityElement.value = String(count);
-    updateOutput(lineOpacityElement, lineOpacityOutput);
-    localStorage.setItem("line-opacity", lineOpacityElement.value);
-  }
-});
-lineWidthAdd.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(lineWidthElement.value);
-  count += 1;
-  lineWidthElement.value = String(count);
-  updateOutput(lineWidthElement, lineWidthOutput);
-  localStorage.setItem("line-width", lineWidthElement.value);
-});
-lineWidthSubtract.addEventListener("click", function (event) {
-  // event.stopPropagation();
-  let count = parseInt(lineWidthElement.value);
-  count -= 1;
-  lineWidthElement.value = String(count);
-  updateOutput(lineWidthElement, lineWidthOutput);
-  localStorage.setItem("line-width", lineWidthElement.value);
-});
-lineWidthAdd.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(lineWidthElement.value);
-    count += 1;
-    lineWidthElement.value = String(count);
-    updateOutput(lineWidthElement, lineWidthOutput);
-    localStorage.setItem("line-width", lineWidthElement.value);
-  }
-});
-lineWidthSubtract.addEventListener("keydown", function (event) {
-  if (event.key === "Enter" || event.key === " ") {
-    // event.stopPropagation();
-    let count = parseInt(lineWidthElement.value);
-    count -= 1;
-    lineWidthElement.value = String(count);
-    updateOutput(lineWidthElement, lineWidthOutput);
-    localStorage.setItem("line-width", lineWidthElement.value);
   }
 });
 
@@ -2250,7 +1924,6 @@ function reset() {
   dragY = 0;
   scaleValue = 1;
   zoomElement.value = String(100);
-  updateOutput(zoomElement, zoomOutput);
 }
 
 ///// Draw a line /////
