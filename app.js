@@ -1581,7 +1581,6 @@ function removeExtension(filename) {
 }
 
 downloadBtn.addEventListener("click", debouncedDownload);
-downloadBtn.addEventListener("keydown", debouncedDownload);
 
 function debounce(func, delay, immediate) {
   let timerId;
