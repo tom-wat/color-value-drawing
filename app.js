@@ -26,7 +26,6 @@ const colorSpace = document.getElementById("color-space");
 const webp = document.getElementById("webp");
 const png = document.getElementById("png");
 const clear = document.getElementById("clear-btn");
-const scale = document.getElementById("scale");
 const zoomElement = document.getElementById("zoom");
 const fontInput = document.getElementById("font-size-input");
 const columnNumber = document.getElementById("column-number");
@@ -38,10 +37,6 @@ const positionX = document.getElementById("position-x");
 const positionY = document.getElementById("position-y");
 const clickPointAdjustmentX = 0;
 const clickPointAdjustmentY = 0;
-const scaleFull = document.getElementById("scale-full");
-const scaleHalf = document.getElementById("scale-half");
-const scaleQuarter = document.getElementById("scale-quarter");
-const scaleWindow = document.getElementById("scale-window");
 const color = document.getElementById("color");
 const pointer = document.getElementById("pointer");
 const line = document.getElementById("line");
@@ -93,6 +88,10 @@ let scaleValue = 1;
 let startDragOffset = {};
 let dragX = 0;
 let dragY = 0;
+let moveX = 0;
+let moveY = 0;
+let prevCanvasWidth = 0;
+let prevCanvasHeight = 0;
 let colors = [];
 let checkedPoints = [];
 let lines = [];
@@ -101,7 +100,6 @@ let file;
 
 const throttledStoreLine = throttle(storeLine, 100);
 function setStyles() {
-  const settingScale = localStorage.getItem("scale");
   const settingFormat = localStorage.getItem("format");
   const settingFilter = localStorage.getItem("filter");
   const settingColorSpace = localStorage.getItem("color-space");
@@ -118,7 +116,6 @@ function setStyles() {
   const settingColorsOnly = localStorage.getItem("colors-only");
   const settingAngleConstraint = localStorage.getItem("angle-constraint");
 
-  setValueToSelected(scale, settingScale);
   setValueToSelected(format, settingFormat);
   setValueToSelected(filter, settingFilter);
   setValueToSelected(colorSpace, settingColorSpace);
@@ -201,19 +198,8 @@ const openFile = (event) => {
     image = new Image();
     image.src = reader.result;
     image.onload = function () {
-      switch (scale.selectedOptions[0].value) {
-        case "full":
-          dividedDrawImage(1);
-          break;
-        case "half":
-          dividedDrawImage(2);
-          break;
-        case "quarter":
-          dividedDrawImage(4);
-          break;
-        default:
-          adjustedDrawImage();
-      }
+      dividedDrawImage(1);
+      ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
       imageContainer.style.display = "block";
       changeFontSize(ctx, fontInput.value);
       initialState = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -243,7 +229,6 @@ function dividedDrawImage(divisor) {
   compositeCanvas.height = image.height / divisor;
   imageContainer.style.width = `${image.width / divisor}px`;
   imageContainer.style.height = `${image.height / divisor}px`;
-  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 //ウインドウの幅にキャンバスを合わせる
@@ -262,7 +247,6 @@ function adjustedDrawImage() {
   imageContainer.style.height = `${
     image.height * (canvasWidth / image.width)
   }px`;
-  ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
 
 function rgbToHex(r, g, b) {
@@ -798,8 +782,8 @@ function drawMultilineText(
 
     drawRoundedRectangle(
       context,
-      pointX + drawingPositionX + xOffset,
-      pointY + drawingPositionY + yOffset,
+      pointX * scaleValue + drawingPositionX + xOffset,
+      pointY * scaleValue + drawingPositionY + yOffset,
       cardWidth,
       cardHeight,
       padding,
@@ -849,8 +833,12 @@ function drawMultilineText(
 
     context.fillText(
       colorElement,
-      pointX + drawingPositionX + xOffset + padding,
-      pointY + drawingPositionY + yOffset + fontSize + fontSize / 12
+      pointX * scaleValue + drawingPositionX + xOffset + padding,
+      pointY * scaleValue +
+        drawingPositionY +
+        yOffset +
+        fontSize +
+        fontSize / 12
     );
 
     if ((i + 1) % columnNumber === 0) {
@@ -1321,7 +1309,7 @@ function drawColors() {
         color.pointY,
         color.textPositionX,
         color.textPositionY,
-        color.fontSize,
+        color.fontSize * scaleValue,
         color.columnNumberValue,
         color.colorList,
         color.colorSpaceValue,
@@ -1653,10 +1641,6 @@ fileButton.addEventListener("click", function () {
     navToggle();
   }
 });
-scale.addEventListener("change", function (event) {
-  localStorage.setItem(`${scale.name}`, scale.selectedOptions[0].value);
-  // scale.blur();
-});
 format.addEventListener("change", function (event) {
   localStorage.setItem(`${format.name}`, format.selectedOptions[0].value);
   // format.blur();
@@ -1875,6 +1859,15 @@ function onMouseUp() {
   canvas.removeEventListener("mouseout", onMouseUp);
 }
 
+// window.addEventListener("scroll", function () {
+//   moveX = window.scrollX;
+//   moveY = window.scrollY;
+//   console.log("moveX", moveX);
+//   console.log("moveY", moveY);
+//   console.log("scaleDiffX", (canvas.width - prevCanvasWidth) / 2);
+//   console.log("scaleDiffY", (canvas.height - prevCanvasHeight) / 2);
+// });
+
 function drawImage() {
   if (!!image === false) return;
   ctxBase.clearRect(0, 0, canvas.width, canvas.height);
@@ -1888,6 +1881,15 @@ function drawImage() {
   ctx.translate(dragX, dragY);
   ctx.scale(scaleValue, scaleValue);
 
+  moveX = window.scrollX;
+  moveY = window.scrollY;
+  prevCanvasWidth = canvas.width;
+  prevCanvasHeight = canvas.height;
+  dividedDrawImage(1 / scaleValue);
+  window.scrollTo(
+    moveX + (canvas.width - prevCanvasWidth) / 2,
+    moveY + (canvas.height - prevCanvasHeight) / 2
+  );
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawLines();
   drawColors();
@@ -2074,12 +2076,17 @@ function drawLines() {
     ctx.lineWidth = parseInt(lineWidth);
     if (line[1].lineChecked === true) {
       ctx.beginPath();
-      ctx.moveTo(pointStart.x, pointStart.y);
-      ctx.lineTo(pointEnd.x, pointEnd.y);
+      ctx.moveTo(pointStart.x * scaleValue, pointStart.y * scaleValue);
+      ctx.lineTo(pointEnd.x * scaleValue, pointEnd.y * scaleValue);
       ctx.stroke();
     }
     if (line[1].pointerChecked === true) {
-      drawCross(pointStart.x, pointStart.y, lineColor, lineWidth);
+      drawCross(
+        pointStart.x * scaleValue,
+        pointStart.y * scaleValue,
+        lineColor,
+        lineWidth
+      );
       // drawCross(pointEnd.x, pointEnd.y, lineColor, lineWidth);
     }
   });
