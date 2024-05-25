@@ -90,6 +90,10 @@ let dragX = 0;
 let dragY = 0;
 let moveX = 0;
 let moveY = 0;
+let centerX = 0;
+let centerY = 0;
+let scaleDiffX = 0;
+let scaleDiffY = 0;
 let prevCanvasWidth = 0;
 let prevCanvasHeight = 0;
 let colors = [];
@@ -1883,13 +1887,14 @@ function drawImage() {
 
   moveX = window.scrollX;
   moveY = window.scrollY;
+  // centerX = 260 + (window.innerWidth - 260) / 2;
+  // centerY = window.innerHeight / 2;
   prevCanvasWidth = canvas.width;
   prevCanvasHeight = canvas.height;
   dividedDrawImage(1 / scaleValue);
-  window.scrollTo(
-    moveX + (canvas.width - prevCanvasWidth) / 2,
-    moveY + (canvas.height - prevCanvasHeight) / 2
-  );
+  scaleDiffX = (canvas.width - prevCanvasWidth) / 2;
+  scaleDiffY = (canvas.height - prevCanvasHeight) / 2;
+  window.scrollTo(moveX + scaleDiffX, moveY + scaleDiffY);
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawLines();
   drawColors();
@@ -1921,11 +1926,13 @@ function zoom() {
 }
 
 function reset() {
-  drawImageDefault();
   dragX = 0;
   dragY = 0;
   scaleValue = 1;
   zoomElement.value = String(100);
+  dividedDrawImage(1 / scaleValue);
+  drawImageDefault();
+  window.scrollTo(0, 0);
 }
 
 ///// Draw a line /////
