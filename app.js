@@ -88,6 +88,10 @@ let scaleValue = 1;
 let startDragOffset = {};
 let dragX = 0;
 let dragY = 0;
+let moveX = 0;
+let moveY = 0;
+let prevCanvasWidth = 0;
+let prevCanvasHeight = 0;
 let colors = [];
 let checkedPoints = [];
 let lines = [];
@@ -1855,6 +1859,15 @@ function onMouseUp() {
   canvas.removeEventListener("mouseout", onMouseUp);
 }
 
+// window.addEventListener("scroll", function () {
+//   moveX = window.scrollX;
+//   moveY = window.scrollY;
+//   console.log("moveX", moveX);
+//   console.log("moveY", moveY);
+//   console.log("scaleDiffX", (canvas.width - prevCanvasWidth) / 2);
+//   console.log("scaleDiffY", (canvas.height - prevCanvasHeight) / 2);
+// });
+
 function drawImage() {
   if (!!image === false) return;
   ctxBase.clearRect(0, 0, canvas.width, canvas.height);
@@ -1868,7 +1881,15 @@ function drawImage() {
   ctx.translate(dragX, dragY);
   ctx.scale(scaleValue, scaleValue);
 
+  moveX = window.scrollX;
+  moveY = window.scrollY;
+  prevCanvasWidth = canvas.width;
+  prevCanvasHeight = canvas.height;
   dividedDrawImage(1 / scaleValue);
+  window.scrollTo(
+    moveX + (canvas.width - prevCanvasWidth) / 2,
+    moveY + (canvas.height - prevCanvasHeight) / 2
+  );
   ctxBase.drawImage(image, 0, 0, canvas.width, canvas.height);
   drawLines();
   drawColors();
