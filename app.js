@@ -45,7 +45,7 @@ const lineWidthElement = document.getElementById("line-width");
 const lineColorElement = document.getElementById("line-color");
 const lineColorBtn = document.getElementById("line-color-btn");
 const angleConstraintElement = document.getElementById("angle-constraint");
-const pan = document.getElementById("pan");
+// const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
 const isTablet = navigator.userAgent.match(
   /iPad|Android.*Tablet|Kindle|Playbook/
@@ -1399,10 +1399,10 @@ document.addEventListener("keydown", (event) => {
     changeSelectedElement(filter);
     filterCanvas();
   }
-  if (event.key === "q") {
-    if (keyMeta) return;
-    changeCheckedPan();
-  }
+  // if (event.key === "q") {
+  //   if (keyMeta) return;
+  //   changeCheckedPan();
+  // }
   if (event.key === "1") {
     reset();
   }
@@ -1823,49 +1823,49 @@ function filterCanvas() {
 
 /// switch mode ///
 
-function changeCheckedPan() {
-  pan.checked = !pan.checked;
-  if (pan.checked === true) {
-    tooltip.style.display = "none";
-    html[0].style.cursor = "grab";
-    removeEventListenerTooltip();
-    canvas.removeEventListener("mousedown", throttledStoreLine);
-    canvas.addEventListener("mousedown", panMode);
-  } else {
-    html[0].style.cursor = "crosshair";
-    canvas.removeEventListener("mousedown", panMode);
-    canvas.addEventListener("mousemove", throttledGetColor);
-    document.addEventListener("mousemove", showTooltip);
-    canvas.addEventListener("mousedown", throttledStoreLine);
-  }
-}
+// function changeCheckedPan() {
+//   pan.checked = !pan.checked;
+//   if (pan.checked === true) {
+//     tooltip.style.display = "none";
+//     html[0].style.cursor = "grab";
+//     removeEventListenerTooltip();
+//     canvas.removeEventListener("mousedown", throttledStoreLine);
+//     canvas.addEventListener("mousedown", panMode);
+//   } else {
+//     html[0].style.cursor = "crosshair";
+//     canvas.removeEventListener("mousedown", panMode);
+//     canvas.addEventListener("mousemove", throttledGetColor);
+//     document.addEventListener("mousemove", showTooltip);
+//     canvas.addEventListener("mousedown", throttledStoreLine);
+//   }
+// }
 function removeEventListenerTooltip() {
   canvas.removeEventListener("mousemove", throttledGetColor);
   document.removeEventListener("mousemove", showTooltip);
   // canvas.removeEventListener("mouseup", removeEventListenerTooltip);
   // canvas.removeEventListener("mouseout", removeEventListenerTooltip);
 }
-function panMode(event) {
-  html[0].style.cursor = "grabbing";
-  startDragOffset.x = event.clientX - canvas.offsetLeft - dragX;
-  startDragOffset.y = event.clientY - canvas.offsetTop - dragY;
-  canvas.addEventListener("mousemove", onMouseMove);
-  canvas.addEventListener("mouseup", onMouseUp);
-  canvas.addEventListener("mouseout", onMouseUp);
-}
+// function panMode(event) {
+//   html[0].style.cursor = "grabbing";
+//   startDragOffset.x = event.clientX - canvas.offsetLeft - dragX;
+//   startDragOffset.y = event.clientY - canvas.offsetTop - dragY;
+//   canvas.addEventListener("mousemove", onMouseMove);
+//   canvas.addEventListener("mouseup", onMouseUp);
+//   canvas.addEventListener("mouseout", onMouseUp);
+// }
 
-function onMouseMove(event) {
-  dragX = event.clientX - canvas.offsetLeft - startDragOffset.x;
-  dragY = event.clientY - canvas.offsetTop - startDragOffset.y;
-  drawImage();
-}
+// function onMouseMove(event) {
+//   dragX = event.clientX - canvas.offsetLeft - startDragOffset.x;
+//   dragY = event.clientY - canvas.offsetTop - startDragOffset.y;
+//   drawImage();
+// }
 
-function onMouseUp() {
-  html[0].style.cursor = "grab";
-  canvas.removeEventListener("mousemove", onMouseMove);
-  canvas.removeEventListener("mouseup", onMouseUp);
-  canvas.removeEventListener("mouseout", onMouseUp);
-}
+// function onMouseUp() {
+//   html[0].style.cursor = "grab";
+//   canvas.removeEventListener("mousemove", onMouseMove);
+//   canvas.removeEventListener("mouseup", onMouseUp);
+//   canvas.removeEventListener("mouseout", onMouseUp);
+// }
 
 function drawImage() {
   if (!!image === false) return;
