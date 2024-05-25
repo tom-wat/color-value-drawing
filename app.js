@@ -1919,6 +1919,9 @@ function zoom() {
 }
 
 function reset() {
+  if (!!initialState === false) {
+    return;
+  }
   dragX = 0;
   dragY = 0;
   moveX = 0;
