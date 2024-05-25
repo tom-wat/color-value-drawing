@@ -212,6 +212,12 @@ const openFile = (event) => {
       redoStates = [];
       dragX = 0;
       dragY = 0;
+      moveX = 0;
+      moveY = 0;
+      scaleDiffX = 0;
+      scaleDiffY = 0;
+      prevCanvasWidth = 0;
+      prevCanvasHeight = 0;
       scaleValue = 1;
       zoomElement.value = String(100);
     };
@@ -1915,6 +1921,12 @@ function zoom() {
 function reset() {
   dragX = 0;
   dragY = 0;
+  moveX = 0;
+  moveY = 0;
+  scaleDiffX = 0;
+  scaleDiffY = 0;
+  prevCanvasWidth = 0;
+  prevCanvasHeight = 0;
   scaleValue = 1;
   zoomElement.value = String(100);
   dividedDrawImage(1 / scaleValue);
