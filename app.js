@@ -90,8 +90,6 @@ let dragX = 0;
 let dragY = 0;
 let moveX = 0;
 let moveY = 0;
-let centerX = 0;
-let centerY = 0;
 let scaleDiffX = 0;
 let scaleDiffY = 0;
 let prevCanvasWidth = 0;
@@ -1513,8 +1511,10 @@ function download() {
   if (!!initialState === false) {
     return;
   }
+  reset();
   drawImageDefault();
   // Canvasのイメージデータを取得する
+
   let imageData;
   ctxComposite.drawImage(canvasBase, 0, 0);
   ctxComposite.drawImage(canvas, 0, 0);
@@ -1566,7 +1566,6 @@ function download() {
   // リンクをクリックすることでダウンロードを実行する
   downloadLink.click();
   ctxComposite.clearRect(0, 0, compositeCanvas.width, compositeCanvas.height);
-  drawImage();
 }
 const debouncedDownload = debounce(download, 2000, true);
 
@@ -1863,15 +1862,6 @@ function onMouseUp() {
   canvas.removeEventListener("mouseout", onMouseUp);
 }
 
-// window.addEventListener("scroll", function () {
-//   moveX = window.scrollX;
-//   moveY = window.scrollY;
-//   console.log("moveX", moveX);
-//   console.log("moveY", moveY);
-//   console.log("scaleDiffX", (canvas.width - prevCanvasWidth) / 2);
-//   console.log("scaleDiffY", (canvas.height - prevCanvasHeight) / 2);
-// });
-
 function drawImage() {
   if (!!image === false) return;
   ctxBase.clearRect(0, 0, canvas.width, canvas.height);
@@ -1887,8 +1877,6 @@ function drawImage() {
 
   moveX = window.scrollX;
   moveY = window.scrollY;
-  // centerX = 260 + (window.innerWidth - 260) / 2;
-  // centerY = window.innerHeight / 2;
   prevCanvasWidth = canvas.width;
   prevCanvasHeight = canvas.height;
   dividedDrawImage(1 / scaleValue);
