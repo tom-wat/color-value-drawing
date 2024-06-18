@@ -1359,11 +1359,11 @@ function drawColors() {
 /// keyboard shortcuts ///
 // Add event listeners to track the state of each key
 document.addEventListener("keydown", (event) => {
-  if (event.key === "r") {
-    if (keyMeta) return;
+  // if (event.key === "r") {
+  //   if (keyMeta) return;
 
-    fileInput.click();
-  }
+  //   fileInput.click();
+  // }
   if (event.key === "d") {
     if (keyMeta) return;
 
