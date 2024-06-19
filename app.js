@@ -1364,11 +1364,11 @@ document.addEventListener("keydown", (event) => {
 
   //   fileInput.click();
   // }
-  if (event.key === "d") {
-    if (keyMeta) return;
+  // if (event.key === "d") {
+  //   if (keyMeta) return;
 
-    debouncedDownload();
-  }
+  //   debouncedDownload();
+  // }
   // if (event.key === "w") {
   //   if (keyMeta) return;
   //   changeSelectedElement(scale);
@@ -1382,9 +1382,19 @@ document.addEventListener("keydown", (event) => {
 
     clearCanvas();
   }
-  if (event.key === "Escape") {
-    navToggle();
+  if (event.key === "z") {
+    if (keyMeta) return;
+
+    undo();
   }
+  if (event.key === "x") {
+    if (keyMeta) return;
+
+    redo();
+  }
+  // if (event.key === "Escape") {
+  //   navToggle();
+  // }
   if (event.key === "v") {
     if (keyMeta) return;
     changeSelectedElement(colorSpace);
@@ -1403,9 +1413,9 @@ document.addEventListener("keydown", (event) => {
   //   if (keyMeta) return;
   //   changeCheckedPan();
   // }
-  if (event.key === "1") {
-    reset();
-  }
+  // if (event.key === "1") {
+  //   reset();
+  // }
 });
 
 // Set up an object to track the current state of each key
@@ -1423,14 +1433,14 @@ let keyC = false;
 
 // Define your key press handler
 function handleKeyPress() {
-  if (keyMeta && keyZ && !keyShift) {
-    undo();
-    keyZ = false;
-  }
-  if (keyMeta && keyShift && keyZ) {
-    redo();
-    keyZ = false;
-  }
+  // if (keyMeta && keyZ && !keyShift) {
+  //   undo();
+  //   keyZ = false;
+  // }
+  // if (keyMeta && keyShift && keyZ) {
+  //   redo();
+  //   keyZ = false;
+  // }
   if (keyMeta && keyC) {
     copyToClipboard();
     keyC = false;
