@@ -1668,7 +1668,7 @@ filter.addEventListener("change", function (event) {
   filterCanvas();
 });
 zoomElement.addEventListener("change", function (event) {
-  localStorage.setItem(`${zoom.name}`, zoomElement.selectedOptions[0].value);
+  // localStorage.setItem(`${zoom.name}`, zoomElement.selectedOptions[0].value);
   zoom();
 });
 lineOpacityElement.addEventListener("change", function (event) {
