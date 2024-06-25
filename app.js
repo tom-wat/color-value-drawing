@@ -102,21 +102,21 @@ let file;
 
 const throttledStoreLine = throttle(storeLine, 100);
 function setStyles() {
-  const settingFormat = localStorage.getItem("format");
-  const settingFilter = localStorage.getItem("filter");
-  const settingColorSpace = localStorage.getItem("color-space");
-  const settingPositionX = localStorage.getItem("position-x");
-  const settingPositionY = localStorage.getItem("position-y");
-  const settingFontSize = localStorage.getItem("font-size-input");
-  const settingColumn = localStorage.getItem("column-number");
-  const settingColor = localStorage.getItem("color");
-  const settingPointer = localStorage.getItem("pointer");
-  const settingLine = localStorage.getItem("line");
-  const settingLineOpacity = localStorage.getItem("line-opacity");
-  const settingLineWidth = localStorage.getItem("line-width");
-  const settingLineColor = localStorage.getItem("line-color");
-  const settingColorsOnly = localStorage.getItem("colors-only");
-  const settingAngleConstraint = localStorage.getItem("angle-constraint");
+  const settingFormat = localStorage.getItem("color-format");
+  const settingFilter = localStorage.getItem("color-filter");
+  const settingColorSpace = localStorage.getItem("color-color-space");
+  const settingPositionX = localStorage.getItem("color-position-x");
+  const settingPositionY = localStorage.getItem("color-position-y");
+  const settingFontSize = localStorage.getItem("color-font-size-input");
+  const settingColumn = localStorage.getItem("color-column-number");
+  const settingColor = localStorage.getItem("color-color");
+  const settingPointer = localStorage.getItem("color-pointer");
+  const settingLine = localStorage.getItem("color-line");
+  const settingLineOpacity = localStorage.getItem("color-line-opacity");
+  const settingLineWidth = localStorage.getItem("color-line-width");
+  const settingLineColor = localStorage.getItem("color-line-color");
+  const settingColorsOnly = localStorage.getItem("color-colors-only");
+  const settingAngleConstraint = localStorage.getItem("color-angle-constraint");
 
   setValueToSelected(format, settingFormat);
   setValueToSelected(filter, settingFilter);
@@ -1641,14 +1641,20 @@ function changeSelectedElement(element) {
       changeColorSpaceForMenu(element.selectedOptions[0].value);
       changeColorSpaceForTooltip(element.selectedOptions[0].value);
     }
-    localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
+    localStorage.setItem(
+      `color-${element.name}`,
+      element.selectedOptions[0].value
+    );
   } else {
     element.options[selectedIndex + 1].selected = true;
     if (element === colorSpace) {
       changeColorSpaceForMenu(element.selectedOptions[0].value);
       changeColorSpaceForTooltip(element.selectedOptions[0].value);
     }
-    localStorage.setItem(`${element.name}`, element.selectedOptions[0].value);
+    localStorage.setItem(
+      `color-${element.name}`,
+      element.selectedOptions[0].value
+    );
   }
 }
 overlay.addEventListener("click", function () {
@@ -1660,40 +1666,46 @@ fileButton.addEventListener("click", function () {
   }
 });
 format.addEventListener("change", function (event) {
-  localStorage.setItem(`${format.name}`, format.selectedOptions[0].value);
+  localStorage.setItem(`color-${format.name}`, format.selectedOptions[0].value);
   // format.blur();
 });
 filter.addEventListener("change", function (event) {
-  localStorage.setItem(`${filter.name}`, filter.selectedOptions[0].value);
+  localStorage.setItem(`color-${filter.name}`, filter.selectedOptions[0].value);
   filterCanvas();
 });
 zoomElement.addEventListener("change", function (event) {
-  localStorage.setItem(`${zoom.name}`, zoomElement.selectedOptions[0].value);
+  // localStorage.setItem(`${zoom.name}`, zoomElement.selectedOptions[0].value);
   zoom();
 });
 lineOpacityElement.addEventListener("change", function (event) {
   localStorage.setItem(
-    `${lineOpacityElement.name}`,
+    `color-${lineOpacityElement.name}`,
     lineOpacityElement.selectedOptions[0].value
   );
 });
 lineWidthElement.addEventListener("change", function (event) {
   localStorage.setItem(
-    `${lineWidthElement.name}`,
+    `color-${lineWidthElement.name}`,
     lineWidthElement.selectedOptions[0].value
   );
 });
 fontInput.addEventListener("change", function (event) {
-  localStorage.setItem(`${fontInput.name}`, fontInput.selectedOptions[0].value);
+  localStorage.setItem(
+    `color-${fontInput.name}`,
+    fontInput.selectedOptions[0].value
+  );
 });
 columnNumber.addEventListener("change", function (event) {
   localStorage.setItem(
-    `${columnNumber.name}`,
+    `color-${columnNumber.name}`,
     columnNumber.selectedOptions[0].value
   );
 });
 lineColorElement.addEventListener("change", function (event) {
-  localStorage.setItem(`${lineColorElement.name}`, lineColorElement.value);
+  localStorage.setItem(
+    `color-${lineColorElement.name}`,
+    lineColorElement.value
+  );
 });
 lineColorBtn.addEventListener("click", function (event) {
   lineColorElement.click();
@@ -1715,7 +1727,7 @@ colorSpace.addEventListener("change", function () {
     changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   }
   localStorage.setItem(
-    `${colorSpace.name}`,
+    `color-${colorSpace.name}`,
     colorSpace.selectedOptions[0].value
   );
   positionTooltipFixed(pointerX, pointerY);
@@ -1727,12 +1739,18 @@ clear.addEventListener("click", function () {
   }
 });
 positionX.addEventListener("change", function () {
-  localStorage.setItem(`${positionX.name}`, positionX.selectedOptions[0].value);
+  localStorage.setItem(
+    `color-${positionX.name}`,
+    positionX.selectedOptions[0].value
+  );
   // positionTooltip(pointerX, pointerY);
   // positionX.blur();
 });
 positionY.addEventListener("change", function () {
-  localStorage.setItem(`${positionY.name}`, positionY.selectedOptions[0].value);
+  localStorage.setItem(
+    `color-${positionY.name}`,
+    positionY.selectedOptions[0].value
+  );
   // positionTooltip(pointerX, pointerY);
   // positionY.blur();
 });
@@ -1760,23 +1778,26 @@ function navToggle() {
 
 function changeCheckedColor() {
   color.checked = !color.checked;
-  localStorage.setItem(`color`, color.checked);
+  localStorage.setItem(`color-color`, color.checked);
 }
 function changeCheckedPointer() {
   pointer.checked = !pointer.checked;
-  localStorage.setItem(`pointer`, pointer.checked);
+  localStorage.setItem(`color-pointer`, pointer.checked);
 }
 function changeCheckedLine() {
   line.checked = !line.checked;
-  localStorage.setItem(`line`, line.checked);
+  localStorage.setItem(`color-line`, line.checked);
 }
 function changeCheckedColorsOnly() {
   colorsOnlyElement.checked = !colorsOnlyElement.checked;
-  localStorage.setItem(`colors-only`, colorsOnlyElement.checked);
+  localStorage.setItem(`color-colors-only`, colorsOnlyElement.checked);
 }
 function changeCheckedAngleConstraint() {
   angleConstraintElement.checked = !angleConstraintElement.checked;
-  localStorage.setItem(`angle-constraint`, angleConstraintElement.checked);
+  localStorage.setItem(
+    `color-angle-constraint`,
+    angleConstraintElement.checked
+  );
 }
 
 /// find contrast color
