@@ -44,6 +44,7 @@ const lineOpacityElement = document.getElementById("line-opacity");
 const lineWidthElement = document.getElementById("line-width");
 const lineColorElement = document.getElementById("line-color");
 const lineColorBtn = document.getElementById("line-color-btn");
+const valueBtn = document.getElementById("value-btn");
 const angleConstraintElement = document.getElementById("angle-constraint");
 // const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
@@ -63,6 +64,8 @@ let lch;
 let oklab;
 let oklch;
 let hsl50;
+let currentRGB;
+let currentHex;
 let rgbForTooltip;
 let hexForTooltip;
 let hslForTooltip;
@@ -75,8 +78,8 @@ let oklabForTooltip;
 let oklchForTooltip;
 let hsl50ForTooltip;
 let colorCode;
-let isInitialValue = true;
 let isInitialValueForTooltip = true;
+let isInitialValueForMenu = true;
 let image;
 let undoStates = [];
 let redoStates = [];
@@ -131,7 +134,11 @@ function setStyles() {
   setValueToChecked(color, settingColor);
   setValueToChecked(pointer, settingPointer);
   setValueToChecked(line, settingLine);
-  lineColorElement.value = settingLineColor;
+  if (localStorage.getItem("color-line-color") === null) {
+    lineColorElement.value = "#ffffff";
+  } else {
+    lineColorElement.value = settingLineColor;
+  }
   setValueToSelected(lineOpacityElement, settingLineOpacity);
   setValueToSelected(lineWidthElement, settingLineWidth);
   setValueToChecked(colorsOnlyElement, settingColorsOnly);
@@ -441,11 +448,14 @@ function xyzToLab(x, y, z) {
     zRatio = (903.3 * zRatio + 16) / 116;
   }
 
-  const labL = Math.round(116 * yRatio - 16);
-  const labA = Math.round(500 * (xRatio - yRatio));
-  const labB = Math.round(200 * (yRatio - zRatio));
+  const labL = 116 * yRatio - 16;
+  const labA = 500 * (xRatio - yRatio);
+  const labB = 200 * (yRatio - zRatio);
+  const labLRounded = Math.round(116 * yRatio - 16);
+  const labARounded = Math.round(500 * (xRatio - yRatio));
+  const labBRounded = Math.round(200 * (yRatio - zRatio));
 
-  return { labL, labA, labB };
+  return { labL, labA, labB, labLRounded, labARounded, labBRounded };
 }
 
 function rgb2oklab(r, g, b) {
@@ -543,7 +553,7 @@ function hslToRgb(h, s, l) {
 
   if (s === 0) {
     l *= 255; // 輝度だけで色が決まる
-    return [l, l, l];
+    return [Math.round(l), Math.round(l), Math.round(l)];
   }
 
   const hue2rgb = (p, q, t) => {
@@ -587,6 +597,51 @@ function hslToHsl50(hslH, oklchC) {
     // console.log(minDiff);
   }
   return saturation;
+}
+
+function labToRGB(l, a, b) {
+  let labY = (l + 16) / 116,
+    labX = a / 500 + labY,
+    labZ = labY - b / 200;
+
+  let xyzX =
+    0.95047 *
+    (labX * labX * labX > 0.008856
+      ? labX * labX * labX
+      : (labX - 16 / 116) / 7.787);
+  let xyzY =
+    1.0 *
+    (labY * labY * labY > 0.008856
+      ? labY * labY * labY
+      : (labY - 16 / 116) / 7.787);
+  let xyzZ =
+    1.08883 *
+    (labZ * labZ * labZ > 0.008856
+      ? labZ * labZ * labZ
+      : (labZ - 16 / 116) / 7.787);
+
+  let linearR = xyzX * 3.2406 + xyzY * -1.5372 + xyzZ * -0.4986;
+  let linearG = xyzX * -0.9689 + xyzY * 1.8758 + xyzZ * 0.0415;
+  let linearB = xyzX * 0.0557 + xyzY * -0.204 + xyzZ * 1.057;
+
+  let srgbR =
+    linearR > 0.0031308
+      ? 1.055 * Math.pow(linearR, 1 / 2.4) - 0.055
+      : 12.92 * linearR;
+  let srgbG =
+    linearG > 0.0031308
+      ? 1.055 * Math.pow(linearG, 1 / 2.4) - 0.055
+      : 12.92 * linearG;
+  let srgbB =
+    linearB > 0.0031308
+      ? 1.055 * Math.pow(linearB, 1 / 2.4) - 0.055
+      : 12.92 * linearB;
+
+  return [
+    Math.round(Math.max(0, Math.min(1, srgbR)) * 255),
+    Math.round(Math.max(0, Math.min(1, srgbG)) * 255),
+    Math.round(Math.max(0, Math.min(1, srgbB)) * 255),
+  ];
 }
 
 // function to undo
@@ -645,7 +700,7 @@ function updateUndoStates() {
 
 function clearCanvas() {
   if (!initialState) return;
-  if (initialState === undoStates[0]) return;
+  if (colors[colors.length - 1].length === 0) return;
   colors = [];
   lines = [];
   checkedPoints = [];
@@ -661,7 +716,7 @@ function clearCanvas() {
 }
 
 async function copyToClipboard() {
-  if (isInitialValue) {
+  if (isInitialValueForMenu) {
     return;
   }
   try {
@@ -938,6 +993,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `R:${rgbForTooltip[0]} G:${rgbForTooltip[1]} B:${rgbForTooltip[2]}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "hex":
       if (isInitialValueForTooltip) {
@@ -946,6 +1005,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
       }
       2;
       tooltip.textContent = hexForTooltip;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "hsv":
       if (isInitialValueForTooltip) {
@@ -953,6 +1016,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `H:${hsvForTooltip.hsvH} S:${hsvForTooltip.hsvS} V:${hsvForTooltip.hsvB}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "hsl":
       if (isInitialValueForTooltip) {
@@ -960,17 +1027,25 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `H:${hslForTooltip.h} S:${hslForTooltip.s} L:${hslForTooltip.l}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "lab":
       if (isInitialValueForTooltip) {
         tooltip.textContent = `L:-- a:-- b:--`;
         break;
       }
-      tooltip.textContent = `L:${labForTooltip.labL} a:${labForTooltip.labA} b:${labForTooltip.labB}`;
+      tooltip.textContent = `L:${labForTooltip.labLRounded} a:${labForTooltip.labARounded} b:${labForTooltip.labBRounded}`;
       // tooltip.style.setProperty(
       //   "--background-color",
       //   `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
       // );
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "lch":
       if (isInitialValueForTooltip) {
@@ -978,6 +1053,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `L:${lchForTooltip.lchL} C:${lchForTooltip.lchC} H:${lchForTooltip.lchH}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "oklab":
       if (isInitialValueForTooltip) {
@@ -985,6 +1064,10 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `l:${oklabForTooltip.oklabLRounded} a:${oklabForTooltip.oklabARounded} b:${oklabForTooltip.oklabBRounded}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "oklch":
       if (isInitialValueForTooltip) {
@@ -992,13 +1075,17 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         break;
       }
       tooltip.textContent = `l:${oklchForTooltip.oklchL} c:${oklchForTooltip.oklchC} h:${oklchForTooltip.oklchH}`;
+      tooltip.style.setProperty(
+        "--background-color",
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
+      );
       break;
     case "l":
       if (isInitialValueForTooltip) {
         tooltip.textContent = `L:--`;
         break;
       }
-      tooltip.textContent = `L:${labForTooltip.labL}`;
+      tooltip.textContent = `L:${labForTooltip.labLRounded}`;
       tooltip.style.setProperty(
         "--background-color",
         `lab(${labForTooltip.labL}% 0 0)`
@@ -1020,11 +1107,11 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
         tooltip.textContent = `L:-- h:-- s:--`;
         break;
       }
-      tooltip.textContent = `L:${labForTooltip.labL} h:${hslForTooltip.h} s:${hsl50ForTooltip}`;
+      tooltip.textContent = `L:${labForTooltip.labLRounded} h:${hslForTooltip.h} s:${hsl50ForTooltip}`;
       // ツールチップの背景色を白黒から元に戻す
       tooltip.style.setProperty(
         "--background-color",
-        `lab(${labForTooltip.labL}% ${labForTooltip.labA} ${labForTooltip.labB})`
+        `rgb(${rgbForTooltip[0]} ${rgbForTooltip[1]} ${rgbForTooltip[2]})`
       );
       break;
     default:
@@ -1035,136 +1122,107 @@ function changeColorSpaceForTooltip(ColorSpaceValue) {
 function changeColorSpaceForMenu(ColorSpaceValue) {
   switch (ColorSpaceValue) {
     case "rgb":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `R:-- G:-- B:--`;
         break;
       }
       colorCode = `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`;
       colorInfoElement.textContent = `R:${rgb[0]} G:${rgb[1]} B:${rgb[2]}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "hex":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `#------`;
         break;
       }
       colorCode = hex;
       colorInfoElement.textContent = hex;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "hsv":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `H:-- S:-- V:--`;
         break;
       }
       colorCode = `h:${hsv.hsvH} s:${hsv.hsvS} v:${hsv.hsvB}`;
       colorInfoElement.textContent = `H:${hsv.hsvH} S:${hsv.hsvS} V:${hsv.hsvB}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "hsl":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `H:-- S:-- L:--`;
         break;
       }
       colorCode = `hsl(${hsl.h} ${hsl.s}% ${hsl.l}%)`;
       colorInfoElement.textContent = `H:${hsl.h} S:${hsl.s} L:${hsl.l}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "lab":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `L:-- a:-- b:--`;
         break;
       }
-      colorCode = `lab(${lab.labL}% ${lab.labA} ${lab.labB})`;
-      colorInfoElement.textContent = `L:${lab.labL} a:${lab.labA} b:${lab.labB}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorCode = `lab(${lab.labLRounded}% ${lab.labARounded} ${lab.labBRounded})`;
+      colorInfoElement.textContent = `L:${lab.labLRounded} a:${lab.labARounded} b:${lab.labBRounded}`;
+      colorBlockElement.value = `${hex}`;
       break;
     case "lch":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `L:-- C:-- H:--`;
         break;
       }
       colorCode = `lch(${lch.lchL}% ${lch.lchC} ${lch.lchH})`;
       colorInfoElement.textContent = `L:${lch.lchL} C:${lch.lchC} H:${lch.lchH}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "oklab":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `l:-- a:-- b:--`;
         break;
       }
       colorCode = `oklab(${oklab.oklabLRounded}% ${oklab.oklabARounded} ${oklab.oklabBRounded})`;
       colorInfoElement.textContent = `l:${oklab.oklabLRounded} a:${oklab.oklabARounded} b:${oklab.oklabBRounded}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "oklch":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `l:-- c:-- h:--`;
         break;
       }
       colorCode = `oklch(${oklch.oklchL}% ${oklch.oklchC} ${oklch.oklchH})`;
       colorInfoElement.textContent = `l:${oklch.oklchL} c:${oklch.oklchC} h:${oklch.oklchH}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorBlockElement.value = `${hex}`;
       break;
     case "l":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `L:--`;
         break;
       }
-      colorCode = `lab(${lab.labL}% 0 0)`;
-      colorInfoElement.textContent = `L:${lab.labL}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `lab(${lab.labL}% 0 0)`
-      );
+      colorCode = `lab(${lab.labLRounded}% 0 0)`;
+      colorInfoElement.textContent = `L:${lab.labLRounded}`;
+      currentRGB = labToRGB(lab.labL, 0, 0);
+      currentHex = rgbToHex(currentRGB[0], currentRGB[1], currentRGB[2]);
+      colorBlockElement.value = currentHex;
       break;
     case "hsl50":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `h:-- s:-- l:50`;
         break;
       }
       colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
       colorInfoElement.textContent = `h:${hsl.h} s:${hsl50} l:50`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `hsl(${hsl.h} ${hsl50} 50)`
-      );
+      currentRGB = hslToRgb(hsl.h, hsl50, 50);
+      currentHex = rgbToHex(currentRGB[0], currentRGB[1], currentRGB[2]);
+      colorBlockElement.value = currentHex;
       break;
     case "l+hsl50":
-      if (isInitialValue) {
+      if (isInitialValueForMenu) {
         colorInfoElement.textContent = `L:-- h:-- s:--`;
         break;
       }
       colorCode = `hsl(${hsl.h} ${hsl50}% 50%)`;
-      colorInfoElement.textContent = `L:${lab.labL} h:${hsl.h} s:${hsl50}`;
-      colorBlockElement.style.setProperty(
-        "background-color",
-        `rgb(${rgb[0]} ${rgb[1]} ${rgb[2]})`
-      );
+      colorInfoElement.textContent = `L:${lab.labLRounded} h:${hsl.h} s:${hsl50}`;
+      colorBlockElement.value = hex;
       break;
     default:
       break;
@@ -1277,11 +1335,8 @@ function storeColor(startX, startY, endX, endY) {
     oklch: oklch,
     hsl50: hsl50,
   };
-  colorBlockElement.style.setProperty(
-    "background-color",
-    `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
-  );
-  isInitialValue = false;
+  colorBlockElement.value = `${hex}`;
+  isInitialValueForMenu = false;
   const colorSpaceValue = colorSpace.selectedOptions[0].value;
   changeColorSpaceForMenu(colorSpaceValue);
   const pointX = endX;
@@ -1378,17 +1433,17 @@ document.addEventListener("keydown", (event) => {
   //   changeSelectedElement(format);
   // }
   if (event.key === "c") {
-    if (keyMeta) return;
+    // if (keyMeta) return;
 
     clearCanvas();
   }
   if (event.key === "z") {
-    if (keyMeta) return;
+    // if (keyMeta) return;
 
     undo();
   }
   if (event.key === "x") {
-    if (keyMeta) return;
+    // if (keyMeta) return;
 
     redo();
   }
@@ -1396,8 +1451,9 @@ document.addEventListener("keydown", (event) => {
   //   navToggle();
   // }
   if (event.key === "v") {
-    if (keyMeta) return;
+    // if (keyMeta) return;
     changeSelectedElement(colorSpace);
+    if (isInitialValueForTooltip) return;
     if (colorSpace.selectedOptions[0].value === "hsl50") {
       hsl50ForTooltip = hslToHsl50(hslForTooltip.h, oklchForTooltip.oklchC);
       changeColorSpaceForTooltip("hsl50");
@@ -1405,7 +1461,7 @@ document.addEventListener("keydown", (event) => {
     positionTooltipFixed(pointerX, pointerY);
   }
   if (event.key === "f") {
-    if (keyMeta) return;
+    // if (keyMeta) return;
     changeSelectedElement(filter);
     filterCanvas();
   }
@@ -1419,107 +1475,107 @@ document.addEventListener("keydown", (event) => {
 });
 
 // Set up an object to track the current state of each key
-let keyShift = false;
-let keyControl = false;
-// let keyArrowUp = false;
-// let keyArrowLeft = false;
-// let keyArrowDown = false;
-// let keyArrowRight = false;
-let keyMeta = false;
-let keyZ = false;
-let keyX = false;
-let keyC = false;
+// let keyShift = false;
+// let keyControl = false;
+// // let keyArrowUp = false;
+// // let keyArrowLeft = false;
+// // let keyArrowDown = false;
+// // let keyArrowRight = false;
+// let keyMeta = false;
+// let keyZ = false;
+// let keyX = false;
+// let keyC = false;
 // let keyD = false;
 
 // Define your key press handler
-function handleKeyPress() {
-  // if (keyMeta && keyZ && !keyShift) {
-  //   undo();
-  //   keyZ = false;
-  // }
-  // if (keyMeta && keyShift && keyZ) {
-  //   redo();
-  //   keyZ = false;
-  // }
-  if (keyMeta && keyC) {
-    copyToClipboard();
-    keyC = false;
-  }
-}
+// function handleKeyPress() {
+//   // if (keyMeta && keyZ && !keyShift) {
+//   //   undo();
+//   //   keyZ = false;
+//   // }
+//   // if (keyMeta && keyShift && keyZ) {
+//   //   redo();
+//   //   keyZ = false;
+//   // }
+//   // if (keyMeta && keyC) {
+//   //   copyToClipboard();
+//   //   keyC = false;
+//   // }
+// }
 
 // Add event listeners to track the state of each key
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Shift") {
-    keyShift = true;
-  }
-  // if (event.key === "Control") {
-  //   keyControl = true;
-  // }
-  // if (event.key === "ArrowUp") {
-  //   keyArrowUp = true;
-  // }
-  // if (event.key === "ArrowLeft") {
-  //   keyArrowLeft = true;
-  // }
-  // if (event.key === "ArrowDown") {
-  //   keyArrowDown = true;
-  // }
-  // if (event.key === "ArrowRight") {
-  //   keyArrowRight = true;
-  // }
-  if (event.key === "Meta") {
-    keyMeta = true;
-  }
-  if (event.key === "z") {
-    keyZ = true;
-  }
-  if (event.key === "x") {
-    keyX = true;
-  }
-  if (event.key === "c") {
-    keyC = true;
-  }
-  // if (event.key === "d") {
-  //   keyD = true;
-  // }
-  handleKeyPress();
-});
+// document.addEventListener("keydown", (event) => {
+//   if (event.key === "Shift") {
+//     keyShift = true;
+//   }
+//   // if (event.key === "Control") {
+//   //   keyControl = true;
+//   // }
+//   // if (event.key === "ArrowUp") {
+//   //   keyArrowUp = true;
+//   // }
+//   // if (event.key === "ArrowLeft") {
+//   //   keyArrowLeft = true;
+//   // }
+//   // if (event.key === "ArrowDown") {
+//   //   keyArrowDown = true;
+//   // }
+//   // if (event.key === "ArrowRight") {
+//   //   keyArrowRight = true;
+//   // }
+//   if (event.key === "Meta") {
+//     keyMeta = true;
+//   }
+//   if (event.key === "z") {
+//     keyZ = true;
+//   }
+//   if (event.key === "x") {
+//     keyX = true;
+//   }
+//   if (event.key === "c") {
+//     keyC = true;
+//   }
+//   // if (event.key === "d") {
+//   //   keyD = true;
+//   // }
+//   handleKeyPress();
+// });
 
-document.addEventListener("keyup", (event) => {
-  if (event.key === "Shift") {
-    keyShift = false;
-  }
-  // if (event.key === "Control") {
-  //   keyControl = false;
-  // }
-  // if (event.key === "ArrowUp") {
-  //   keyArrowUp = false;
-  // }
-  // if (event.key === "ArrowLeft") {
-  //   keyArrowLeft = false;
-  // }
-  // if (event.key === "ArrowDown") {
-  //   keyArrowDown = false;
-  // }
-  // if (event.key === "ArrowRight") {
-  //   keyArrowRight = false;
-  // }
-  if (event.key === "Meta") {
-    keyMeta = false;
-  }
-  if (event.key === "z") {
-    keyZ = false;
-  }
-  // if (event.key === "x") {
-  //   keyX = false;
-  // }
-  if (event.key === "c") {
-    keyC = false;
-  }
-  // if (event.key === "d") {
-  //   keyD = false;
-  // }
-});
+// document.addEventListener("keyup", (event) => {
+//   if (event.key === "Shift") {
+//     keyShift = false;
+//   }
+//   // if (event.key === "Control") {
+//   //   keyControl = false;
+//   // }
+//   // if (event.key === "ArrowUp") {
+//   //   keyArrowUp = false;
+//   // }
+//   // if (event.key === "ArrowLeft") {
+//   //   keyArrowLeft = false;
+//   // }
+//   // if (event.key === "ArrowDown") {
+//   //   keyArrowDown = false;
+//   // }
+//   // if (event.key === "ArrowRight") {
+//   //   keyArrowRight = false;
+//   // }
+//   // if (event.key === "Meta") {
+//   //   keyMeta = false;
+//   // }
+//   // if (event.key === "z") {
+//   //   keyZ = false;
+//   // }
+//   // // if (event.key === "x") {
+//   // //   keyX = false;
+//   // // }
+//   // if (event.key === "c") {
+//   //   keyC = false;
+//   // }
+//   // if (event.key === "d") {
+//   //   keyD = false;
+//   // }
+// });
 
 /// Download ///
 
@@ -1710,8 +1766,26 @@ lineColorElement.addEventListener("change", function (event) {
 lineColorBtn.addEventListener("click", function (event) {
   lineColorElement.click();
 });
-lineColorBtn.addEventListener("keydown", function (event) {
-  lineColorElement.click();
+valueBtn.addEventListener("click", function (event) {
+  colorBlockElement.click();
+});
+colorBlockElement.addEventListener("change", function (event) {
+  const selectColor = colorBlockElement.value;
+  const currentRGBA = hexToRgba(selectColor, 1, "array");
+  rgb = [currentRGBA[0], currentRGBA[1], currentRGBA[2]];
+  hex = selectColor;
+  hsl = rgbToHsl(currentRGBA[0], currentRGBA[1], currentRGBA[2]);
+  hsv = rgbToHsv(currentRGBA[0], currentRGBA[1], currentRGBA[2]);
+  xyz = rgbToXyzD65(currentRGBA[0], currentRGBA[1], currentRGBA[2]);
+  xyzD50 = bradfordTransformationD65toD50(xyz);
+  lab = xyzToLab(xyzD50[0], xyzD50[1], xyzD50[2]);
+  lch = labToLch(lab.labL, lab.labA, lab.labB);
+  oklab = rgb2oklab(currentRGBA[0], currentRGBA[1], currentRGBA[2]);
+  oklch = oklab2okLch(oklab.oklabL, oklab.oklabA, oklab.oklabB);
+  hsl50 = hslToHsl50(hsl.h, oklch.oklchC);
+  isInitialValueForMenu = false;
+  const colorSpaceValue = colorSpace.selectedOptions[0].value;
+  changeColorSpaceForMenu(colorSpaceValue);
 });
 colorSpace.addEventListener("change", function () {
   changeColorSpaceForMenu(colorSpace.selectedOptions[0].value);
@@ -2217,7 +2291,7 @@ function rotatePoint(x0, y0, x, y, degree) {
 
   return [x1, y1];
 }
-function hexToRgba(hex, alpha) {
+function hexToRgba(hex, alpha, type) {
   // HEX値を正規化（3桁の場合は6桁に拡張）
   let normalizedHex = hex.replace(/^#/, "");
   if (normalizedHex.length === 3) {
@@ -2234,6 +2308,10 @@ function hexToRgba(hex, alpha) {
 
   // α値を0から1の範囲に変換
   const a = alpha / 100;
+
+  if (type === "array") {
+    return [r, g, b, a];
+  }
 
   // RGBA値を返す
   return `rgba(${r}, ${g}, ${b}, ${a})`;

@@ -348,7 +348,7 @@
             </button>
           </li>
           <li>
-            <button class="button flex-center button-type-b" tabindex="-1">
+            <button id="value-btn" class="button flex-center" data-tabindex="">
               <span class="icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -362,11 +362,22 @@
                 </svg>
               </span>
               <span class="row-1">Value</span>
+              <form class="flex">
+                <label>
+                  <input
+                    type="color"
+                    id="color-block"
+                    name="color-block"
+                    class="input-color"
+                    value="#ffffff"
+                  />
+                </label>
+              </form>
             </button>
           </li>
           <li>
             <button class="button flex-center button-type-b" tabindex="-1">
-              <span id="color-block" class="color-block"></span>
+              <!-- <span id="color-block" class="color-block"></span> -->
               <span id="color-info">R:-- G:-- B:--</span>
             </button>
           </li>
