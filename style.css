@@ -416,18 +416,18 @@ label:focus-visible {
   --background-color: var(--tertiary-white);
   position: relative;
   color: var(--tertiary-white);
-  margin-inline-start: 0.5rem;
+  margin-inline-start: auto;
   padding-inline-end: 1rem;
   max-width: 22ch;
 }
-.color-block {
+/* .color-block {
   content: "";
   display: inline-block;
   width: var(--font-size-small);
   height: var(--font-size-small);
   background-color: var(--tertiary-white);
   margin-inline-start: 22px;
-}
+} */
 
 .object {
   color: var(--grey-1);
@@ -441,6 +441,7 @@ label:focus-visible {
   border: none;
   background: none;
   width: 3ch;
+  cursor: pointer;
 }
 .overlay {
   width: 100%;
