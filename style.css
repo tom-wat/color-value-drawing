@@ -227,6 +227,7 @@ select:focus-visible {
   padding-inline-start: 2rem;
   display: grid;
   grid-template-columns: 80px 1fr;
+  text-wrap: balance;
 }
 .list .color-name {
   grid-column: 1 / 2;
