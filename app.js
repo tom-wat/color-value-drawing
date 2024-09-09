@@ -48,9 +48,6 @@ const valueBtn = document.getElementById("value-btn");
 const angleConstraintElement = document.getElementById("angle-constraint");
 // const pan = document.getElementById("pan");
 const isMobile = navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/);
-const isTablet = navigator.userAgent.match(
-  /iPad|Android.*Tablet|Kindle|Playbook/
-);
 const overlay = document.getElementById("overlay");
 // const undoStatesLimitNumber = 50;
 let rgb;
@@ -165,7 +162,6 @@ function setValueToSelected(element, value) {
 
 document.addEventListener("DOMContentLoaded", function () {
   const tabbableElements = document.querySelectorAll("[data-tabindex]");
-
   tabbableElements.forEach(function (element, index) {
     element.setAttribute("tabindex", index + 1);
   });
@@ -181,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
   changeColorSpaceForTooltip(colorSpace.selectedOptions[0].value);
   setStyles();
   filterCanvas();
-  if (!!isMobile === false && !!isTablet === false) {
+  if (!!isMobile === false) {
     canvas.addEventListener("mousemove", throttledGetColor);
     document.addEventListener("mousemove", showTooltip);
     canvas.addEventListener("mousedown", throttledStoreLine);
@@ -660,7 +656,7 @@ function undo() {
     colors = [];
   }
   checkedPoints = [];
-  if (storeLineFlag === true && !!isMobile === false && !!isTablet === false) {
+  if (storeLineFlag === true && !!isMobile === false) {
     canvas.removeEventListener("mousemove", drawLineOnMouseMove);
     canvas.addEventListener("mousemove", throttledGetColor);
     document.addEventListener("mousemove", showTooltip);
@@ -678,11 +674,7 @@ function redo() {
     lines = undoStatesCopy.lines;
     colors = undoStatesCopy.colors;
     checkedPoints = [];
-    if (
-      storeLineFlag === true &&
-      !!isMobile === false &&
-      !!isTablet === false
-    ) {
+    if (storeLineFlag === true && !!isMobile === false) {
       canvas.removeEventListener("mousemove", drawLineOnMouseMove);
       canvas.addEventListener("mousemove", throttledGetColor);
       document.addEventListener("mousemove", showTooltip);
@@ -704,7 +696,7 @@ function clearCanvas() {
   colors = [];
   lines = [];
   checkedPoints = [];
-  if (storeLineFlag === true && !!isMobile === false && !!isTablet === false) {
+  if (storeLineFlag === true && !!isMobile === false) {
     canvas.removeEventListener("mousemove", drawLineOnMouseMove);
     canvas.addEventListener("mousemove", throttledGetColor);
     document.addEventListener("mousemove", showTooltip);
@@ -2129,14 +2121,14 @@ function storeLine(event) {
     pointerChecked,
     lineChecked,
   });
-  if (!!isMobile === false && !!isTablet === false) {
+  if (!!isMobile === false) {
     canvas.addEventListener("mousemove", drawLineOnMouseMove);
     removeEventListenerTooltip();
     tooltip.style.display = "none";
   }
 
   if (checkedPoints.length === 2) {
-    if (!!isMobile === false && !!isTablet === false) {
+    if (!!isMobile === false) {
       canvas.removeEventListener("mousemove", drawLineOnMouseMove);
     }
     // console.log("checkedPoints:", checkedPoints);
