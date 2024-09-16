@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const openFile = (event) => {
   file = event.target.files[0];
   if (!file) {
-    console.error("No file selected.");
+    // console.error("No file selected.");
     return;
   }
   main.style.display = "none";
@@ -714,7 +714,8 @@ async function copyToClipboard() {
   try {
     await navigator.clipboard.writeText(colorCode);
   } catch (err) {
-    console.error("Failed to copy color values.", err);
+    // console.error("Failed to copy color values.", err);
+    return;
   }
 }
 
